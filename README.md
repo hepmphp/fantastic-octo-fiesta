@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 <p align="center">
     <a href="https://github.com/yiisoft" target="_blank">
         <img src="https://avatars0.githubusercontent.com/u/993323" height="100px">
@@ -61,6 +62,4 @@ environments/            contains environment-based overrides
 ```
 =======
 # yiiadmin
-基于yii2的通用管理后台 
-提供一个通用的后台解决方案,方便快速开发和构建web应用程序
->>>>>>> 77dfa2eee0fc45e0f59450ac4cc884c6213da9e3
+基于yii2的通用管理后台 提供一个通用的后台解决方案,方便快速开发和构建web应用程序
