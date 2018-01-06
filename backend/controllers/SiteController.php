@@ -3,16 +3,22 @@ namespace backend\controllers;
 
 use Yii;
 use yii\db\Query;
-use yii\web\Controller;
+use backend\controllers\BaseController;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 use common\models\LoginForm;
 
+
 /**
  * Site controller
  */
-class SiteController extends Controller
+class SiteController extends BaseController
 {
+
+    public function __construct(){
+        parent::init();
+    }
+
     /**
      * @inheritdoc
      */

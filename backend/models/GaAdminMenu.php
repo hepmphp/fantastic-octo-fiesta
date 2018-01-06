@@ -58,4 +58,28 @@ class GaAdminMenu extends \yii\db\ActiveRecord
             'level' => Yii::t('app', '菜单级别 0 1 2 3 4 依次递增'),
         ];
     }
+
+    /**
+     * 获取菜单数据
+     * @param $where
+     * @return array
+     */
+    public function getMenuData($where){
+        $mAdminMenu = GaAdminMenu::find()->where($where)->asArray(true);
+        $data = $mAdminMenu->limit(100000)->all();
+        $menu_data = array();
+        foreach($data as $k=>$v){
+            $menu = array(
+                'id'=>$v['id'],
+                'pId'=>$v['parentid'],
+                'name'=>$v['name'],
+            );
+            if($v['parentid']==0){
+                $menu['open'] = true;
+            }
+            $menu_data[] = $menu;
+        }
+        return $menu_data;
+
+    }
 }
