@@ -19,7 +19,7 @@ use yii\data\Pagination;
 class GaadminmenuController extends BaseController{
 
     public function init(){
-        parent::init();
+        //parent::init();
         if(Yii::$app->request->get('iframe')==1){
             $this->layout = false;
         }
@@ -67,10 +67,9 @@ class GaadminmenuController extends BaseController{
     }
 
     public function actionCreate(){
-        if(isset($_GET['remark'])){//Yii::$app->request->isPost
+        if(Yii::$app->request->isPost){//Yii::$app->request->isPost
             $model = new GaAdminMenu();
-
-            if ($model->load(Yii::$app->request->post()) && $model->insert()) {
+            if ($model->load(Yii::$app->request->post()) && $model->validate() && $model->save()) {
                 $response = array(
                     'status'=>0,
                     'msg'=>'',
@@ -78,11 +77,11 @@ class GaadminmenuController extends BaseController{
                 );
             }else{
                 $commandQuery = clone $model;
-                echo $commandQuery->find()->createCommand()->getRawSql();
                 $response = array(
                     'status'=>-1,
-                    'msg'=>'添加失败',
-                    'data'=>$model->errors(),
+                    'msg'=>'error',
+                    'data'=>$model->errors,
+                    'lastSql'=>$commandQuery->find()->createCommand()->getRawSql(),
                 );
             }
             $this->asJson($response);

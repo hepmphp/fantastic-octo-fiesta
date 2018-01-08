@@ -15,6 +15,8 @@ return [
     'components' => [
         'request' => [
             'csrfParam' => '_csrf-backend',
+            'enableCookieValidation' => false,//关闭token验证
+            'enableCsrfValidation'=>false,
         ],
         'user' => [
             'identityClass' => 'common\models\User',

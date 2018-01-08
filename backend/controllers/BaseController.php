@@ -13,17 +13,20 @@ use yii\web\Controller;
 
 class BaseController extends Controller{
 
+
+    /***
+     *模块名 Yii::$app->controller->module->id;
+     *控制器名 Yii::$app->controller->id
+     *方法名 Yii::$app->controller->action->id;
+     */
+    public $layout = 'main_admin.php';
+
     public function beforeAction($action){
         if(parent::beforeAction($action)){
             if(in_array($action->id,['create','update','delete'])){
-                $this->layout = 'main_curd';//使用curd布局
+                $this->layout = 'main_curd.php';//使用curd布局
             }
             if($this->layout && Yii::$app->request->get('iframe')==1){
-                /***
-                 *模块名 Yii::$app->controller->module->id;
-                 *控制器名 Yii::$app->controller->id
-                 *方法名 Yii::$app->controller->action->id;
-                 */
                 $this->layout = 'main_content.php';//详情页
             }
             return true;

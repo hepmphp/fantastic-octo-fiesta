@@ -36,7 +36,6 @@
 </div>
 <script>
     var zNodes = <?=$menu_data?>
-
 </script>
 <script src="/static/js/ztree/js/jquery.ztree.core.js"></script>
 <script src="/static/js/ztree/js/jquery.ztree.excheck.js"></script>
