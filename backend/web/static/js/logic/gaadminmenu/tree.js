@@ -83,21 +83,22 @@ function admin_menu_form(url,action){
         yes: function(index, layero){
             var body = layer.getChildFrame('body', index);
             var param ={
-                id:body.find('#id').val(),
-                parentid:body.find('#parentid').val(),
-                app_id:body.find('#app_id').val(),
-                model:body.find('#model').val(),
-                action:body.find('#action').val(),
-                data:body.find('#data').val(),
-                status:body.find('#status').val(),
-                name:body.find('#name').val(),
-                remark:body.find('#remark').val(),
-                listorder:body.find('#listorder').val(),
-                level:body.find('#level').val()
+                GaAdminMenu:{
+                    id:body.find('#id').val(),
+                    parentid:body.find('#parentid').val(),
+                    app_id:body.find('#app_id').val(),
+                    model:body.find('#model').val(),
+                    action:body.find('#action').val(),
+                    data:body.find('#data').val(),
+                    status:body.find('#status').val(),
+                    name:body.find('#name').val(),
+                    remark:body.find('#remark').val(),
+                    listorder:body.find('#listorder').val(),
+                    level:body.find('#level').val()
+                }
             };
-
             var url = "?r=gaadminmenu/create";
-            if(param.id){
+            if(param.GaAdminMenu.id){
                 var url = "?r=gaadminmenu/update";
             }
             layer.load(2);

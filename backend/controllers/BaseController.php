@@ -11,6 +11,7 @@ namespace backend\controllers;
 use Yii;
 use yii\web\Controller;
 
+
 class BaseController extends Controller{
 
 
@@ -29,6 +30,7 @@ class BaseController extends Controller{
             if($this->layout && Yii::$app->request->get('iframe')==1){
                 $this->layout = 'main_content.php';//详情页
             }
+
             return true;
         }else{
             return false;

@@ -1,3 +1,6 @@
+<?php
+use Yii;
+?>
 <!DOCTYPE html>
 <html lang="">
 <head>
@@ -20,8 +23,9 @@
 <body>
 <?=$content?>
 </body>
-<script src="/static/js/jquery.min.js"></script>
-<script src="/static/js/bootstrap.min.js"></script>
+<script src="<?=$asset->baseUrl?>/static/js/jquery.min.js"></script>
+<script src="<?=$asset->baseUrl?>/static/js/bootstrap.min.js"></script>
+<script src="<?=$asset->baseUrl?>/static/js/logic/<?=Yii::$app->controller->id?>/<?=Yii::$app->controller->action->id?>.js">
 
 </html>
 

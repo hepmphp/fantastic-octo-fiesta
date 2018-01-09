@@ -10,6 +10,7 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
+use backend\services\Log;
 /**
  * GaadminlogController implements the CRUD actions for GaAdminLog model.
  */
@@ -30,12 +31,21 @@ class GaadminlogController extends Controller
         ];
     }
 
+    public function actionTest(){
+        echo basename(__CLASS__).'.'.__FUNCTION__;
+        echo PHP_EOL;
+        echo __METHOD__;
+        echo PHP_EOL;
+        echo __FUNCTION__;
+    }
+
     /**
      * Lists all GaAdminLog models.
      * @return mixed
      */
     public function actionIndex()
     {
+
         $searchModel = new GaAdminLogSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
@@ -83,7 +93,8 @@ class GaadminlogController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-
+        $log_filename = sprintf("%s.%s",basename(__CLASS__).'.'.__FUNCTION__,'.log');
+        Log::write(var_export($_POST,true),$log_filename);
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
