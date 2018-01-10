@@ -45,7 +45,6 @@ class GaadminlogController extends Controller
      */
     public function actionIndex()
     {
-
         $searchModel = new GaAdminLogSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 

@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "{{%ga_admin_group}}".
@@ -30,7 +31,7 @@ class GaAdminGroup extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['mids'], 'required'],
+            [['name'], 'required'],
             [['mids'], 'string'],
             [['allow_mutil_login', 'addtime'], 'integer'],
             [['name', 'comment'], 'string', 'max' => 255],
@@ -50,5 +51,12 @@ class GaAdminGroup extends \yii\db\ActiveRecord
             'allow_mutil_login' => Yii::t('app', '允许多人登录 0否 1是'),
             'addtime' => Yii::t('app', '添加时间'),
         ];
+    }
+
+    public function get_config_group_id($where=array()){
+
+        $admin_group =   GaAdminGroup::find()->select('id,name')->where($where)->asArray(true)->all();
+        $config_admin_group_id = ArrayHelper::index($admin_group,'id');
+        return $config_admin_group_id;
     }
 }

@@ -158,11 +158,10 @@ class GaadminmenuController extends BaseController{
 
         }else{
             $model = $this->findModel(Yii::$app->request->get('id'));
-            var_dump($model->attributes);
             $parentid = Yii::$app->request->get('parentid');
             $mAdminMenu = new GaAdminMenu();
             return $this->render('create',[
-                'form'=>$model->attributes,
+                'form'=>$model->attributes,//表单参数
                 'config_status'=>$mAdminMenu->get_config_status(),
                 'config_menu'  =>$mAdminMenu->get_config_menu($parentid)
             ]);
@@ -201,18 +200,24 @@ class GaadminmenuController extends BaseController{
         }
     }
 
-    public function actionLog(){
-        echo Yii::t('app','create_success');
-    }
+
 
     public function actionAjaxGetConfigMenu(){//ajax-get-config-menu
         $menu_id = Yii::$app->request->get('menu_id');
         $config_menu =(new GaAdminMenu())->get_config_menu($menu_id);
-        $response = array(
-            'status'=>0,
-            'msg'=>'',
-            'data'=>$config_menu
-        );
+        if(!empty($config_menu)){
+            $response = array(
+                'status'=>0,
+                'msg'=>'',
+                'data'=>$config_menu
+            );
+        }else{
+            $response = array(
+                'status'=>-1,
+                'msg'=>Yii::t('app','get_data_fail'),
+                'data'=>array()
+            );
+        }
         $this->asJson($response);
     }
 

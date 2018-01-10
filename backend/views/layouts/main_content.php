@@ -15,18 +15,18 @@ $asset = AppAsset::register($this);
         <?= Html::csrfMetaTags() ?>
         <title><?= Html::encode($this->title) ?></title>
         <?php $this->head() ?>
-        <link  href="<?=$asset->baseUrl?>/static/css/nav.css"  rel="stylesheet">
         <!--[if lt IE 9]>
         <meta http-equiv="refresh" content="0;ie.html" />
         <script src="<?=$asset->baseUrl?>/static/js/html5shiv.min.js"></script>
         <script src="<?=$asset->baseUrl;?>/static/js/respond.min.js"></script>
         <![endif]-->
     </head>
-    <body>
     <?php $this->beginBody() ?>
     <body class="form-body">
     <?=$content?>
     <?php $this->endBody() ?>
+    <!--业务逻辑代码-->
+    <script src="<?=$asset->baseUrl?>/static/js/logic/<?=Yii::$app->controller->id?>/<?=Yii::$app->controller->action->id?>.js"></script>
     </body>
     </html>
 <?php $this->endPage() ?>

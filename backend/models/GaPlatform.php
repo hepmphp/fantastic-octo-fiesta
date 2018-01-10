@@ -3,7 +3,7 @@
 namespace app\models;
 
 use Yii;
-
+use yii\helpers\ArrayHelper;
 /**
  * This is the model class for table "{{%ga_platform}}".
  *
@@ -47,5 +47,16 @@ class GaPlatform extends \yii\db\ActiveRecord
             'ip_list' => Yii::t('app', 'ip列表 用,分隔'),
             'domain' => Yii::t('app', '域名'),
         ];
+    }
+
+    /**
+     * 获取平台id
+     * @return array
+     */
+    public function get_config_plat_id(){
+        $where = array();
+        $platform = GaPlatform::find()->select('id,name,sign')->where($where)->asArray(true)->all();
+        $platform = ArrayHelper::index($platform,'id');
+        return $platform;
     }
 }

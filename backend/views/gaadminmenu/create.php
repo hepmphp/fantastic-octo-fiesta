@@ -10,7 +10,6 @@
                 </select>
             </div>
         </div>
-
         <!-- Text input-->
         <div class="form-group">
             <label class="col-md-2 control-label" for="name">菜单名称</label>
@@ -19,16 +18,13 @@
 
             </div>
         </div>
-
         <!-- Text input-->
         <div class="form-group">
             <label class="col-md-2 control-label" for="model">控制器</label>
             <div class="col-md-4">
                 <input id="model" name="model"  value="<?=$form['model']?>" type="text" placeholder="控制器" class="form-control input-md">
-
             </div>
         </div>
-
         <!-- Text input-->
         <div class="form-group">
             <label class="col-md-2 control-label" for="action">方法</label>
@@ -37,7 +33,6 @@
 
             </div>
         </div>
-
         <!-- Text input-->
         <div class="form-group">
             <label class="col-md-2 control-label" for="data">参数</label>

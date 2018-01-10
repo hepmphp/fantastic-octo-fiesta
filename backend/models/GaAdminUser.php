@@ -3,7 +3,8 @@
 namespace app\models;
 
 use Yii;
-
+use backend\services\helpers\Unique;
+use app\models\GaAdminGroup;
 /**
  * This is the model class for table "{{%ga_admin_user}}".
  *
@@ -23,6 +24,31 @@ use Yii;
  */
 class GaAdminUser extends \yii\db\ActiveRecord
 {
+
+    public function beforeSave($insert){
+        if (parent::beforeSave($insert)) {
+            return false;
+            if($this->isNewRecord) {
+                //GaAdminGroup
+                $mGaAdminGroup = GaAdminGroup::findOne($this->group_id);
+                $salt = Unique::genRandomString(6);//密码盐
+                $this->salt = $salt;
+                $this->password = $this->genrate_password($this->password,$salt);
+                $this->mids = $mGaAdminGroup['mids'];
+                $this->create_time = time();//添加时间
+            } else {
+                if(!empty($this->password)){
+                    $salt = Unique::genRandomString(6);//密码盐
+                    $this->salt = $salt;
+                    $this->password = $this->genrate_password($this->password,$salt);
+                }
+            }
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     /**
      * @inheritdoc
      */
@@ -37,7 +63,7 @@ class GaAdminUser extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['username', 'password', 'salt', 'create_time', 'mids'], 'required'],
+            [['username', 'password'], 'required'],
             [['create_time', 'status', 'platform_id', 'group_id', 'last_login_time'], 'integer'],
             [['mids'], 'string'],
             [['username'], 'string', 'max' => 64],
@@ -67,5 +93,25 @@ class GaAdminUser extends \yii\db\ActiveRecord
             'last_session_id' => Yii::t('app', '上一次登录的session_id'),
             'last_login_time' => Yii::t('app', '最后登录时间'),
         ];
+    }
+
+    /**
+     * 生成密码
+     * @param $password
+     * @param $salt
+     * @return string
+     */
+    public function genrate_password($password,$salt){
+        return md5($password.md5($salt));
+    }
+    /***
+     * 获取用户状态
+     * @return array
+     */
+    public function get_config_status(){
+        return array(
+            '-1'=>array('id'=>1,'name'=>'锁定'),
+            '0'=>array('id'=>0,'name'=>'正常'),
+        );
     }
 }

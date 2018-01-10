@@ -14,7 +14,6 @@ use yii\web\Controller;
 
 class BaseController extends Controller{
 
-
     /***
      *模块名 Yii::$app->controller->module->id;
      *控制器名 Yii::$app->controller->id
@@ -22,6 +21,7 @@ class BaseController extends Controller{
      */
     public $layout = 'main_admin.php';
 
+    public $model = '';//通用的操作模型
     public function beforeAction($action){
         if(parent::beforeAction($action)){
             if(in_array($action->id,['create','update','delete'])){
@@ -41,9 +41,123 @@ class BaseController extends Controller{
         //根据url参数设置layout
 
 
+    }
 
+    /***
+     *
+     * 通用的添加方法
+     * @param $model
+     * @return \yii\web\Response
+     */
+    public function commonCreate($model){
+        $model->load(Yii::$app->request->post());
+        if($model->validate()){
+            $res = $model->save();
+            if ($res) {
+                $response = array(
+                    'status'=>0,
+                    'msg'=>Yii::t('app','create_success'),
+                    'data'=>array(),
+                );
+            }else{
+                // $commandQuery = clone $model;
+                $response = array(
+                    'status'=>-1,
+                    'msg'=>Yii::t('app','db_error'),
+                    'data'=>$model->errors,
+                    //   'last_sql'=>$commandQuery->find()->createCommand()->getRawSql(),
+                );
+            }
+        }else{
+            $response = array(
+                'status'=>-2,
+                'msg'=>implode("<br/>",$model->firstErrors),
+                'data'=>$model->errors,
+            );
+        }
+        return $this->asJson($response);
+    }
+    /***
+     * 通用的更新方法
+     * @param $model
+     */
+    public function commonUpdate(){
+        $model = $this->findModel(Yii::$app->request->get('id'));
+        $model->load(Yii::$app->request->post());
+        if($model->validate()){
+            $res = $model->save();
+            if ($res) {
+                $response = array(
+                    'status'=>0,
+                    'msg'=>Yii::t('app','update_success'),
+                    'data'=>array(),
+                );
+            }else{
+                $commandQuery = clone $model;
+                $response = array(
+                    'status'=>-1,
+                    'msg'=>Yii::t('app','db_error'),
+                    'data'=>$model->errors,
+                    'last_sql'=>$commandQuery->find()->createCommand()->getRawSql(),
+                );
+            }
+        }else{
+            $response = array(
+                'status'=>-2,
+                'msg'=>$model->firstErrors,
+                'data'=>$model->errors,
+            );
+        }
+        return $this->asJson($response);
+    }
 
-
+    /**
+     * 通用的删除方法
+     */
+    public function commonDelete(){
+        $response = array(
+            'status'=>-1,
+            'msg'=>Yii::t('app','delete_fail'),
+            'data'=>'',
+        );
+        $ids = Yii::$app->request->get('ids');
+        $ids_arr = explode(',',$ids);
+        $ids_arr = array_map('intval',$ids_arr);
+        if(empty($ids_arr)){
+            $res = $this->model->findAll($ids_arr)->limit(10)->delete();
+            if($res){
+                $response =array(
+                    'status'=>0,
+                    'msg'=>Yii::t('app','delete_success'),
+                    'data'=>'',
+                );
+            }
+        }
+        $this->asJson($response);
+    }
+    /***
+     * 通用逻辑删除
+     */
+    public function commonLogicDelete(){
+        $response = array(
+            'status'=>-1,
+            'msg'=>Yii::t('app','delete_fail'),
+            'data'=>'',
+        );
+        $ids = Yii::$app->request->get('ids');
+        $ids_arr = explode(',',$ids);
+        $ids_arr = array_map('intval',$ids_arr);
+        if(empty($ids_arr)){
+            $res = $this->model->updateAll(['status'=>-1],$ids_arr);
+            if($res){
+                $response =array(
+                    'status'=>0,
+                    'msg'=>Yii::t('app','delete_success'),
+                    'data'=>'',
+                );
+            }
+        }
+        $this->asJson($response);
     }
 
     public $admin_user = null;

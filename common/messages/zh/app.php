@@ -18,4 +18,7 @@ return [
     'update_fail'   => '更新失败',
     'delete_success'=> '删除成功',
     'delete_fail'   => '删除失败',
+    'get_data_fail' => '获取数据失败',
+    'permission_success'=>'权限设置成功',
+    'permission_fail'=>'权限设置失败'
 ];

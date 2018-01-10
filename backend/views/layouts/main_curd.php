@@ -25,7 +25,7 @@ use Yii;
 </body>
 <script src="<?=$asset->baseUrl?>/static/js/jquery.min.js"></script>
 <script src="<?=$asset->baseUrl?>/static/js/bootstrap.min.js"></script>
-<script src="<?=$asset->baseUrl?>/static/js/logic/<?=Yii::$app->controller->id?>/<?=Yii::$app->controller->action->id?>.js">
+<script src="<?=$asset->baseUrl?>/static/js/logic/<?=Yii::$app->controller->id?>/<?=Yii::$app->controller->action->id?>.js"></script>
 
 </html>
 

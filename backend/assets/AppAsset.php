@@ -34,14 +34,17 @@ class AppAsset extends AssetBundle
     public $js = [
          //全局js
         '/static/js/jquery.min.js',
+        '/static/js/bootstrap.min.js',
         '/static/js/layer/layer.js',
+
         //Bootstrap table
-//        '/static/js/bootstrap-table/bootstrap-table.min.js',
-//        '/static/js/bootstrap-table/locale/bootstrap-table-zh-CN.min.js',
-//        '/static/js/table-demo.js',
+        '/static/js/bootstrap-table/bootstrap-table.min.js',
+        '/static/js/bootstrap-table/locale/bootstrap-table-zh-CN.min.js',
+        '/static/js/table-demo.js',
         //日期
 //        '/static/js/date/moment.min.js',
 //        '/static/js/date/jquery.daterangepicker.js',
+
         //通用
         '/static/js/common.js',
     ];

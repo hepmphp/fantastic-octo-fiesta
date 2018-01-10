@@ -1,3 +1,12 @@
+<!DOCTYPE html>
+<html lang="">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+
 <script src="/static/js/jquery.min.js"></script>
 <script src="/static/js/layer/layer.js"></script>
 <script src="/static/js/common.js"></script>
@@ -29,7 +38,7 @@
         </form>
 
     </div>
-    <link rel="stylesheet" href="<?=$asset->baseUrl?>/static/js/ztree/css/metroStyle/metroStyle.css" type="text/css">
+
     <div class="zTreeDemoBackground left">
         <ul id="treeDemo" class="ztree"></ul>
     </div>
@@ -37,13 +46,13 @@
 <script>
     var zNodes = <?=$menu_data?>
 </script>
+<link rel="stylesheet" href="<?=$asset->baseUrl?>/static/js/ztree/css/metroStyle/metroStyle.css" type="text/css">
 <script src="/static/js/ztree/js/jquery.ztree.core.js"></script>
 <script src="/static/js/ztree/js/jquery.ztree.excheck.js"></script>
 <script src="/static/js/ztree/js/jquery.ztree.exedit.js"></script>
 <script src="/static/js/logic/gaadminmenu/tree.js"></script>
-
-
-
+</body>
+</html>
 
 
 
