@@ -6,11 +6,12 @@ use Yii;
 use app\models\GaAdminGroup;
 use app\models\GaAdminUser;
 use app\models\GaPlatform;
+use app\models\GaAdminMenu;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\data\Pagination;
 use backend\controllers\BaseController;
-use backend\services\helpers\LogicException;
+use backend\components\exception\LogicException;
 
 /**
  * GaAdminGroupController implements the CRUD actions for GaAdminGroup model.
@@ -25,7 +26,7 @@ class GaAdminUserController extends BaseController
 
     public function actionLog(){
         echo Yii::t('app','create_success');
-        throw new LogicException(1,'tset');
+        throw new LogicException(LogicException::USER_EXEIST,"hello hello world");
     }
     /**
      * @inheritdoc
@@ -53,9 +54,9 @@ class GaAdminUserController extends BaseController
             if($id){
                 $where['id'] = $id;
             }
-            $name = $rq->get('name');
-            if($name){
-                $where['name'] = $name;
+            $username = $rq->get('username');
+            if($username){
+                $where['username'] = $username;
             }
             $platform_id = $rq->get('platform_id');
             if($platform_id){
@@ -163,7 +164,7 @@ class GaAdminUserController extends BaseController
      */
     public function actionDelete()
     {
-        return $this->commonDelete();
+        return $this->commonLogicDelete();
     }
 
     /**
@@ -179,6 +180,76 @@ class GaAdminUserController extends BaseController
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
+        }
+    }
+
+    /***
+     * 编辑用户权限
+     */
+    public function actionEditPermission(){
+
+        if(Yii::$app->request->isPost){
+            $id = Yii::$app->request->post('id');
+            $mids = Yii::$app->request->post('mids');
+            sort($mids);
+            $permission = array(
+                'mids'=>implode(',',$mids)
+            );
+            //查找用户组
+            $admin_user = $this->model->findOne($id);
+            $admin_user->mids = $permission['mids'];
+            $res = $admin_user->save();
+            if($res){
+                $response = array(
+                    'status'=>0,
+                    'msg'=>Yii::t('app','permission_success'),
+                    'data'=>'',
+                );
+            }else{
+                $response = array(
+                    'status'=>-1,
+                    'msg'=>Yii::t('app','permission_fail'),
+                    'data'=>'',
+                );
+            }
+            $this->asJson($response);
+        }else{
+            $id = Yii::$app->request->get('id');
+            $admin_user = $this->model->findOne($id);
+
+            $admin_mids = explode(',',$admin_user['mids']);
+            $admin_mids = json_encode($admin_mids,true);
+
+            $mAdminMenu = new GaAdminMenu();
+            $menu_data = $mAdminMenu->getMenuData(array());
+            $menu_data = json_encode($menu_data,true);
+            return $this->renderPartial('edit-permission',[
+                'menu_data'=>$menu_data,
+                'admin_mids'=>$admin_mids
+            ]);
+        }
+    }
+
+    public function actionEditPassword(){
+        if(Yii::$app->request->isPost){
+            $password = Yii::$app->request->post('password');
+            $admin_user = GaAdminUser::findOne(['id'=>Yii::$app->session['admin_user.id']]);
+            $admin_user->password = $password;
+            $res = $admin_user->save();
+            if($res){
+                $response = array(
+                    'status'=>0,
+                    'msg'=>Yii::t('app','update_success'),
+                );
+            }else{
+                $response = array(
+                    'status'=>-1,
+                    'msg'=>Yii::t('app','update_fail')
+                );
+            }
+            $this->asJson($response);
+        }else{
+            return $this->render('edit-password',[]);
         }
     }
 

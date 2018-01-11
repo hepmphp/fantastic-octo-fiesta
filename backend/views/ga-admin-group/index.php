@@ -1,6 +1,6 @@
 <?php
 
-use app\components\PageWidget;
+use backend\components\PageWidget;
 ?>
 <div class="form-wrapper">
     <div class="form-item">

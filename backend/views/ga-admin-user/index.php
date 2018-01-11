@@ -1,6 +1,6 @@
 <?php
 
-use app\components\PageWidget;
+use backend\components\PageWidget;
 ?>
 <div class="form-wrapper">
     <div class="form-item">
@@ -10,7 +10,7 @@ use app\components\PageWidget;
             <input type="hidden" name="search" value="1">
             <div class="form-group">
                 <label class="control-label">用户组：</label>
-                <input placeholder="文本" class="form-control" name="name" id="name" value="<?=Yii::$app->request->get('name')?>" type="text">
+                <input placeholder="文本" class="form-control" name="username" id="username" value="<?=Yii::$app->request->get('username')?>" type="text">
             </div>
             <div class="form-group">
                 <label class="control-label">所属平台：</label>

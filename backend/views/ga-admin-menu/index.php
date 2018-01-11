@@ -50,7 +50,7 @@
 <script src="/static/js/ztree/js/jquery.ztree.core.js"></script>
 <script src="/static/js/ztree/js/jquery.ztree.excheck.js"></script>
 <script src="/static/js/ztree/js/jquery.ztree.exedit.js"></script>
-<script src="/static/js/logic/gaadminmenu/tree.js"></script>
+<script src="/static/js/logic/ga-admin-menu/tree.js"></script>
 </body>
 </html>
 

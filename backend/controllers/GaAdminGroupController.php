@@ -49,7 +49,6 @@ class GaAdminGroupController extends BaseController
             if($name){
                 $where['name'] = $name;
             }
-
         }
         return $where;
     }
@@ -156,7 +155,6 @@ class GaAdminGroupController extends BaseController
      * 编辑用户权限
      */
     public function actionEditPermission(){
-
 
         if(Yii::$app->request->isPost){
             $id = Yii::$app->request->post('id');

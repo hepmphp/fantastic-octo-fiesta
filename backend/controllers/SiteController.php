@@ -2,6 +2,8 @@
 namespace backend\controllers;
 
 use Yii;
+use app\models\GaAdminMenu;
+use app\models\GaAdminUser;
 use yii\db\Query;
 use backend\controllers\BaseController;
 use yii\filters\VerbFilter;
@@ -15,50 +17,8 @@ use common\models\LoginForm;
 class SiteController extends BaseController
 {
 
-    public function __construct(){
-        parent::init();
-    }
+    public $layout = false;
 
-    /**
-     * @inheritdoc
-     */
-    public function behaviors()
-    {
-        return [
-            'access' => [
-                'class' => AccessControl::className(),
-                'rules' => [
-                    [
-                        'actions' => ['login', 'error','test'],
-                        'allow' => true,
-                    ],
-                    [
-                        'actions' => ['logout', 'index'],
-                        'allow' => true,
-                        'roles' => ['@'],
-                    ],
-                ],
-            ],
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'logout' => ['post'],
-                ],
-            ],
-        ];
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function actions()
-    {
-        return [
-            'error' => [
-                'class' => 'yii\web\ErrorAction',
-            ],
-        ];
-    }
 
     /**
      * Displays homepage.
@@ -67,8 +27,7 @@ class SiteController extends BaseController
      */
     public function actionIndex()
     {
-
-        return $this->render('index');
+        return $this->renderPartial('login');
     }
 
     /**
@@ -76,21 +35,36 @@ class SiteController extends BaseController
      *
      * @return string
      */
-    public function actionLogin()
+    public function actionAjaxLogin()
     {
+        if(Yii::$app->request->isPost){
+            $username = Yii::$app->request->post('username');
+            $password = Yii::$app->request->post('password');
+            //验证
 
-        if (!Yii::$app->user->isGuest) {
-            return $this->goHome();
+
+            $model = new GaAdminUser();
+            $admin_user = $model->login($username,$password);
+            if($admin_user){
+                $where_admin_menu['id'] = explode(',',$admin_user['mids']);
+                $where_admin_menu['level'] = 0;
+                $where_admin_menu['action'] = 'index';
+                $menu  = GaAdminMenu::find()->where($where_admin_menu)->orderBy(['listorder'=>SORT_ASC])->asArray()->limit(1)->one();
+                $response = array(
+                    'status'=>0,
+                    'msg'=>Yii::t('app','login_success'),
+                    'data'=>array('url'=>"?r={$menu['model']}/{$menu['action']}"),
+                );
+            }else{
+                $response = array(
+                    'status'=>-1,
+                    'msg'=>Yii::t('app','login_fail'),
+                    'data'=>array()
+                );
+            }
+            return $this->asJson($response);
         }
 
-        $model = new LoginForm();
-        if ($model->load(Yii::$app->request->post()) && $model->login()) {
-            return $this->goBack();
-        } else {
-            return $this->render('login', [
-                'model' => $model,
-            ]);
-        }
     }
 
     /**
@@ -100,9 +74,8 @@ class SiteController extends BaseController
      */
     public function actionLogout()
     {
-        Yii::$app->user->logout();
-
-        return $this->goHome();
+        Yii::$app->session->destroy();
+        return Yii::$app->getResponse()->redirect('?r=site/index');
     }
 
     /***

@@ -124,6 +124,20 @@ function ajax_post(url,param){
                 layer.closeAll('loading');
                 alert_fail(data.msg);
             }
+        },
+        error: function(XMLHttpRequest, textStatus, errorThrown) {
+           // console.log(XMLHttpRequest.status);
+          //  console.log(XMLHttpRequest.readyState);
+          //  console.log(textStatus);
+           // console.log(errorThrown);
+            var result = jQuery.parseJSON(XMLHttpRequest.responseText);
+            console.log(result);
+            layer.closeAll('loading');
+            alert_fail(result.msg);
+        },
+        complete: function(XMLHttpRequest, textStatus) {
+           // console.log(textStatus);
+            //this; // 调用本次AJAX请求时传递的options参数
         }
     });
 }
@@ -193,3 +207,53 @@ $(function () { $(".popover-options a").popover({
 });});*/
 
 
+/**
+ * 修改密码开始
+ */
+$('#edit_password').click(function(){
+    edit();
+});
+
+function edit() {
+    var url = "?r=ga-admin-user/edit-password";
+    user_form(url,2);
+}
+//添加模板
+function user_form(url,action){
+    var content = url;
+    var title = action==2?'修改':'添加';
+    var btn =  action==2?['确认修改','取消']:['确认添加','取消'];
+    layer.open({
+        type: 2, //iframe
+        area: ['500px', '340px'],
+        title: title,
+        btn: btn,
+        shade: 0.3, //遮罩透明度
+        content:content,
+        yes: function(index, layero){
+            var body = layer.getChildFrame('body', index);
+            var param ={
+                id:body.find('#id').val(),
+                password:body.find('#password').val(),
+                repassword:body.find('#repassword').val()
+            };
+
+            if(param.password != param.repassword){
+                alert_fail('两次输入密码不一致');
+                return false;
+            }
+            var url = "?r=ga-admin-user/edit-password";
+            if(param.id){
+                var url = "?r=ga-admin-user/edit-password";
+            }
+            ajax_post(url,param);
+
+        },btn2: function(index, layero){
+
+        }
+        // content:"{:U('Serverpolicy/add')}" //iframe的url
+    });
+}
+/**
+ * 修改密码结束
+ */

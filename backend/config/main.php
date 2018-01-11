@@ -11,7 +11,11 @@ return [
     'basePath' => dirname(__DIR__),
     'controllerNamespace' => 'backend\controllers',
     'bootstrap' => ['log'],
-    'modules' => [],
+    'modules' => [
+        'api' => [
+            'class' => 'backend\modules\api\Api',//验证码api模块
+        ],
+     ],
     'components' => [
         'request' => [
             'csrfParam' => '_csrf-backend',
@@ -36,9 +40,7 @@ return [
                 ],
             ],
         ],
-        'errorHandler' => [
-            'errorAction' => 'site/error',
-        ],
+
         //路由配置
         'urlManager' => [
             'enablePrettyUrl' => false,//路由的路径化 去掉 ?r=
@@ -49,6 +51,48 @@ return [
                 'company/<id:\d+>.html'=>'company/list',
             ],
         ],
+
+        'db' => [
+            'class' => 'yii\db\Connection',
+            'dsn' => 'mysql:host=localhost;dbname=game_admin_t',
+            'username' => 'root',
+            'password' => '',
+            'charset' => 'utf8',
+        ],
+        'db_operation'=>[
+            'class' => 'yii\db\Connection',
+            'dsn' => 'mysql:host=localhost;dbname=game_operate',
+            'username' => 'root',
+            'password' => '',
+            'charset' => 'utf8',
+        ],
+        'mailer' => [
+            'class' => 'yii\swiftmailer\Mailer',
+            'viewPath' => '@common/mail',
+            // send all mails to a file by default. You have to set
+            // 'useFileTransport' to false and configure a transport
+            // for the mailer to send real emails.
+            'useFileTransport' => true,
+        ],
+
+        //多语言
+        'i18n' => [
+            'translations' => [
+                'app' => [
+                    'class' => 'yii\i18n\PhpMessageSource',
+                    'basePath' => '@common/messages',
+                    //'sourceLanguage' => 'zh-CN',
+                    'fileMap' => [
+                        'app' => 'app.php',
+                        'app/error' => 'error.php',
+                    ],
+                ],
+            ],
+        ],
+        'errorHandler' => [
+            //'class'=>'backend\components\exception\ErrorHandler'
+        ]
+
         /*
         'urlManager' => [
             'enablePrettyUrl' => true,

@@ -17,48 +17,29 @@ var urls = {
 };
 
 function del(id) {
-    if(confirm("确定要锁定？")){
-        var index = layer.load(2);
-        $.ajax({
-            type:"POST",
-            url: urls.account_create,
-            data:  "ids="+id,
-            timeout:"4000",
-            dataType:'json',
-            async: false,
-            success: function(data){
-                if (data.status == 0) {
-                    layer.close(index);
-                    alert_success(data.msg);
-                } else {
-                    alert_fail(data.msg);
-                }
-            }
-        });
-    };
+    layer.confirm('确定要锁定?',{
+        btn: ['确定','取消'], //按钮
+        icon: 3,
+        title:'提示'
+    }, function(){
+            ajax_post(urls.account_delete,{ids:id})
+        },
+        function(){
+
+        }
+    );
 }
 
 function un_del(id) {
-    if(confirm("确认解除锁定")){
-        var index = layer.load(2);
-        $.ajax({
-            type:"POST",
-            url: urls.account_delete,
-            data:{ids:id,status:0},
-            timeout:"4000",
-            dataType:'json',
-            async: false,
-            success: function(data){
-                if (data.status == 0) {
-                    layer.close(index);
-                    alert_success(data.msg);
-                } else {
-                    alert_fail(data.msg);
-                }
-            }
-        });
-    };
+    layer.confirm('确定解除锁定?',{
+        btn:['确定','取消'],
+        icon:3,
+        title:"提示"
+    },function(){
+        ajax_post(urls.account_delete,{ids:id,status:0});
+    },function(){});
 }
+
 $('.change_group_id').change(function(){
     var param = {
         id:$(this).attr('data-id'),
@@ -213,9 +194,11 @@ function user_form(url,action){
                 alert_fail('两次输入密码不一致');
                 return false;
             }
-            var url = urls.account_create
-            if(param.id){
+
+            if(param.GaAdminUser.id){
                 var url = urls.account_update+'&id='+param.GaAdminUser.id;
+            }else{
+                var url = urls.account_create
             }
             layer.load(2);
             ajax_post(url,param);

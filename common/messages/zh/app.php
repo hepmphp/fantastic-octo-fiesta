@@ -14,11 +14,15 @@ return [
     'logic_error'   => '逻辑验证错误',
     'create_success'=> '添加成功',
     'create_fail'   => '添加失败',
-    'update_success'=> '更新成功',
-    'update_fail'   => '更新失败',
-    'delete_success'=> '删除成功',
-    'delete_fail'   => '删除失败',
+    'update_success'=> '操作成功',
+    'update_fail'   => '操作失败',
+    'delete_success'=> '操作成功',
+    'delete_fail'   => '操作失败',
     'get_data_fail' => '获取数据失败',
     'permission_success'=>'权限设置成功',
-    'permission_fail'=>'权限设置失败'
+    'permission_fail'=>'权限设置失败',
+    'login_success'=>'登录成功',
+    'login_fail'=>'登录失败',
+    'user_has_no_permission'=>'没有权限操作',
+
 ];

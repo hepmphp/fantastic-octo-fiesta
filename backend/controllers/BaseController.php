@@ -9,6 +9,7 @@
 
 namespace backend\controllers;
 use Yii;
+use app\models\GaAdminMenu;
 use yii\web\Controller;
 
 
@@ -21,10 +22,13 @@ class BaseController extends Controller{
      */
     public $layout = 'main_admin.php';
 
+    public $current_menu = null;
+
+
     public $model = '';//通用的操作模型
     public function beforeAction($action){
         if(parent::beforeAction($action)){
-            if(in_array($action->id,['create','update','delete'])){
+            if(in_array($action->id,['create','update','delete','edit-password'])){
                 $this->layout = 'main_curd.php';//使用curd布局
             }
             if($this->layout && Yii::$app->request->get('iframe')==1){
@@ -37,10 +41,111 @@ class BaseController extends Controller{
         }
     }
 
+    public function afterAction($action,$result){
+            //登录信息和权限检测
+//        var_dump(Yii::$app->controller->module->id);
+//        var_dump(Yii::$app->controller->id);
+//        var_dump(Yii::$app->controller->action->id);
+        $this->check();
+        return parent::afterAction($action,$result);
+    }
+
+
+    /**
+     *账号信息和权限检测
+     */
+    public function check(){
+        $this->ip_check();
+        header("Content-type:text/html;charset=utf-8");
+        if(Yii::$app->controller->id !='site'&&empty(Yii::$app->session['admin_user.id'])){
+            //跳转
+            exit('长时间没操作,请重新登录');
+           // $this->error('长时间没操作,请重新登录',U('index/login'),5000);
+        }elseif(Yii::$app->controller->id !='site'){//检测账号是否过期
+            if(
+                (Yii::$app->session['admin_user.allow_mutil_login']===0) AND
+                !empty(Yii::$app->session['admin_user.last_session_id']) AND
+                (Yii::$app->session['admin_user.last_session_id']!=session_id())
+            ){//用户组做登录限制
+                Yii::$app->session->destroy();
+                exit('你的账户在其它地方登录,请重新登录');
+                //跳转
+            }
+        }
+        if(Yii::$app->request->get('iframe')==1){
+            $this->checkAccess();
+        }
+        /*
+        $this->admin_menu = D('AdminUser')->getUserMenu($this->admin_user['id']);
+        $top_menu = M('admin_menu')->where(array('parentid'=>0,'status'=>0))->order('listorder asc')->select();
+        $tree_menu = D('AdminMenu')->get_menu_tree();
+        $left_menu = M('admin_menu')->where(array('data'=>$this->current_menu['data'],'level'=>1))->order('listorder asc')->select();
+        $this->assign('admin_menu',$this->admin_menu);
+
+
+        $this->assign('method',$this->method);
+        $this->assign('action',$this->action);
+        $this->assign('index_menu',$this->index_menu);
+        $this->assign('current_menu',$this->current_menu);
+        $this->assign('top_menu',$top_menu);
+        $this->assign('tree_menu',$tree_menu);
+        $this->assign('left_menu',$left_menu);*/
+
+    }
+
+    /**
+     * 菜单权限检测
+     * @param bool $read_only
+     * @return bool
+     */
+    public function checkAccess($read_only=false){
+        if(Yii::$app->controller->id=='site'){
+            return true;
+        }
+
+        $where_menu = array(
+            'model'=>Yii::$app->controller->id,
+            'action'=>Yii::$app->controller->action->id,
+         //   ['<>','level',0]
+        );
+        $current_menu = GaAdminMenu::find()->where($where_menu)->limit(1)->asArray()->one();
+        if(!in_array($current_menu['id'],Yii::$app->session['admin_user.mids']) && Yii::$app->controller->action->id != 'get_search_where'){//搜索条件拼接不做权限检测
+            if(Yii::$app->request->isPost){
+                $response = array(
+                    'status'=>-1,
+                    'msg'=>Yii::t('app','user_has_no_permission'),
+                    'data'=>array(
+                        'method'=>Yii::$app->controller->id,
+                        'action'=>Yii::$app->controller->action->id,
+                        'current_id'=>$current_menu['id'],
+                        'mids'=>Yii::$app->session['admin_user.mids'],
+                    ),
+                );
+                $this->asJson($response);
+                return false;
+            }else{
+                $this->error('没有权限操作','',1000);
+            }
+        }else{
+            return true;
+        }
+    }
+
     public function init(){//公用方法初始化
         //根据url参数设置layout
 
 
+    }
+
+    /**
+     * ip检测
+     */
+    public function ip_check() {
+        if(isset($_SERVER['SERVER_ADDR']) && $_SERVER['SERVER_ADDR']!='192.168.71.21'){//本地测试机
+            if (!in_array(Yii::$app->request->getUserIP(),array())) {//ip 白名单 抽离到配置中
+                //exit('deny ....');
+            }
+        }
     }
 
     /***
@@ -104,7 +209,7 @@ class BaseController extends Controller{
         }else{
             $response = array(
                 'status'=>-2,
-                'msg'=>$model->firstErrors,
+                'msg'=>implode("<br/>",$model->firstErrors),
                 'data'=>$model->errors,
             );
         }
@@ -120,7 +225,7 @@ class BaseController extends Controller{
             'msg'=>Yii::t('app','delete_fail'),
             'data'=>'',
         );
-        $ids = Yii::$app->request->get('ids');
+        $ids = Yii::$app->request->post('ids');
         $ids_arr = explode(',',$ids);
         $ids_arr = array_map('intval',$ids_arr);
         if(empty($ids_arr)){
@@ -144,140 +249,28 @@ class BaseController extends Controller{
             'msg'=>Yii::t('app','delete_fail'),
             'data'=>'',
         );
-        $ids = Yii::$app->request->get('ids');
+        $status = Yii::$app->request->post('status','1');
+        $ids = Yii::$app->request->post('ids');
         $ids_arr = explode(',',$ids);
         $ids_arr = array_map('intval',$ids_arr);
-        if(empty($ids_arr)){
-            $res = $this->model->updateAll(['status'=>-1],$ids_arr);
+        if(!empty($ids_arr)){
+            $res = $this->model->updateAll(['status'=>$status],['id'=>$ids_arr]);
             if($res){
+             //   $m = clone $this->model;
                 $response =array(
                     'status'=>0,
                     'msg'=>Yii::t('app','delete_success'),
-                    'data'=>'',
+                    'data'=>array() //$m->find()->createCommand()->getRawSql(),
                 );
             }
         }
+
         $this->asJson($response);
     }
 
-    public $admin_user = null;
-    public $admin_access = null;
-    public $admin_menu = array();
-    public $method;
-    public $action;
-    public $current_menu;
-    public $index_menu;
-    public  $IP_Address_list = array('61.160.237.27', '118.184.179.244', '27.154.242.246', '124.192.162.58','122.195.72.27');
-    //登陆初始页
-    public function ip_check() {
-        if(isset($_SERVER['SERVER_ADDR']) && $_SERVER['SERVER_ADDR']!='192.168.71.21'){//本地测试机
-
-            if (!in_array(get_client_ip(), $this->IP_Address_list)) {
-                //exit('deny ....');
-            }
-        }
-    }
-
-    public function _initialize(){
-        $this->ip_check();
-        header("Content-type:text/html;charset=utf-8");
-        $this->admin_user = session('admin_user');
-        $this->initConfig();
-        if(MODULE_NAME !='Index'&&empty($this->admin_user)){
-            $this->error('长时间没操作,请重新登录',U('index/login'),5000);
-        }elseif(MODULE_NAME !='Index'){
-            $db_admin_user = D('AdminUser')->where(array('id'=>$this->admin_user['id']))->find();
-            $admin_group = D('admin_group')->where(array('id'=>$db_admin_user['group_id']))->find();
-            if($admin_group['is_login_limit']===1){//用户组做登录限制
-                if(!empty($db_admin_user['last_session_id']) && ($db_admin_user['last_session_id']!=session_id())){
-                    D('AdminUser')->delete_session(session_id());
-                    session('admin_user',null);
-                    $this->error('你的账户在其它地方登录,请重新登录',U('Index/login'),5000);
-                }
-            }
-        }
-        list($this->admin_access,$read_only_config) = D('AdminUser')->getUserPermission($this->admin_user['id']);
-        $this->admin_access = explode(',',$this->admin_access);
-        $this->admin_menu = D('AdminUser')->getUserMenu($this->admin_user['id']);
-
-        $this->checkAccess($this->admin_access);
-
-        $top_menu = M('admin_menu')->where(array('parentid'=>0,'status'=>0))->order('listorder asc')->select();
-        $tree_menu = D('AdminMenu')->get_menu_tree();
-        $left_menu = M('admin_menu')->where(array('data'=>$this->current_menu['data'],'level'=>1))->order('listorder asc')->select();
-        //  echo M('admin_menu')->getLastSql();
-        $this->assign('admin_user',$this->admin_user);
-        $this->assign('admin_menu',$this->admin_menu);
-        $this->assign('admin_access',$this->admin_access);
-
-        /*控制器 方法*/
-        $this->assign('method',$this->method);
-        $this->assign('action',$this->action);
-        $this->assign('index_menu',$this->index_menu);
-        $this->assign('current_menu',$this->current_menu);
-        $this->assign('top_menu',$top_menu);
-        $this->assign('tree_menu',$tree_menu);
-        $this->assign('left_menu',$left_menu);
-
-    }
-
-    public function initConfig(){
-        if(isset($_SERVER['SERVER_ADDR']) && $_SERVER['SERVER_ADDR']=='192.168.71.21'){//本地测试机
-            $Config['siteurl'] = "http://game-admin.local";//http://game_admin.local
-            $Config['sitefileurl'] = "http://192.168.71.21:8000";
-            $Config['uploadfileurl'] = "http://192.168.71.21:8000";
-
-        }
-        else {
-            // $Config['siteurl'] = "http://newadmin.bajian.wan.sogou.com";
-            $Config['siteurl'] = "http://admin.bajian.wan.sogou.com";
-            $Config['sitefileurl'] = "http://www.menle.com";
-            $Config['uploadfileurl'] = "http://www.menle.com";
-        }
-        $this->assign('Config',$Config);
-    }
-
-    public function checkAccess($access,$read_only=false){
-
-        $this->method = strtolower(MODULE_NAME);
-        $this->action = strtolower(ACTION_NAME);
-        if($this->method=='index'){
-            return true;
-        }
-        //查找对应的菜单
-        $this->current_menu = D('AdminMenu')->where(array('model'=>$this->method,'action'=>$this->action,'level'=>array('neq',0)))->find();
-        // var_dump($current_menu,$this->method,$this->action);
-
-        if(in_array($this->method,array('singleserversum','datadailysummary','operationplayer','monitor','servermanage','developer'))&& $this->action=='index' && !isset($_GET['iframe'])){
-            return true;
-        }
-
-        if(!in_array($this->current_menu['id'],$access) && $this->action!='get_search_where'){
-
-            if(IS_AJAX){
-                $response = array(
-                    'status'=>-1,
-                    'msg'=>'没有权限操作',
-                    'data'=>array(
-                        'method'=>$this->method,
-                        'action'=>$this->action,
-                        'current_id'=>$this->current_menu['id'],
-                        'access'=>$access,
-                    ),
-                );
-                $this->ajaxReturn($response);
-                exit();
-            }else{
-                $this->error('没有权限操作','',1000);
-            }
 
 
 
-        }
-
-
-
-    }
     /**
      * 获取操作日志类型
      */
@@ -298,7 +291,7 @@ class BaseController extends Controller{
     }
 
     public function adminLog($user_id,$username,$info=''){
-        if($this->isPost ()){
+        if(Yii::$app->request->isPost){
             $data = array(
                 'user_id'=>$user_id,
                 'username'=>$username,
@@ -318,10 +311,4 @@ class BaseController extends Controller{
         }
     }
 
-    public function ajaxReturn($response,$info=''){
-        if(!empty($info)){
-            $this->adminLog($this->admin_user['id'],$this->admin_user['username'],$info);
-        }
-        parent::ajaxReturn($response);
-    }
 }

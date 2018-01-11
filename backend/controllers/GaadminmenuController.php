@@ -18,7 +18,7 @@ use backend\controllers\BaseController;
 use yii\data\Pagination;
 use backend\services\helpers\Log;
 
-class GaadminmenuController extends BaseController{
+class GaAdminMenuController extends BaseController{
 
     public function init(){
         //parent::init();

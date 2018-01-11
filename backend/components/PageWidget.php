@@ -7,7 +7,7 @@
  * To change this template use File | Settings | File Templates.
  */
 
-namespace app\components;
+namespace backend\components;
 use yii\base\Widget;
 use yii\helpers\Html;
 
