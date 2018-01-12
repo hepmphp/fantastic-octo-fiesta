@@ -29,6 +29,7 @@ function group_form(url,action){
         yes: function(index, layero){
             var body = layer.getChildFrame('body', index);
             var param ={
+                id:body.find('#id').val(),
                 GaAdminGroup:{
                     id:body.find('#id').val(),
                     name:body.find('#name').val(),

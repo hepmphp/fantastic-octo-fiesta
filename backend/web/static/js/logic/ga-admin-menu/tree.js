@@ -83,6 +83,7 @@ function admin_menu_form(url,action){
         yes: function(index, layero){
             var body = layer.getChildFrame('body', index);
             var param ={
+                id:body.find('#id').val(),
                 GaAdminMenu:{
                     id:body.find('#id').val(),
                     parentid:body.find('#parentid').val(),

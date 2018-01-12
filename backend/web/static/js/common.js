@@ -126,10 +126,11 @@ function ajax_post(url,param){
             }
         },
         error: function(XMLHttpRequest, textStatus, errorThrown) {
-           // console.log(XMLHttpRequest.status);
-          //  console.log(XMLHttpRequest.readyState);
-          //  console.log(textStatus);
-           // console.log(errorThrown);
+           console.log(XMLHttpRequest.status);
+            console.log(XMLHttpRequest.readyState);
+            console.log(textStatus);
+           console.log(errorThrown);
+            console.log(XMLHttpRequest.responseText);
             var result = jQuery.parseJSON(XMLHttpRequest.responseText);
             console.log(result);
             layer.closeAll('loading');

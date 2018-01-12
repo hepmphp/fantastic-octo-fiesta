@@ -11,6 +11,7 @@ namespace backend\controllers;
 use Yii;
 use app\models\GaAdminMenu;
 use yii\web\Controller;
+use backend\components\exception\LogicException;
 
 
 class BaseController extends Controller{
@@ -57,11 +58,12 @@ class BaseController extends Controller{
     public function check(){
         $this->ip_check();
         header("Content-type:text/html;charset=utf-8");
+
         if(Yii::$app->controller->id !='site'&&empty(Yii::$app->session['admin_user.id'])){
             //跳转
             exit('长时间没操作,请重新登录');
            // $this->error('长时间没操作,请重新登录',U('index/login'),5000);
-        }elseif(Yii::$app->controller->id !='site'){//检测账号是否过期
+        }else if(Yii::$app->controller->id !='site'){//检测账号是否过期
             if(
                 (Yii::$app->session['admin_user.allow_mutil_login']===0) AND
                 !empty(Yii::$app->session['admin_user.last_session_id']) AND
@@ -75,17 +77,31 @@ class BaseController extends Controller{
         if(Yii::$app->request->get('iframe')==1){
             $this->checkAccess();
         }
+        //Yii::$app->view->
+        $top_menu = GaAdminMenu::find()->where(['parentid'=>0,'status'=>0])->orderBy(['listorder'=>SORT_ASC])->asArray()->all();
+
+        $where_left_menu = array(
+            'parentid'=>$this->current_menu['parentid'],
+            'level'=>1,
+        );
+        $left_menu = GaAdminMenu::find()->where($where_left_menu)->orderBy(['listorder'=>SORT_ASC])->asArray()->all();
+        $menu = array(
+            'top_menu'=>$top_menu,
+            'left_menu'=>$left_menu
+        );
+        Yii::$app->cache->set('menu',$menu);
+        Yii::$app->cache->set('current_top_menu_id',$this->current_menu['top_menu_id']);//当前菜单id
+
+      //  Yii::$app->cache->get('current_top_menu_id');
+
+
+      //  echo "<pre>";
+      //  print_r(Yii::$app->view->params['menu']);
         /*
-        $this->admin_menu = D('AdminUser')->getUserMenu($this->admin_user['id']);
-        $top_menu = M('admin_menu')->where(array('parentid'=>0,'status'=>0))->order('listorder asc')->select();
-        $tree_menu = D('AdminMenu')->get_menu_tree();
-        $left_menu = M('admin_menu')->where(array('data'=>$this->current_menu['data'],'level'=>1))->order('listorder asc')->select();
         $this->assign('admin_menu',$this->admin_menu);
-
-
         $this->assign('method',$this->method);
         $this->assign('action',$this->action);
-        $this->assign('index_menu',$this->index_menu);
+
         $this->assign('current_menu',$this->current_menu);
         $this->assign('top_menu',$top_menu);
         $this->assign('tree_menu',$tree_menu);
@@ -106,12 +122,13 @@ class BaseController extends Controller{
         $where_menu = array(
             'model'=>Yii::$app->controller->id,
             'action'=>Yii::$app->controller->action->id,
-         //   ['<>','level',0]
         );
-        $current_menu = GaAdminMenu::find()->where($where_menu)->limit(1)->asArray()->one();
-        if(!in_array($current_menu['id'],Yii::$app->session['admin_user.mids']) && Yii::$app->controller->action->id != 'get_search_where'){//搜索条件拼接不做权限检测
-            if(Yii::$app->request->isPost){
-                $response = array(
+        $this->current_menu = GaAdminMenu::find()->where($where_menu)->andWhere(['<>','level',0])->limit(1)->asArray()->one();
+//        echo "<pre>";
+//        print_r($current_menu);
+        if(!in_array($this->current_menu['id'],Yii::$app->session['admin_user.mids']) && Yii::$app->controller->action->id != 'get_search_where'){//搜索条件拼接不做权限检测
+               /*
+               $response = array(
                     'status'=>-1,
                     'msg'=>Yii::t('app','user_has_no_permission'),
                     'data'=>array(
@@ -120,12 +137,8 @@ class BaseController extends Controller{
                         'current_id'=>$current_menu['id'],
                         'mids'=>Yii::$app->session['admin_user.mids'],
                     ),
-                );
-                $this->asJson($response);
-                return false;
-            }else{
-                $this->error('没有权限操作','',1000);
-            }
+                );*/
+                throw new LogicException(-1,Yii::t('app','user_has_no_permission'));
         }else{
             return true;
         }

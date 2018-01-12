@@ -17,6 +17,7 @@ use app\models\GaAdminUser;
 use backend\controllers\BaseController;
 use yii\data\Pagination;
 use backend\services\helpers\Log;
+use backend\components\exception\LogicException;
 
 class GaAdminMenuController extends BaseController{
 
@@ -70,12 +71,7 @@ class GaAdminMenuController extends BaseController{
      */
     public function actionCreate(){
         if(Yii::$app->request->isPost){//Yii::$app->request->isPost
-            $admin_menu = GaAdminUser::findOne(['id'=>Yii::$app->request->post('parentid')]);
-            if(isset($admin_menu['level'])){
-                $_POST['level'] = $admin_menu['level']+1;
-            }else{
-                $_POST['level'] = 0;
-            }
+
             $model = new GaAdminMenu();
             $model->load(Yii::$app->request->post());
             if($model->validate()){
@@ -122,20 +118,13 @@ class GaAdminMenuController extends BaseController{
 
         if(Yii::$app->request->isPost){//Yii::$app->request->isPost
             $model = $this->findModel(Yii::$app->request->post('id'));
-            $admin_menu = GaAdminUser::findOne(['id'=>Yii::$app->request->post('parentid')]);
-            if(isset($admin_menu['level'])){
-                $_POST['level'] = $admin_menu['level']+1;
-            }else{
-                $_POST['level'] = 0;
-            }
-
             $model->load(Yii::$app->request->post());
             if($model->validate()){
                 $res = $model->save();
                 if ($res) {
                     $response = array(
                         'status'=>0,
-                        'msg'=>Yii::t('app','create_success'),
+                        'msg'=>Yii::t('app','update_success'),
                         'data'=>array(),
                     );
                 }else{
@@ -196,7 +185,7 @@ class GaAdminMenuController extends BaseController{
         if (($model = GaAdminMenu::findOne($id)) !== null) {
             return $model;
         } else {
-            throw new NotFoundHttpException('The requested page does not exist.');
+            throw new LogicException(LogicException::DATA_NOT_FUND);
         }
     }
 

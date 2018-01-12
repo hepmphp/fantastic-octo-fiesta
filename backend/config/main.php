@@ -90,7 +90,7 @@ return [
             ],
         ],
         'errorHandler' => [
-            //'class'=>'backend\components\exception\ErrorHandler'
+            'class'=>'backend\components\exception\ErrorHandler'
         ]
 
         /*

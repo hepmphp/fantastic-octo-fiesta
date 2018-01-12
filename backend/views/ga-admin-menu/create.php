@@ -1,5 +1,6 @@
 <div class="container col-sm-12">
 <form class="form-horizontal">
+        <input type="hidden" id="id" value="<?=$form['id']?>">
         <!-- Select Basic -->
         <div class="form-group inline-block">
             <label class="col-md-2 control-label" for="parentid">上级</label>

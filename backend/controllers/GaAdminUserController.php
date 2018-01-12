@@ -95,12 +95,16 @@ class GaAdminUserController extends BaseController
             print_r($data);
             print_r($page);
         }
+
+
+
         return $this->render('index', [
             'page' => $page,
             'data'=>$data,
             'config_status'=>$this->model->get_config_status(),
             'config_group_id'=>(new GaAdminGroup)->get_config_group_id(),
-            'config_platform_id'=>(new GaPlatform)->get_config_plat_id()
+            'config_platform_id'=>(new GaPlatform)->get_config_plat_id(),
+
         ]);
     }
 

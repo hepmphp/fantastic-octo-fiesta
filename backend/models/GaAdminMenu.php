@@ -4,6 +4,7 @@ namespace app\models;
 
 use Yii;
 use backend\services\helpers\Tree;
+use backend\services\helpers\Log;
 
 /**
  * This is the model class for table "{{%ga_admin_menu}}".
@@ -35,7 +36,8 @@ class GaAdminMenu extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['parentid', 'status', 'listorder', 'level'], 'integer'],
+            [['parentid', 'status', 'listorder','level','top_menu_id'], 'integer'],
+
             [['model', 'action', 'remark'], 'string', 'max' => 255],
             [['data', 'name'], 'string', 'max' => 50],
         ];
@@ -59,6 +61,48 @@ class GaAdminMenu extends \yii\db\ActiveRecord
             'level' => Yii::t('app', '菜单级别 0 1 2 3 4 依次递增'),
         ];
     }
+    /***
+     * 保存数据库之前的处理
+     * @param bool $insert
+     * @return bool
+     */
+    public function beforeSave($insert){
+        if(parent::beforeSave($insert)){
+            if($this->isNewRecord){
+                $admin_menu = GaAdminMenu::findOne(['id'=>$this->parentid]);
+                if(isset($admin_menu['level']) && is_numeric($admin_menu['level'])){
+                    $this->level = $admin_menu['level']+1;
+                }else{
+                    $this->level = 0;
+                }
+            }
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    /***
+     * 保存
+     * @param bool $insert
+     * @param array $changedAttributes
+     */
+    public function afterSave($insert,$changedAttributes){
+        parent::afterSave($insert,$changedAttributes);
+        //修改top_menu_id
+        if($insert){
+           // Log::write(var_export($this->attributes,true),'common');
+            if($this->level==0){
+                $this->top_menu_id = $this->id;
+            }else{
+                //查找父类的顶层id
+                $parent_menu = GaAdminMenu::findOne(['id'=>$this->parentid]);
+                $this->top_menu_id = $parent_menu['top_menu_id'];
+            }
+            $this->save(false,['top_menu_id']);
+        }
+    }
+
     /***
      * 获取菜单状态
      * @return array

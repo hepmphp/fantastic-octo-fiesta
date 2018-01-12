@@ -88,10 +88,10 @@ $('.passw').on('blur', function(){
         });
     }
 });
+
 function edit_permission(id){
     var url = urls.account_permission+"&id="+id;
     permission_form(url,1);
-
 }
 //权限设置窗口
 function permission_form(url,action){
@@ -144,7 +144,6 @@ function permission_form(url,action){
     });
 }
 
-
 /***
  * 添加账号
  */
@@ -175,6 +174,7 @@ function user_form(url,action){
         yes: function(index, layero){
             var body = layer.getChildFrame('body', index);
             var param ={
+                id:body.find('#id').val(),
                 GaAdminUser:{
                     id:body.find('#id').val(),
                     username:body.find('#username').val(),
