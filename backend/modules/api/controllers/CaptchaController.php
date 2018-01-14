@@ -3,6 +3,8 @@
 namespace backend\modules\api\controllers;
 
 use yii\web\Controller;
+use Gregwar\Captcha\CaptchaBuilder;
+use Yii;
 
 /**
  * Default controller for the `api` module
@@ -10,22 +12,21 @@ use yii\web\Controller;
 class CaptchaController extends Controller
 {
     public $layout = false;
-    public function actions(){
-        return [
-            'captchatest' => [
-                'class' => 'yii\captcha\CaptchaAction',
-                'maxLength' => 4, //生成的验证码最大长度
-                'minLength' => 4  //生成的验证码最短长度
-            ]
-        ];
-    }
+
     /**
      * Renders the index view for the module
      * @return string
      */
     public function actionIndex()
     {
-        return $this->render('index');
+        $builder = new CaptchaBuilder;
+        $builder->build();
+        $sesson = Yii::$app->session;
+        $sesson['phrase'] = $builder->getPhrase();
+        header('Content-type: image/jpeg');
+        $builder->output();
+
+        //return $this->render('index');
     }
 
 

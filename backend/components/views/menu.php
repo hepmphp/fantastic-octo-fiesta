@@ -25,7 +25,7 @@
     </div>
 
     <div class="nav-right">
-        Hi! <span class="user-item">admin<i class="fa fa-angle-down" aria-hidden="true"></i>
+        Hi! <span class="user-item"><?=Yii::$app->session['admin_user.username']?><i class="fa fa-angle-down" aria-hidden="true"></i>
 	<span class="user-con">
 		<a href="javasript:void(0)" class="a1" id="edit_password">账号修改</a>
 		<a href="?r=site/logout" class="a2">安全退出</a>

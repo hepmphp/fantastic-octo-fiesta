@@ -27,7 +27,17 @@ class SiteController extends BaseController
      */
     public function actionIndex()
     {
-        return $this->renderPartial('login');
+        if(Yii::$app->session['admin_user.id']){
+
+            $where_admin_menu['id'] = Yii::$app->session['admin_user.mids'];
+            $where_admin_menu['level'] = 0;
+            $where_admin_menu['action'] = 'index';
+            $menu  = GaAdminMenu::find()->where($where_admin_menu)->orderBy(['listorder'=>SORT_ASC])->asArray()->limit(1)->one();
+            Yii::$app->getResponse()->redirect("?r={$menu['model']}/{$menu['action']}");
+        }else{
+            return $this->renderPartial('login');
+        }
+
     }
 
     /**
@@ -41,7 +51,16 @@ class SiteController extends BaseController
             $username = Yii::$app->request->post('username');
             $password = Yii::$app->request->post('password');
             //验证
+            $verify_code = Yii::$app->request->post('verify_code');
 
+            if( Yii::$app->session['phrase'] != strtolower($verify_code)){
+                $response = array(
+                    'status'=>-2,
+                    'msg'=>Yii::t('app','verify_code_fail'),
+                    'data'=>array()
+                );
+                return $this->asJson($response);
+            }
 
             $model = new GaAdminUser();
             $admin_user = $model->login($username,$password);

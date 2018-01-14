@@ -24,5 +24,6 @@ return [
     'login_success'=>'登录成功',
     'login_fail'=>'登录失败',
     'user_has_no_permission'=>'没有权限操作',
+    'verify_code_fail'=>'验证码错误',
 
 ];

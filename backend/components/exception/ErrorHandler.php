@@ -23,7 +23,11 @@ class ErrorHandler extends \yii\base\ErrorHandler{
             echo( json_encode( array('status' =>$exception->getCode(),'msg'  =>$exception->getMessage())));
             return false;
         }else{
-            echo  Yii::$app->getView()->renderFile($this->errorView,['exception' => $exception,],$this);
+            if($exception->getCode()==3000){
+                $this->errorView =  '@app/views/error-handler/page.php';
+            }
+            echo  Yii::$app->getView()->renderFile($this->errorView,['exception' => $exception],$this);
+
         }
     }
 }

@@ -69,7 +69,7 @@
         var param ={
             username:username,
             password:password,
-            code:verify_code
+            verify_code:verify_code
         };
         $.ajax({
             type:'POST',
@@ -80,18 +80,14 @@
                 if(data.status==0){
                     window.location.href = data.data.url;
                 }else{
-                    layer.alert(data.info, {icon: 2});
+                    layer.alert(data.msg, {icon: 2});
                 }
             }
         });
     }
     $('.yzm-img').click(function(){
-        $.getJSON('?r=api/captcha/index&refresh=1',function(data){
-            if(data.status==0){
-                $('.yzm-img').attr('src',data.data.captcha_url);
-            }
-//            console.log(data);
-        })
+        var captcha_url = '?r=api/captcha/index&'+Date.parse(new Date());
+        $('.yzm-img').attr('src',captcha_url);
     });
     $(document).ready(function() {
         $("#verify_code").keydown(function(e) {

@@ -61,7 +61,7 @@ class BaseController extends Controller{
 
         if(Yii::$app->controller->id !='site'&&empty(Yii::$app->session['admin_user.id'])){
             //跳转
-            exit('长时间没操作,请重新登录');
+            throw new LogicException(LogicException::PAGE_ERROR,'长时间没操作,请重新登录');
            // $this->error('长时间没操作,请重新登录',U('index/login'),5000);
         }else if(Yii::$app->controller->id !='site'){//检测账号是否过期
             if(
@@ -70,8 +70,7 @@ class BaseController extends Controller{
                 (Yii::$app->session['admin_user.last_session_id']!=session_id())
             ){//用户组做登录限制
                 Yii::$app->session->destroy();
-                exit('你的账户在其它地方登录,请重新登录');
-                //跳转
+                throw new LogicException(LogicException::PAGE_ERROR,'你的账户在其它地方登录,请重新登录');
             }
         }
         if(Yii::$app->request->get('iframe')==1){
@@ -81,32 +80,20 @@ class BaseController extends Controller{
         $top_menu = GaAdminMenu::find()->where(['parentid'=>0,'status'=>0])->orderBy(['listorder'=>SORT_ASC])->asArray()->all();
 
         $where_left_menu = array(
-            'parentid'=>$this->current_menu['parentid'],
+            'top_menu_id'=>$this->current_menu['top_menu_id'],
             'level'=>1,
         );
         $left_menu = GaAdminMenu::find()->where($where_left_menu)->orderBy(['listorder'=>SORT_ASC])->asArray()->all();
+
         $menu = array(
             'top_menu'=>$top_menu,
             'left_menu'=>$left_menu
         );
         Yii::$app->cache->set('menu',$menu);
         Yii::$app->cache->set('current_top_menu_id',$this->current_menu['top_menu_id']);//当前菜单id
-
       //  Yii::$app->cache->get('current_top_menu_id');
-
-
       //  echo "<pre>";
       //  print_r(Yii::$app->view->params['menu']);
-        /*
-        $this->assign('admin_menu',$this->admin_menu);
-        $this->assign('method',$this->method);
-        $this->assign('action',$this->action);
-
-        $this->assign('current_menu',$this->current_menu);
-        $this->assign('top_menu',$top_menu);
-        $this->assign('tree_menu',$tree_menu);
-        $this->assign('left_menu',$left_menu);*/
-
     }
 
     /**

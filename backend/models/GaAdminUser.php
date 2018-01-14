@@ -45,7 +45,7 @@ class GaAdminUser extends \yii\db\ActiveRecord
                 $this->create_time = time();//添加时间
             } else {
 
-                if(!empty($this->password)){//密码不为空 重新更新密码
+                if(!empty($this->password) && in_array('password',$this->dirtyAttributes)){//密码不为空 重新更新密码
                     $salt = Unique::genRandomString(6);//密码盐
                     $this->salt = $salt;
                     $this->password = $this->genrate_password($this->password,$salt);
@@ -132,10 +132,7 @@ class GaAdminUser extends \yii\db\ActiveRecord
      * @return bool
      */
     public function login($username,$password){
-
-        //
         $admin_user = GaAdminUser::find()->where(array('username'=>$username,'status'=>0))->limit(1)->one();
-
         if(
             $admin_user&&$this->genrate_password($password,$admin_user['salt'])==$admin_user['password']
         ){
@@ -153,7 +150,6 @@ class GaAdminUser extends \yii\db\ActiveRecord
             $session['admin_user.platform_id'] = $admin_user['platform_id'];
             $session['admin_user.group_id'] = $admin_user['group_id'];
             $session['admin_user.allow_mutil_login'] = $admin_group['allow_mutil_login'];//是否启用账号踢出功能
-
 
             //更新用户
             $admin_user->last_session_id = $last_session_id;
@@ -182,6 +178,7 @@ class GaAdminUser extends \yii\db\ActiveRecord
         }
         $admin_log = new GaAdminLog();
         $data = array(
+            'user_id'=>$admin_user['id'],
             'username'=>$username,
             'ip'=>Yii::$app->request->getUserIP(),
             'status'=>$status,

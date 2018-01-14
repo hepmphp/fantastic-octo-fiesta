@@ -54,9 +54,9 @@ return [
 
         'db' => [
             'class' => 'yii\db\Connection',
-            'dsn' => 'mysql:host=localhost;dbname=game_admin_t',
+            'dsn' => 'mysql:host=localhost;dbname=game_admin',
             'username' => 'root',
-            'password' => '',
+            'password' => '123456',
             'charset' => 'utf8',
         ],
         'db_operation'=>[

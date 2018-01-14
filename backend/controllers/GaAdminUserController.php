@@ -26,7 +26,7 @@ class GaAdminUserController extends BaseController
 
     public function actionLog(){
         echo Yii::t('app','create_success');
-        throw new LogicException(LogicException::USER_EXEIST,"hello hello world");
+        throw new LogicException(LogicException::PAGE_ERROR,"hello hello world");
     }
     /**
      * @inheritdoc

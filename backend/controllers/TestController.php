@@ -13,8 +13,9 @@ use yii;
 use backend\controllers\BaseController;
 use yii\data\Pagination;
 
-class TaController extends BaseController
+class TestController extends BaseController
 {
+
 
 
 

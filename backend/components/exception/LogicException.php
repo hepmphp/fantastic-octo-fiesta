@@ -14,6 +14,7 @@ class LogicException extends UserException{
     //逻辑异常对照表
     CONST USER_EXEIST = 1000;
     CONST DATA_NOT_FUND = 2000;//数据库没找到记录
+    CONST PAGE_ERROR = 3000;
     static $codeMessage = array(
         '1000'=>'用户名已存在',
         '2000'=>'数据库没找到记录'
