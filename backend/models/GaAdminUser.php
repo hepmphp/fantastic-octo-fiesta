@@ -44,8 +44,7 @@ class GaAdminUser extends \yii\db\ActiveRecord
                 $this->mids = $mGaAdminGroup['mids'];
                 $this->create_time = time();//添加时间
             } else {
-
-                if(!empty($this->password) && in_array('password',$this->dirtyAttributes)){//密码不为空 重新更新密码
+                if(!empty($this->password) && in_array('password',array_keys($this->dirtyAttributes))){//密码不为空 重新更新密码
                     $salt = Unique::genRandomString(6);//密码盐
                     $this->salt = $salt;
                     $this->password = $this->genrate_password($this->password,$salt);

@@ -25,5 +25,8 @@ return [
     'login_fail'=>'登录失败',
     'user_has_no_permission'=>'没有权限操作',
     'verify_code_fail'=>'验证码错误',
+    'create_js_file_success'=>'生成js文件成功',
+    'create_js_file_fail'=>'生成js文件失败',
+    'js_file_exist'=>'js文件已经存在,请手动进行覆盖',
 
 ];

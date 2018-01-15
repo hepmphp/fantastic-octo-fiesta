@@ -1,16 +1,16 @@
 /*
 Navicat MySQL Data Transfer
 
-Source Server         : 本地数据库
-Source Server Version : 50626
+Source Server         : docker_mysql
+Source Server Version : 50716
 Source Host           : localhost:3306
-Source Database       : game_admin_t
+Source Database       : game_admin
 
 Target Server Type    : MYSQL
-Target Server Version : 50626
+Target Server Version : 50716
 File Encoding         : 65001
 
-Date: 2018-01-12 16:52:54
+Date: 2018-01-15 23:45:19
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -64,7 +64,7 @@ CREATE TABLE `ga_admin_log` (
   `status` tinyint(3) NOT NULL DEFAULT '0' COMMENT '登录状态 1成功0失败',
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=991 DEFAULT CHARSET=utf8 COMMENT='管理员操作日志';
+) ENGINE=InnoDB AUTO_INCREMENT=1029 DEFAULT CHARSET=utf8 COMMENT='管理员操作日志';
 
 -- ----------------------------
 -- Records of ga_admin_log
@@ -74,6 +74,44 @@ INSERT INTO `ga_admin_log` VALUES ('987', '0', '0', 'sysadmin', '192.168.71.21',
 INSERT INTO `ga_admin_log` VALUES ('988', '0', '0', 'sysadmin', '192.168.71.21', '', '', '1515667140', '4', '登录成功', '1');
 INSERT INTO `ga_admin_log` VALUES ('989', '0', '0', 'sysadmin', '192.168.71.21', '', '', '1515723846', '5', '密码错误', '0');
 INSERT INTO `ga_admin_log` VALUES ('990', '0', '0', 'sysadmin', '192.168.71.21', '', '', '1515723852', '4', '登录成功', '1');
+INSERT INTO `ga_admin_log` VALUES ('991', '0', '0', 'sysadmin', '127.0.0.1', '', '', '1515757667', '4', '登录成功', '1');
+INSERT INTO `ga_admin_log` VALUES ('992', '0', '0', 'sysadmin', '127.0.0.1', '', '', '1515768652', '5', '密码错误', '0');
+INSERT INTO `ga_admin_log` VALUES ('993', '0', '0', 'sysadmin', '127.0.0.1', '', '', '1515768704', '5', '密码错误', '0');
+INSERT INTO `ga_admin_log` VALUES ('994', '0', '0', 'sysadmin', '127.0.0.1', '', '', '1515768840', '5', '密码错误', '0');
+INSERT INTO `ga_admin_log` VALUES ('995', '0', '0', 'sysadmin', '127.0.0.1', '', '', '1515768846', '5', '密码错误', '0');
+INSERT INTO `ga_admin_log` VALUES ('996', '0', '0', 'sysadmin', '127.0.0.1', '', '', '1515768851', '5', '密码错误', '0');
+INSERT INTO `ga_admin_log` VALUES ('997', '0', '0', 'sysadmin', '127.0.0.1', '', '', '1515768880', '5', '密码错误', '0');
+INSERT INTO `ga_admin_log` VALUES ('998', '0', '0', 'sysadmin', '127.0.0.1', '', '', '1515768894', '5', '密码错误', '0');
+INSERT INTO `ga_admin_log` VALUES ('999', '0', '0', 'sysadmin', '127.0.0.1', '', '', '1515768900', '5', '密码错误', '0');
+INSERT INTO `ga_admin_log` VALUES ('1000', '0', '0', 'sysadmin', '127.0.0.1', '', '', '1515768911', '5', '密码错误', '0');
+INSERT INTO `ga_admin_log` VALUES ('1001', '0', '0', 'sysadmin', '127.0.0.1', '', '', '1515768948', '5', '密码错误', '0');
+INSERT INTO `ga_admin_log` VALUES ('1002', '0', '0', 'sysadmin', '127.0.0.1', '', '', '1515768977', '4', '登录成功', '1');
+INSERT INTO `ga_admin_log` VALUES ('1003', '0', '0', 'sysadmin', '127.0.0.1', '', '', '1515768985', '4', '登录成功', '1');
+INSERT INTO `ga_admin_log` VALUES ('1004', '0', '0', 'sysadmin', '127.0.0.1', '', '', '1515823365', '5', '密码错误', '0');
+INSERT INTO `ga_admin_log` VALUES ('1005', '0', '0', 'sysadmin', '127.0.0.1', '', '', '1515823370', '5', '密码错误', '0');
+INSERT INTO `ga_admin_log` VALUES ('1006', '0', '0', 'sysadmin', '127.0.0.1', '', '', '1515823656', '5', '密码错误', '0');
+INSERT INTO `ga_admin_log` VALUES ('1007', '0', '0', 'sysadmin', '127.0.0.1', '', '', '1515823666', '4', '登录成功', '1');
+INSERT INTO `ga_admin_log` VALUES ('1008', '0', '0', 'sysadmin', '127.0.0.1', '', '', '1515851684', '4', '登录成功', '1');
+INSERT INTO `ga_admin_log` VALUES ('1009', '0', '0', 'sysadmin', '127.0.0.1', '', '', '1515854475', '5', '密码错误', '0');
+INSERT INTO `ga_admin_log` VALUES ('1010', '0', '0', 'sysadmin', '127.0.0.1', '', '', '1515854479', '4', '登录成功', '1');
+INSERT INTO `ga_admin_log` VALUES ('1011', '0', '0', 'sysadmin', '127.0.0.1', '', '', '1515918902', '4', '登录成功', '1');
+INSERT INTO `ga_admin_log` VALUES ('1012', '0', '0', 'sysadmin', '127.0.0.1', '', '', '1515919078', '4', '登录成功', '1');
+INSERT INTO `ga_admin_log` VALUES ('1013', '0', '0', 'sysadmin', '127.0.0.1', '', '', '1515919519', '5', '密码错误', '0');
+INSERT INTO `ga_admin_log` VALUES ('1014', '0', '0', 'sysadmin', '127.0.0.1', '', '', '1515919525', '5', '密码错误', '0');
+INSERT INTO `ga_admin_log` VALUES ('1015', '0', '0', 'sysadmin', '127.0.0.1', '', '', '1515919564', '5', '密码错误', '0');
+INSERT INTO `ga_admin_log` VALUES ('1016', '0', '0', 'sysadmin', '127.0.0.1', '', '', '1515919566', '5', '密码错误', '0');
+INSERT INTO `ga_admin_log` VALUES ('1017', '0', '0', 'sysadmin', '127.0.0.1', '', '', '1515919572', '5', '密码错误', '0');
+INSERT INTO `ga_admin_log` VALUES ('1018', '0', '0', 'sysadmin', '127.0.0.1', '', '', '1515919577', '5', '密码错误', '0');
+INSERT INTO `ga_admin_log` VALUES ('1019', '0', '0', 'sysadmin', '127.0.0.1', '', '', '1515919585', '5', '密码错误', '0');
+INSERT INTO `ga_admin_log` VALUES ('1020', '0', '0', 'sysadmin', '127.0.0.1', '', '', '1515919616', '5', '密码错误', '0');
+INSERT INTO `ga_admin_log` VALUES ('1021', '0', '0', 'sysadmin', '127.0.0.1', '', '', '1515919623', '5', '密码错误', '0');
+INSERT INTO `ga_admin_log` VALUES ('1022', '0', '0', 'sysadmin', '127.0.0.1', '', '', '1515919636', '4', '登录成功', '1');
+INSERT INTO `ga_admin_log` VALUES ('1023', '0', '0', 'sysadmin', '127.0.0.1', '', '', '1515920156', '5', '密码错误', '0');
+INSERT INTO `ga_admin_log` VALUES ('1024', '0', '0', 'sysadmin', '127.0.0.1', '', '', '1515920231', '4', '登录成功', '1');
+INSERT INTO `ga_admin_log` VALUES ('1025', '0', '0', 'sysadmin', '127.0.0.1', '', '', '1515938977', '4', '登录成功', '1');
+INSERT INTO `ga_admin_log` VALUES ('1026', '1', '0', 'sysadmin', '127.0.0.1', '', '', '1516023496', '4', '登录成功', '1');
+INSERT INTO `ga_admin_log` VALUES ('1027', '1', '0', 'sysadmin', '127.0.0.1', '', '', '1516023853', '4', '登录成功', '1');
+INSERT INTO `ga_admin_log` VALUES ('1028', '1', '0', 'sysadmin', '127.0.0.1', '', '', '1516027778', '4', '登录成功', '1');
 
 -- ----------------------------
 -- Table structure for ga_admin_menu
@@ -95,17 +133,17 @@ CREATE TABLE `ga_admin_menu` (
   KEY `status` (`status`),
   KEY `parentid` (`parentid`),
   KEY `model` (`model`)
-) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8 COMMENT='后台菜单';
+) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=utf8 COMMENT='后台菜单';
 
 -- ----------------------------
 -- Records of ga_admin_menu
 -- ----------------------------
 INSERT INTO `ga_admin_menu` VALUES ('1', '0', '1', 'ga-admin-menu', 'index', '', '0', '系统设置', '一级菜单', '1', '0');
 INSERT INTO `ga_admin_menu` VALUES ('2', '1', '1', 'ga-admin-menu', 'index', '', '0', '菜单列表', '', '1', '1');
-INSERT INTO `ga_admin_menu` VALUES ('3', '2', '1', 'ga-admin-menu', 'create', '', '-1', '菜单添加', '', '2', '0');
-INSERT INTO `ga_admin_menu` VALUES ('4', '2', '1', 'ga-admin-menu', 'update', '', '-1', '菜单修改', '', '3', '0');
-INSERT INTO `ga_admin_menu` VALUES ('5', '2', '1', 'ga-admin-menu', 'delete', '', '-1', '菜单删除', '', '4', '0');
-INSERT INTO `ga_admin_menu` VALUES ('6', '2', '1', 'ga-admin-menu', 'index', '', '0', '菜单列表', '', '1', '0');
+INSERT INTO `ga_admin_menu` VALUES ('3', '2', '1', 'ga-admin-menu', 'create', '', '-1', '菜单添加', '', '2', '2');
+INSERT INTO `ga_admin_menu` VALUES ('4', '2', '1', 'ga-admin-menu', 'update', '', '-1', '菜单修改', '', '3', '2');
+INSERT INTO `ga_admin_menu` VALUES ('5', '2', '1', 'ga-admin-menu', 'delete', '', '-1', '菜单删除', '', '4', '2');
+INSERT INTO `ga_admin_menu` VALUES ('6', '2', '1', 'ga-admin-menu', 'index', '', '0', '菜单列表', '', '1', '2');
 INSERT INTO `ga_admin_menu` VALUES ('7', '2', '1', 'ga-admin-menu', 'ajax-get-config-menu', '', '-1', '获取菜单', '', '0', '2');
 INSERT INTO `ga_admin_menu` VALUES ('8', '1', '1', 'ga-admin-group', 'index', '', '0', '用户组', '', '2', '1');
 INSERT INTO `ga_admin_menu` VALUES ('9', '8', '1', 'ga-admin-group', 'index', '', '0', '用户组列表', '', '0', '2');
@@ -121,8 +159,12 @@ INSERT INTO `ga_admin_menu` VALUES ('18', '15', '1', 'ga-admin-user', 'update', 
 INSERT INTO `ga_admin_menu` VALUES ('19', '15', '1', 'ga-admin-user', 'delete', '', '-1', '用户删除', '', '0', '2');
 INSERT INTO `ga_admin_menu` VALUES ('20', '15', '1', 'ga-admin-user', 'edit-password', '', '-1', '修改密码', '', '0', '2');
 INSERT INTO `ga_admin_menu` VALUES ('21', '15', '1', 'ga-admin-user', 'edit-permission', '', '-1', '权限修改', '', '0', '2');
-INSERT INTO `ga_admin_menu` VALUES ('22', '0', '22', 'ga-developer', 'index', '', '0', '开发工具', '', '0', '0');
-INSERT INTO `ga_admin_menu` VALUES ('23', '22', '22', 'ga-developer', 'index', '', '0', '开发工具', '', '0', '1');
+INSERT INTO `ga_admin_menu` VALUES ('22', '0', '22', 'developer', 'index', '', '0', '开发工具', '', '0', '0');
+INSERT INTO `ga_admin_menu` VALUES ('23', '22', '22', 'gii', '', '', '0', '开发工具', '', '0', '1');
+INSERT INTO `ga_admin_menu` VALUES ('24', '23', '22', 'gii', '', '', '0', 'gii', '', '2', '2');
+INSERT INTO `ga_admin_menu` VALUES ('25', '23', '22', 'developer', 'index', '', '0', '开发工具', '', '1', '2');
+INSERT INTO `ga_admin_menu` VALUES ('26', '23', '22', 'developer', 'preview', '', '-1', '表单生成预览', '', '2', '2');
+INSERT INTO `ga_admin_menu` VALUES ('27', '23', '22', 'developer', 'create-js', '', '-1', '生成js', '', '2', '2');
 
 -- ----------------------------
 -- Table structure for ga_admin_user
@@ -136,7 +178,7 @@ CREATE TABLE `ga_admin_user` (
   `password` varchar(32) NOT NULL COMMENT '密码',
   `salt` varchar(6) NOT NULL COMMENT '密码盐',
   `create_time` int(11) unsigned NOT NULL COMMENT '创建时间',
-  `status` tinyint(1) NOT NULL DEFAULT '0' COMMENT '状态 0正常 1删除',
+  `status` tinyint(1) NOT NULL DEFAULT '0' COMMENT '状态|0:正常,1:删除',
   `mids` text NOT NULL COMMENT '用户菜单权限',
   `platform_id` int(10) NOT NULL DEFAULT '0' COMMENT '平台id',
   `group_id` int(10) NOT NULL DEFAULT '0' COMMENT '分组id',
@@ -148,7 +190,7 @@ CREATE TABLE `ga_admin_user` (
 -- ----------------------------
 -- Records of ga_admin_user
 -- ----------------------------
-INSERT INTO `ga_admin_user` VALUES ('1', 'sysadmin', '系统管理', '', '74fe49a7f55b050063f698d5e64d52b7', '78sYss', '1479393090', '0', '1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99,100,101,102,103,104,105,106,107,108,109,110,111,112,113,114,115,116,117,118,119,120,121,122,123,124,125,126,127,128,129,130,131,132,133,134,135,136,137,138,139,140,141,142,143,144,145,146,147,148,149,150,151,152,153,154,155,156,157,158,159,160,161,162,163,164,165,166,167,168,169,170,171,172,173,174,175,176,177,178,179,181,182,183,184,185,186,187,188,189,190,191,192,193,194,195,196,197,198,199,203,204,205,206,207', '1000', '1', '50gk2i7b24mj6cnp079gu2kha0', '1515723852');
+INSERT INTO `ga_admin_user` VALUES ('1', 'sysadmin', '系统管理', '', '3885662a78b79c45ade750345fe0b679', 'i4BeVr', '1479393090', '0', '1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27', '1000', '1', 'duiqmab0vumfiktg3uu3oe5vf6', '1516027778');
 INSERT INTO `ga_admin_user` VALUES ('2', 'test', 'test', '', 'c51f62115947f3689e5f440819ae7032', 'v6KJ4v', '1510814911', '0', '1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99,100,101,102,103,104,105,106,107,110,111,116,117,118,119,120,121,122,123,124,125,126,127,128,129,130,131,135,136,142,143,144,145,146,147,152,153', '61000', '1', 'emklcqulrtkgk1266soo8m07s2', '1513322025');
 INSERT INTO `ga_admin_user` VALUES ('3', 'xhd', 'xhd', '', 'b8dd2d160aac9e9da4add8b4143b0d9a', 'BSmWrr', '1511182801', '0', '1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99,100,101,102,103,104,105,106,107,110,111,116,117,118,119,120,121,122,123,124,125,126,127,128,129,130,131,135,136,138,139,140,141,142,143,144,145,146,147,148,152,153,155,156,157,162,163,164,165,166,167,168,169,170,171,172,191,192,193,194,195,196,197,198,199', '1', '1', 'ta9asqvhjv9d5a7eg64i7m4i62', '1515205636');
 INSERT INTO `ga_admin_user` VALUES ('4', 'wenbin', 'wenbin', '', '4173033fd3a048645eff75ee6f00a5f6', 'z4TGpO', '1511837805', '0', '1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99,100,101,102,103,104,105,106,107,110,111,116,117,118,119,120,121,122,123,124,125,126,127,128,129,130,131,135,136,142,143,144,145,146,147,152,153', '0', '1', 'fonqs26aiifh1hv4fap9rqlu87', '1511847554');
@@ -176,7 +218,7 @@ CREATE TABLE `ga_platform` (
   `name` varchar(20) NOT NULL DEFAULT '' COMMENT '平台名称',
   `ip_list` varchar(10000) NOT NULL DEFAULT '' COMMENT 'ip列表 用,分隔',
   `domain` varchar(255) NOT NULL DEFAULT '' COMMENT '域名'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='平台';
 
 -- ----------------------------
 -- Records of ga_platform

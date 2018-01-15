@@ -19,7 +19,6 @@ $('.chekck_all').click(function(){
 });
 
 $('#preview').click(function(){
-    console.log("aaaa");
     var fields = new Array();
     var form_builder_types = new Array();
     var table = $('#table').val();
@@ -38,6 +37,9 @@ $('#preview').click(function(){
         shade: 0.3, //遮罩透明度
         content:"?r=developer/preview&fields="+fields+"&form_builder_types="+form_builder_types+"&table="+table
     });
+});
 
-
+$('#btn_js').click(function(){
+    var create_js_url = '?r=developer/create-js';
+    ajax_post(create_js_url,{table:$('#table').val()});
 });

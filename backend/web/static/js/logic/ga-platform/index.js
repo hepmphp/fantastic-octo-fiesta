@@ -7,9 +7,9 @@
  */
 
 var urls = {
-    create_url:'?r=[controller]/create',
-    update_url:'?r=[controller]/update',
-    delete_url:'?r=[controller]/delete'
+    create_url:'?r=ga-platform/create',
+    update_url:'?r=ga-platform/update',
+    delete_url:'?r=ga-platform/delete'
 };
 
 /***
@@ -61,11 +61,17 @@ function layer_form(url,action){
             var body = layer.getChildFrame('body', index);
             var param ={
                 id:body.find('#id').val(),
-                [form_data]
+                GaPlatform:{
+					id:body.find('#id').val(),
+					sign:body.find('#sign').val(),
+					name:body.find('#name').val(),
+					ip_list:body.find('#ip_list').val(),
+					domain:body.find('#domain').val()
+}
             };
             //todo生成js验证
-            if(param.[from_name].id){
-                var url = urls.update_url+'&id='+param.[from_name].id;
+            if(param.GaPlatform.id){
+                var url = urls.update_url+'&id='+param.GaPlatform.id;
             }else{
                 var url = urls.create_url
             }

@@ -19,11 +19,12 @@ use backend\services\helpers\FormBuilder;
 class DeveloperController extends BaseController{
 
     public function actionIndex(){
+
         $fields = array();
         $select = array();
         if(Yii::$app->request->get('search')){
             $table = Yii::$app->request->get('table','ga_platfrom');
-            $sql   = "SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name ='{$table}' and TABLE_SCHEMA='game_admin_t'";
+            $sql   = "SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name ='{$table}' and TABLE_SCHEMA='game_admin'";
             $command = Yii::$app->db->createCommand($sql);
             $table_field = $command->queryAll();
             $fields = array();
@@ -44,7 +45,7 @@ class DeveloperController extends BaseController{
             }
         }
 
-        $sql   = "SELECT table_name as id,table_comment as name from information_schema.`TABLES` where TABLE_SCHEMA='game_admin_t'";
+        $sql   = "SELECT table_name as id,table_comment as name from information_schema.`TABLES` where TABLE_SCHEMA='game_admin'";
         $command = Yii::$app->db->createCommand($sql);
         $config_table_id = $command->queryAll();
 
@@ -58,7 +59,6 @@ class DeveloperController extends BaseController{
     }
 
   public function actionPreview(){
-
       $table = Yii::$app->request->get('table','ga_platform');
       $get_fields = Yii::$app->request->get('fields');
       $get_fields = explode(',',$get_fields);
@@ -69,7 +69,7 @@ class DeveloperController extends BaseController{
           $config_fied_builder_types[$field] = $get_form_builder_types[$k];
       }
 
-      $sql   = "SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name ='{$table}' and TABLE_SCHEMA='game_admin_t'";
+      $sql   = "SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name ='{$table}' and TABLE_SCHEMA='game_admin'";
       $command = Yii::$app->db->createCommand($sql);
       $table_field = $command->queryAll();
       $fields = array();
@@ -92,6 +92,9 @@ class DeveloperController extends BaseController{
       $form_html = '';
       foreach($fields as $field=>$name){
           $fb_func = $config_fied_builder_types[$field];
+          if(empty($fb_func)){
+              continue;
+          }
 
           if(isset($select[$field])){
               $form_html .= FormBuilder::$fb_func($field,$name,$select[$field]);
@@ -107,6 +110,54 @@ class DeveloperController extends BaseController{
 
   }
 
+    /**
+     *  生成js
+     */
+    public function actionCreateJs(){
+        $table = Yii::$app->request->get('table','ga_platform');
+        $sql   = "SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name ='{$table}' and TABLE_SCHEMA='game_admin'";
+        $command = Yii::$app->db->createCommand($sql);
+        $table_field = $command->queryAll();
+        $template_js = Yii::$app->viewPath.'/developer/template/js/index.js';
+        $template_content = file_get_contents($template_js);
+       // echo $template_content;
+        $form_name = str_replace(' ','',ucwords(str_replace('_',' ',$table)));
+        $from_data = $form_name.':{';
+        foreach($table_field as $v){
+            $from_data_str[] = "\t\t\t\t\t{$v['COLUMN_NAME']}:body.find('#{$v['COLUMN_NAME']}').val()";
+        }
+        $from_data .= PHP_EOL.implode(','.PHP_EOL,$from_data_str);
+        $from_data .= PHP_EOL."}";
+        $controller = str_replace('_','-',$table);
+        $template_content = str_replace(array('[controller]','[form_data]','[from_name]'),array($controller,$from_data,$form_name),$template_content);
+       // echo $template_content;
+        $logic_path = './static/js/logic/'.$controller;//目前就用到index.js
+        if(!is_dir($logic_path)){
+            mkdir($logic_path,0755,true);
+        }
+        $logic_file = $logic_path.'/index.js';
+        if(!file_exists($logic_file)){//不允许覆盖
+            $res = file_put_contents($logic_file,$template_content);
+            if($res){
+                $response = array(
+                    'status'=>0,
+                    'msg'=>Yii::t('app','create_js_file_success')
+                );
+            }else{
+                $response = array(
+                    'status'=>-1,
+                    'msg'=>Yii::t('app','create_js_file_fail')
+                );
+            }
+        }else{
+            $response = array(
+                'status'=>-2,
+                'msg'=>Yii::t('app','js_file_exist')
+            );
+        }
+        return $this->asJson($response);
+
+   }
 
 
 
