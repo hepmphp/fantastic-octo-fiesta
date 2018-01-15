@@ -29,6 +29,11 @@ class BaseController extends Controller{
     public $model = '';//通用的操作模型
     public function beforeAction($action){
         if(parent::beforeAction($action)){
+//            var_dump(Yii::$app->controller->module->id);
+//            var_dump(Yii::$app->controller->id);
+//            var_dump(Yii::$app->controller->action->id);
+            //登录信息和权限检测
+            $this->checkLogin();
             if(in_array($action->id,['create','update','delete','edit-password'])){
                 $this->layout = 'main_curd.php';//使用curd布局
             }
@@ -43,11 +48,9 @@ class BaseController extends Controller{
     }
 
     public function afterAction($action,$result){
-            //登录信息和权限检测
 //        var_dump(Yii::$app->controller->module->id);
 //        var_dump(Yii::$app->controller->id);
 //        var_dump(Yii::$app->controller->action->id);
-        $this->check();
         return parent::afterAction($action,$result);
     }
 
@@ -55,7 +58,7 @@ class BaseController extends Controller{
     /**
      *账号信息和权限检测
      */
-    public function check(){
+    public function checkLogin(){
         $this->ip_check();
         header("Content-type:text/html;charset=utf-8");
 
@@ -73,9 +76,9 @@ class BaseController extends Controller{
                 throw new LogicException(LogicException::PAGE_ERROR,'你的账户在其它地方登录,请重新登录');
             }
         }
-        if(Yii::$app->request->get('iframe')==1){
+//        if(Yii::$app->request->get('iframe')==1){
             $this->checkAccess();
-        }
+//        }
         //Yii::$app->view->
         $top_menu = GaAdminMenu::find()->where(['parentid'=>0,'status'=>0])->orderBy(['listorder'=>SORT_ASC])->asArray()->all();
 
@@ -85,12 +88,16 @@ class BaseController extends Controller{
         );
         $left_menu = GaAdminMenu::find()->where($where_left_menu)->orderBy(['listorder'=>SORT_ASC])->asArray()->all();
 
+
         $menu = array(
             'top_menu'=>$top_menu,
             'left_menu'=>$left_menu
         );
         Yii::$app->cache->set('menu',$menu);
         Yii::$app->cache->set('current_top_menu_id',$this->current_menu['top_menu_id']);//当前菜单id
+
+      //  var_dump(Yii::$app->cache->get('current_top_menu_id'));
+      //  var_dump($left_menu);
       //  Yii::$app->cache->get('current_top_menu_id');
       //  echo "<pre>";
       //  print_r(Yii::$app->view->params['menu']);
@@ -112,7 +119,7 @@ class BaseController extends Controller{
         );
         $this->current_menu = GaAdminMenu::find()->where($where_menu)->andWhere(['<>','level',0])->limit(1)->asArray()->one();
 //        echo "<pre>";
-//        print_r($current_menu);
+
         if(!in_array($this->current_menu['id'],Yii::$app->session['admin_user.mids']) && Yii::$app->controller->action->id != 'get_search_where'){//搜索条件拼接不做权限检测
                /*
                $response = array(

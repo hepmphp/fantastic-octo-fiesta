@@ -59,7 +59,7 @@ class SiteController extends BaseController
                     'msg'=>Yii::t('app','verify_code_fail'),
                     'data'=>array()
                 );
-                return $this->asJson($response);
+              //  return $this->asJson($response);
             }
 
             $model = new GaAdminUser();

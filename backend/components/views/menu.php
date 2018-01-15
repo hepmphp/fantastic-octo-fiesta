@@ -45,14 +45,16 @@
 
             //         $left_menu = $tree_menu->get_parent($current_menu['parentid']);
             $left_menu = $menu['left_menu'];
+
             usort($left_menu,function($a,$b){
                 if ($a['listorder'] == $b['listorder']) {
                     return 0;
                 }
                 return ($a['listorder'] < $b['listorder']) ? -1 : 1;
             });
-
+           // var_dump($admin_access);
             foreach($left_menu as $menu){
+                //var_dump($menu);
                 if(!in_array($menu['id'],$admin_access)){
                     continue;
                 }

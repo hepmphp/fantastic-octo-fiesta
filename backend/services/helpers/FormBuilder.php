@@ -16,6 +16,19 @@ namespace backend\services\helpers;
  */
 class FormBuilder {
 
+    public static function get_config_form_builder_type(){
+        $config = array(
+            'text_input'=>'普通文本',
+            'password_input'=>'密码',
+            'textarea_input'=>'文本框',
+            'select_input'=>'下拉框',
+            'multi_radio'=>'单选框',
+            'mutil_checkbox'=>'复选框',
+            'time'=>'时间',
+        );
+        return $config;
+    }
+
     /**
      * 普通文本框
      * @param $field

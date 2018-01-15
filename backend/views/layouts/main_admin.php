@@ -28,7 +28,6 @@ $asset = AppAsset::register($this);
     <?php $this->beginBody() ?>
     <body class="gray-bg">
     <div class="wrapper">
-
         <?= MenuWidget::widget(['menu' =>Yii::$app->cache->get('menu'),'current_top_menu_id'=>Yii::$app->cache->get('current_top_menu_id'),'admin_access'=>Yii::$app->session['admin_user.mids']]) ?>
 
 
