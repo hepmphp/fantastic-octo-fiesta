@@ -39,11 +39,21 @@ return [
         /*
         'urlManager' => [
             'enablePrettyUrl' => true,
+            'enableStrictParsing'=>true,
             'showScriptName' => false,
             'rules' => [
+                ['class'=>'yii\rest\UrlRule','controller'=>'user']
             ],
         ],
-        */
+*/
+        'db' => [
+            'class' => 'yii\db\Connection',
+            'dsn' => 'mysql:host=localhost;dbname=yii_api',
+            'username' => 'root',
+            'password' => '123456',
+            'charset' => 'utf8',
+        ],
+
     ],
     'params' => $params,
 ];

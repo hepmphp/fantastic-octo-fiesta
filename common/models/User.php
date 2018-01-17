@@ -32,7 +32,7 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public static function tableName()
     {
-        return '{{%ga_admin_user}}';
+        return '{{%user}}';
     }
 
     /**
