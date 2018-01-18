@@ -55,6 +55,15 @@ class ApiController extends ActiveController{
 
     public function actions(){
         $actions = parent::actions();
+        #ajax请求接口时出现 401授权验证问题
+        //设置固定options控制器
+        $actions['options'] = [
+            'class' => 'yii\rest\OptionsAction',
+            // optional:
+            'collectionOptions' => ['GET', 'POST', 'HEAD', 'OPTIONS'],
+            'resourceOptions' => ['GET', 'PUT', 'PATCH', 'DELETE', 'HEAD', 'OPTIONS'],
+        ];
+
         return $actions;
     }
 
