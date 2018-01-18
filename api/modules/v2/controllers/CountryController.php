@@ -2,7 +2,7 @@
 
 namespace api\modules\v2\controllers;
 
-use yii\rest\ActiveController;
+use api\controllers\ApiController;
 use api\modules\v1\models\Country;
 /**
  * Country Controller API
@@ -21,9 +21,9 @@ use api\modules\v1\models\Country;
     - OPTIONS /countries/AU: show the supported verbs regarding endpoint /countries/AU.
  *
  */
-class CountryController extends ActiveController
+class CountryController extends ApiController
 {
-    public $modelClass = 'api\modules\v1\models\Country';
+    public $modelClass = 'api\modules\v2\models\Country';
     public $serializer = [
         'class' => 'yii\rest\Serializer',
         'collectionEnvelope' => 'items',

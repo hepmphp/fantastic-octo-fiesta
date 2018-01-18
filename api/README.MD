@@ -1,24 +1,46 @@
-http://www.ruanyifeng.com/blog/2014/05/restful_api.html
-https://github.com/diandianxiyu/PageBlog/edit/master/Yii2%E5%AE%9E%E7%8E%B0RESTful%E6%9E%B6%E6%9E%84%E9%85%8D%E7%BD%AE%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5.md
+
 
 #Yii2实现RESTful架构配置最佳实践
 
 ## 为什么要用RESTful API
 
-> 在服务器端，应用程序状态和功能可以分为各种资源。资源是一个有趣的概念实体，它向客户端公开。资源的例子有：应用程序对象、数据库记录、算法等等。每个资源都使用 URI (Universal Resource Identifier) 得到一个唯一的地址。所有资源都共享统一的接口，以便在客户端和服务器之间传输状态。使用的是标准的 HTTP 方法，比如 GET、PUT、POST 和 DELETE。Hypermedia 是应用程序状态的引擎，资源表示通过超链接互联。
-
-
-无状态,分层,可扩展
-
-**本文为原创博客,被收录在我自己的GitHub项目中**[点我查看项目文件](https://github.com/diandianxiyu/PageBlog/blob/master/Yii2%E5%AE%9E%E7%8E%B0RESTful%E6%9E%B6%E6%9E%84%E9%85%8D%E7%BD%AE%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5.md)
+> 在服务器端，应用程序状态和功能可以分为各种资源。资源是一个有趣的概念实体，它向客户端公开。资源的例子有：应用程序对象、数据库记录、算法等等。
+每个资源都使用 URI (Universal Resource Identifier) 得到一个唯一的地址。所有资源都共享统一的接口，以便在客户端和服务器之间传输状态。使用的是标准的 HTTP 方法，比如 GET、PUT、POST 和 DELETE。Hypermedia 是应用程序状态的引擎，资源表示通过超链接互联。无状态,分层,可扩展
 
 ## 基于Yii2的RESTful API 的实现
 
-### 不用自带的REST实现方式
+###认证使用AUTH1.0
 
-首先,Yii2自带了实现RESTful api的方式,但是,官方的例子过于简单,把一个资源限定成了数据库中的一个表,这显然是和REST中定义的资源不相符的,并且实际的业务需求过于复杂,不能通过一个表进行数据的操作。
+      $behaviors = parent::behaviors();
+        $behaviors['authenticator'] = [
+            'class'=>HttpBearerAuth::className(),
+            'optional'=>[
+                'login',//登录接口排除
+                'reg'//注册用户排除
+            ],
+        ];
+###数据库配置
 
-所以,我们采用了另一种方式,通过使用Yii2的不同组件,完成RESTful API的构建
+     'db' => [
+            'class' => 'yii\db\Connection',
+            'dsn' => 'mysql:host=localhost;dbname=yii_api',
+            'username' => 'root',
+            'password' => '',
+            'charset' => 'utf8',
+        ],
+
+###api多版本
+
+     'modules' => [//多个版本 分模块
+        'v1' => [
+            'basePath' => '@api/modules/v1',
+            'class' => 'api\modules\v1\Module'
+        ],
+        'v2' => [
+            'basePath' => '@api/modules/v2',
+            'class' => 'api\modules\v2\Module'
+        ]
+    ],
 
 ### 路由
 
@@ -26,57 +48,218 @@ REST要求定义资源,采用不同HTTP方式进行访问。
 
 这里用到了框架内部的路由
 
-在项目的配置文件`/config/web.php`,中,对不同资源进行路由设置,从而达到同一个URL用不同的访问方式来处理不同业务的目的。
+在项目的配置文件`/config/main.php`,中,对不同资源进行路由设置,从而达到同一个URL用不同的访问方式来处理不同业务的目的。
 
-```php
-        //url配置对应规则
-        'urlManager' => [
+```
+ 'urlManager' => [
             'enablePrettyUrl' => true,
+            'enableStrictParsing' => true,
             'showScriptName' => false,
-            'rules' => [
-                //配置规则,实现RESTful的方式
-                'POST accounts'=>'account/login', // 登录
-                'GET accounts'=>'account/get-avatar', //获取头像
-                "GET accounts/status"=>'account/status', //查询登录状态
+            'rules' => [#路由规则配置
+                [
+                    'class' => 'yii\rest\UrlRule',
+                    'controller' => 'v1/country',
+                    'pluralize' => false,//禁用复数
+                    'tokens' => [
+                        '{id}' => '<id:\\w+>'
+                    ],
+                    'extraPatterns'=>[
+                       'GET search/<name>' => 'search',//#额外的参数 这边只需要添加需要添加的参数即可
+                    ],
+                ],
+                [
+                    'class' => 'yii\rest\UrlRule',
+                    'controller' => 'v2/country',
+                    'pluralize' => false,//禁用复数
+                    'tokens' => [
+                        '{id}' => '<id:\\w+>'
+                    ],
+                ],
+                [
+                    'class' => 'yii\rest\UrlRule',
+                    'controller' => 'user',#api\controllers\user
+                    'pluralize' => false,//禁用复数
+                    'extraPatterns'=>[
+                        'POST login' => 'login',//#登录
+                        'POST reg'=>'reg',#注册测试账号
+                        'GET debug'=>'debug',
+                        'GET info'=>'info',
+                    ],
+                ],
+                //'GET v1/country/search/<name>' => 'v1/country/search',//#自定义搜索
 
-                //获取用户组信息
-                "GET groups"=>"account/profile",
-
-                //用户申请加入用户组的接口
-                "GET users/ask"=>"user/apply", //申请列表
-                "PUT users/<uid:\d+>"=>"user/pass", //通过
-                "PATCH users/<uid:\d+>"=>"user/nopass", //不通过
-                "GET users"=>"user/list",  //通过的用户列表
-                "DELETE users/<uid:\d+>"=>"user/remove", //移除现有的用户
-                "GET users/<uid:\d+>"=>"user/info", //网红的具体信息
-                "GET users/serach"=>"user/serach", //搜索当前用户的用户
-
-
-                //消息中心相关
-                "GET  notices"=>"notice/list", //消息列表
-                "PUT notices/<nid:\d+>"=>"notice/mark", //消息标记为已读
-                "GET notices/status"=>"notice/status", //获取消息的概要
             ],
+
+        ]
 ```
 
-这部分的设计,参考官方文档对于RESTful实现的部分
+这部分的设计,参考官方文档对于RESTful实现的部分 同时禁用复数
 
-- GET /users: 逐页列出所有用户
-- HEAD /users: 显示用户列表的概要信息
-- POST /users: 创建一个新用户
-- GET /users/123: 返回用户 123 的详细信息
-- HEAD /users/123: 显示用户 123 的概述信息
-- PATCH /users/123 and PUT /users/123: 更新用户123
-- DELETE /users/123: 删除用户123
-- OPTIONS /users: 显示关于末端 /users 支持的动词
-- OPTIONS /users/123: 显示有关末端 /users/123 支持的动词
+- GET /country: 逐页列出所有国家
+- HEAD /country: 显示国家列表的概要信息
+- POST /country: 创建一个国家
+- GET /country/CN: 返回国家CN的详细信息
+- HEAD /country/CN: 显示国家的概述信息
+- PATCH /country/CN and PUT /country/CN: 更新国家CN信息
+- DELETE /country/CN: 删除国家CN
+- OPTIONS /country: 显示关于末端 /users 支持的动词
+- OPTIONS /country/CN: 显示有关末端 /users/123 支持的动词
 
+###示列
+**GET /country: 逐页列出所有国家**
+
+    GET http://yiiapi.local/index.php/v1/country?page=1&per-page=1 HTTP/1.1
+    Host: yiiapi.local
+    Connection: keep-alive
+    User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.81 Safari/537.36
+    Cache-Control: no-cache
+    Content-Type: application/x-www-form-urlencoded
+    Authorization: Bearer  60201e75e59b15c79e002eaa4eb5506a
+    Postman-Token: 77a6ee2b-19b4-b1f8-645e-9b2d36acbef2
+    Accept: */*
+    Accept-Encoding: gzip, deflate, sdch
+    Accept-Language: zh-CN,zh;q=0.8
+
+    {
+    "code": 200,
+    "msg": "OK",
+    "data": {
+        "items": [
+            {
+                "code": "BR",
+                "name": "Brazil",
+                "population": 170115000
+            }
+        ],
+        "_links": {
+            "self": {
+                "href": "http://yiiapi.local/v1/country?page=1&per-page=1"
+            },
+            "next": {
+                "href": "http://yiiapi.local/v1/country?page=2&per-page=1"
+            },
+            "last": {
+                "href": "http://yiiapi.local/v1/country?page=10&per-page=1"
+            }
+        },
+        "_meta": {
+            "totalCount": 10,
+            "pageCount": 10,
+            "currentPage": 1,
+            "perPage": 1
+        }
+    }
+}
+
+ **POST /country: 创建一个国家**
+
+    POST http://yiiapi.local/index.php/v1/country HTTP/1.1
+    Host: yiiapi.local
+    Connection: keep-alive
+    Content-Length: 33
+    User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.81 Safari/537.36
+    Cache-Control: no-cache
+    Origin: chrome-extension://fhbjgbiflinjbdggehcddcbncdddomop
+    Content-Type: application/x-www-form-urlencoded
+    Authorization: Bearer  60201e75e59b15c79e002eaa4eb5506a
+    Postman-Token: f18dc580-39c7-e403-c84e-c7b96dea9964
+    Accept: */*
+    Accept-Encoding: gzip, deflate
+    Accept-Language: zh-CN,zh;q=0.8
+    
+    code=te&name=test&population=4000
+    
+    {
+    "code": 201,
+    "msg": "Created",
+    "data": {
+        "code": "te",
+        "name": "test",
+        "population": "4000"
+    }
+}
+
+ **GET /country/CN: 返回国家CN的详细信息**
+    
+    
+    GET http://yiiapi.local/index.php/v1/country/CN HTTP/1.1
+    Host: yiiapi.local
+    Connection: keep-alive
+    User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.81 Safari/537.36
+    Cache-Control: no-cache
+    Content-Type: application/x-www-form-urlencoded
+    Authorization: Bearer  60201e75e59b15c79e002eaa4eb5506a
+    Postman-Token: 5d39ab6a-255d-ec1a-d8fe-7b6b0f054a5b
+    Accept: */*
+    Accept-Encoding: gzip, deflate, sdch
+    Accept-Language: zh-CN,zh;q=0.8
+
+
+    {
+        "code": 200,
+        "msg": "OK",
+        "data": {
+            "id": 3,
+            "code": "CN",
+            "name": "China",
+            "population": 1277558000
+        }
+    }
+**PATCH /country/CN and PUT /country/CN: 更新国家CN信息**
+
+    PUT http://yiiapi.local/index.php/v1/country/te HTTP/1.1
+    Host: yiiapi.local
+    Connection: keep-alive
+    Content-Length: 33
+    User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.81 Safari/537.36
+    Cache-Control: no-cache
+    Origin: chrome-extension://fhbjgbiflinjbdggehcddcbncdddomop
+    Content-Type: application/x-www-form-urlencoded
+    Authorization: Bearer  60201e75e59b15c79e002eaa4eb5506a
+    Postman-Token: 8d99ffc3-d493-9042-47fb-294a00fea3fd
+    Accept: */*
+    Accept-Encoding: gzip, deflate, sdch
+    Accept-Language: zh-CN,zh;q=0.8
+    
+    code=te&name=test&population=4000
+    
+    {
+    "code": 200,
+    "msg": "OK",
+    "data": {
+        "code": "te",
+        "name": "test",
+        "population": "4000"
+    }
+}
+
+**DELETE /country/CN: 删除国家CN**
+
+  
+
+        DELETE http://yiiapi.local/index.php/v1/country/te HTTP/1.1
+        Host: yiiapi.local
+        Connection: keep-alive
+        Content-Length: 33
+        User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.81 Safari/537.36
+        Cache-Control: no-cache
+        Origin: chrome-extension://fhbjgbiflinjbdggehcddcbncdddomop
+        Content-Type: application/x-www-form-urlencoded
+        Authorization: Bearer  60201e75e59b15c79e002eaa4eb5506a
+        Postman-Token: 88b20fbe-1482-bcda-7c47-146a7b4b5d39
+        Accept: */*
+        Accept-Encoding: gzip, deflate, sdch
+        Accept-Language: zh-CN,zh;q=0.8
+        
+       {
+           "code":204,
+           "msg":"No Content",
+           "data":[]
+       }
 
 ### 接收数据
 
-我们需要获取客户端传递过来的`GET`,`POST`,`Header`的数据,框架自带了`Yii::$app->request`,可以直接得到客户端传过来的数据。
-
-参考`\yii\web\Request|\yii\console\Request $request The request component. This property is read-only.`
+利用操作头以及参数做对应接收处理
 
 ### 处理数据
 
@@ -94,7 +277,7 @@ REST要求定义资源,采用不同HTTP方式进行访问。
 
 HTTP状态码的说明如下
 
-|Code	|HTTP Operation|	Body Contents	|Description|
+|Code    |HTTP Operation|	Body Contents	|Description|
 |:------------- |-------------| -----| -----|
 |200	|GET,PUT|	资源	|操作成功|
 |201	|POST	|资源,元数据	|对象创建成功|
@@ -112,146 +295,7 @@ HTTP状态码的说明如下
 |415	|GET,PSOT,PUT,DELETE,PATCH	|错误提示(消息)	|不支持的数据(媒体)类型|
 |429	|GET,PSOT,PUT,DELETE,PATCH	|错误提示(消息)	|请求过多被限制|
 |500	|GET,PSOT,PUT,DELETE,PATCH	|错误提示(消息)	|系统内部错误|
-|501	|GET,PSOT,PUT,DELETE,PATCH	|错误提示(消息)	|接口未实现|
-
-格式化数据,我们的返回数据的格式为JSON
-
-```php
-$response= Yii::$app->response;
-$response->format = \yii\web\Response::FORMAT_JSON; //返回json
-```
-
-### 错误处理
-
-通过不同的错误码,返回不同的HTTP状态码。
-
-由于的非常频繁的调用,所以对数据进行了封装。
-
-错误处理类`Error.php`
-
-```php
-
-/**
- * 错误处理类
- *
- * ------------------------------------
- *
- * 错误处理扩展 seaslog
- *
- * http://www.oschina.net/news/50333/seaslog-0-21
- *
- * http://neeke.github.io/SeasLog/
- *
- * ------------------------------------
- *
- * @author Calvin
- * @version 1.0
- * @copyright (c) 2016,
- */
-
-namespace app\components\error;
-
-use Yii;
-
-class Error {
-
-    /**
-     * 公共的错误返回处理,通过传入参数,返回对应的错误代码,这里也定义了错误返回的格式,以及对日志的记录
-     *
-     * @param $error_code
-     * @return array
-     */
-    public static function errorJson($error_code) {
-        $requests = Yii::$app->request; //返回值
-        $post = json_encode($requests->post());
-        $get = json_encode($requests->get());
-        $headers = json_encode($requests->getHeaders()->toArray());
-
-        //带入记录错误代码的文件
-        $error_file = require_once \Yii::$app->basePath . "/components/error/ErrorCode.php";
-        //获取http状态码,以及文字说明
-        $error_info = $error_file["$error_code"];
-
-
-        $http_code = $error_info['http_code'];
-        $error_text = $error_info['remark'];
-
-        $error_body = [ //设置返回的格式
-            'request' => $requests->getUrl(),
-            'method'=>$requests->getMethod(),
-            'error_code' => $error_code,
-            'error' =>$error_text,
-        ];
-
-        $response = Yii::$app->response;
-        $response->statusCode=$http_code;
-        $response->format = \yii\web\Response::FORMAT_JSON;
-        $headers = Yii::$app->response->headers;
-        $headers->add('X-Halo-Result', 0);
-//        $response->data = $error_body;
-
-
-//        $userIP = $requests->userIP;
-        //写入日志
-//        \SeasLog::error('error === {error} && error_text === {error_text}  && userIP === {userIP} && post === {post}  && get === {get} && header === {header} ', [
-//            '{error}' => $error,
-//            '{error_text}' => $error_file["$error"],
-//            '{post}' => $post,
-//            '{get}' => $get,
-//            '{userIP}' => $userIP,
-//            '{header}' => $headers,
-//                ], $request);
-//        $appLog = \Alibaba::AppLog();
-//        $appLog->debug("debug-log-emssage");
-//        $appLog->info("info-log-emssage");
-//        $appLog->warn("warn-log-emssage");
-//        $appLog->error("error-log-emssage");
-
-        return $error_body;
-    }
-
-}
-
-
-```
-
-错误代码文件`ErrorCode.php`
-
-```php
-/**
- * 增加对不同类型的HTTP状态码的返回
- *
- * 错误码,HTTP状态码,返回值
- */
-return [
-    '1001'=>[
-        'http_code'=>403,
-        'remark'=>"Token验证失败",
-    ],
-    '1002'=>[
-        'http_code'=>400,
-        'remark'=>"参数错误",
-    ],
-    '1003'=>[
-        'http_code'=>400,
-        'remark'=>"参数不全",
-    ],
-    '2001'=>[
-        'http_code'=>404,
-        'remark'=>"用户不存在",
-    ],
-
-];
-```
-
-调用错误数据返回
-```php
-return Error::errorJson(1002);
-```
-
-## 文档
-
-有句话说得好,程序员不愿意写文档,但是看到没有文档的项目又会抓狂。。。。
+|501	|GET,PSOT,PUT,DELETE,PATCH	|错误提示(消息)	||
 
 ### 概括结构
 
@@ -266,8 +310,7 @@ return Error::errorJson(1002);
 
 ### 接口文档
 
-接口文档告诉客户端,调用什么数据,怎么掉,异常了咋办。。。
-
+接口文档告诉客户端,调用什么数据
 - 简单说明
 - 访问地址
 - 请求方式
@@ -279,15 +322,8 @@ return Error::errorJson(1002);
 ## 总结
 
 RESTful API的好处在于更简洁的规范了数据请求的方式,通过资源来设计数据接口,方便客户端的调用,减少沟通成本。
-
 不过协议毕竟只是个建议,我们可以根据自己项目的实际情况,有选择的满足协议的需求,更好的为自己的项目服务。
-
-:)
-
 ## 参考资料
-
-- http://www.yiichina.com/doc/guide/2.0/rest-quick-start
-- http://ningandjiao.iteye.com/blog/1990004
-- http://www.cnblogs.com/yuzhongwusan/p/3152526.html
-- https://zhuanlan.zhihu.com/p/20034107
-- http://my.oschina.net/freegeek/blog/303639
+-http://www.ruanyifeng.com/blog/2014/05/restful_api.html
+-https://github.com/diandianxiyu/PageBlog/edit/master/Yii2%E5%AE%9E%E7%8E%B0RESTful%E6%9E%B6%E6%9E%84%E9%85%8D%E7%BD%AE%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5.md
+-https://www.jianshu.com/p/23bc92c31053

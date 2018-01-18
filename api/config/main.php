@@ -9,7 +9,8 @@ $params = array_merge(
 
 return [
     'id' => 'app-api',
-    'basePath' => dirname(__DIR__),    
+    'basePath' => dirname(__DIR__),
+    'controllerNamespace' => 'api\controllers',
     'bootstrap' => ['log'],
     'modules' => [//多个版本 分模块
         'v1' => [
@@ -23,7 +24,7 @@ return [
     ],
     'components' => [        
         'user' => [
-            'identityClass' => 'common\models\User',
+            'identityClass' => 'api\models\User',
             'enableAutoLogin' => false,
         ],
         'log' => [
@@ -35,17 +36,27 @@ return [
                 ],
             ],
         ],
+        'db' => [#db
+            'class' => 'yii\db\Connection',
+            'dsn' => 'mysql:host=localhost;dbname=yii_api',
+            'username' => 'root',
+            'password' => '',
+            'charset' => 'utf8',
+        ],
         'urlManager' => [
             'enablePrettyUrl' => true,
             'enableStrictParsing' => true,
             'showScriptName' => false,
-            'rules' => [
+            'rules' => [#路由规则配置
                 [
                     'class' => 'yii\rest\UrlRule',
                     'controller' => 'v1/country',
                     'pluralize' => false,//禁用复数
                     'tokens' => [
                         '{id}' => '<id:\\w+>'
+                    ],
+                    'extraPatterns'=>[
+                       'GET search/<name>' => 'search',//#额外的参数 这边只需要添加需要添加的参数即可
                     ],
                 ],
                 [
@@ -56,11 +67,23 @@ return [
                         '{id}' => '<id:\\w+>'
                     ],
                 ],
-                'POST v1/country/search/<name>' => 'v1/country/search',//#自定义搜索
+                [
+                    'class' => 'yii\rest\UrlRule',
+                    'controller' => 'user',#api\controllers\user
+                    'pluralize' => false,//禁用复数
+                    'extraPatterns'=>[
+                        'POST login' => 'login',//#登录
+                        'POST reg'=>'reg',#注册测试账号
+                        'GET debug'=>'debug',
+                        'GET info'=>'info',
+                    ],
+                ],
+                //'GET v1/country/search/<name>' => 'v1/country/search',//#自定义搜索
+
             ],
 
         ],
-        'response' => [
+        'response' => [#响应规范设置
             'class' => 'yii\web\Response',
             'on beforeSend' => function ($event) {
                 //restful api
@@ -74,9 +97,9 @@ return [
                 $data = [
                     'code' =>$code,
                     'msg' => $msg,
-                    'data' => $response->data
+                    'data' => !empty($response->data)?$response->data:array(),
                 ];
-                $code == 200 && $data['data'] = $response->data;
+                //$code == 200 && $data['data'] = $response->data;
                 $response->data = $data;
                 $response->format = yii\web\Response::FORMAT_JSON;
             },
