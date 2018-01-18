@@ -1,5 +1,3 @@
-
-
 #Yii2实现RESTful架构配置最佳实践
 
 ## 为什么要用RESTful API
