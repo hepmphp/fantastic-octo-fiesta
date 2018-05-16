@@ -47,8 +47,7 @@ $('#btn_js').click(function(){
             fields.push($(this).val());
         }
     });
-
-    ajax_post(create_js_url,{table:$('#table').val(),fields:fields});
+    console.log(fields);
     var table = $('#table').val();
     layer.open({
         type: 2, //iframe
@@ -56,7 +55,7 @@ $('#btn_js').click(function(){
         title: '预览',
         btn: [],
         shade: 0.3, //遮罩透明度
-        content:create_js_url+"&table="+table
+        content:create_js_url+"&table="+table+"&fields="+fields
     });
     //ajax_post(create_js_url,{table:$('#table').val()});
 });

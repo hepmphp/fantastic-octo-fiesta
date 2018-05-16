@@ -1,16 +1,16 @@
 /*
 Navicat MySQL Data Transfer
 
-Source Server         : 本地数据库
-Source Server Version : 50626
+Source Server         : 127.0.0.1
+Source Server Version : 50721
 Source Host           : localhost:3306
 Source Database       : game_admin
 
 Target Server Type    : MYSQL
-Target Server Version : 50626
+Target Server Version : 50721
 File Encoding         : 65001
 
-Date: 2018-05-16 18:15:21
+Date: 2018-05-17 00:05:50
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -98,6 +98,77 @@ CREATE TABLE `cms_article_category` (
 -- ----------------------------
 
 -- ----------------------------
+-- Table structure for cms_attach
+-- ----------------------------
+DROP TABLE IF EXISTS `cms_attach`;
+CREATE TABLE `cms_attach` (
+  `id` int(10) NOT NULL AUTO_INCREMENT,
+  `cate_id` int(11) NOT NULL DEFAULT '0' COMMENT '所属分类',
+  `tag_ids` varchar(255) NOT NULL DEFAULT '0' COMMENT '标签id',
+  `name` varchar(255) NOT NULL DEFAULT '' COMMENT '附件名称',
+  `file` varchar(255) NOT NULL DEFAULT '' COMMENT '文件路径',
+  `width` int(10) NOT NULL DEFAULT '0' COMMENT '宽度',
+  `height` int(10) NOT NULL DEFAULT '0' COMMENT '高度',
+  `ext` varchar(255) NOT NULL DEFAULT '' COMMENT '文件类型',
+  `size` varchar(255) NOT NULL DEFAULT '' COMMENT '文件大小',
+  `addtime` int(10) NOT NULL DEFAULT '0' COMMENT '添加时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=74 DEFAULT CHARSET=utf8 COMMENT='附件';
+
+-- ----------------------------
+-- Records of cms_attach
+-- ----------------------------
+INSERT INTO `cms_attach` VALUES ('41', '0', '1', '遥望1.png', 'uploads/20180512/b83b084de63446421118a2c806d09a68.png', '2380', '3366', 'png', '141074', '1526136927');
+INSERT INTO `cms_attach` VALUES ('42', '0', '1', '遥望2.png', 'uploads/20180512/e2cf19718a61fd15b747e94bcb2b7c46.png', '2380', '3366', 'png', '81101', '1526136927');
+INSERT INTO `cms_attach` VALUES ('43', '0', '1,2,3', '流浪歌手的情人1.png', 'uploads/20180512/c75026c6465c9c7253388688f2fbd605.png', '1860', '2631', 'png', '141474', '1526136927');
+INSERT INTO `cms_attach` VALUES ('44', '0', '1,2,3', '有多少爱可以重来.png', 'uploads/20180512/d42a11712498c27ea32d0de0adbfa8c5.png', '2380', '3366', 'png', '305396', '1526136927');
+INSERT INTO `cms_attach` VALUES ('45', '0', '1,2,3', '喜欢你.png', 'uploads/20180512/22957ca5860482fa498de3ed90a1efa5.png', '1785', '2525', 'png', '209770', '1526137788');
+INSERT INTO `cms_attach` VALUES ('46', '0', '1,2,3', '喜欢你2.png', 'uploads/20180512/1b242b18acdb46493e523ee633c87bec.png', '1785', '2525', 'png', '195864', '1526137788');
+INSERT INTO `cms_attach` VALUES ('47', '0', '1,2,3', '遥望1.png', 'uploads/20180512/681b44438af35695a3787df80c13f846.png', '2380', '3366', 'png', '141074', '1526137788');
+INSERT INTO `cms_attach` VALUES ('48', '0', '1,2,3', '喜欢你2.png', 'uploads/20180512/7e7eade820d0c94aabc06bd8cd01816b.png', '1785', '2525', 'png', '195864', '1526137906');
+INSERT INTO `cms_attach` VALUES ('49', '0', '1,2,3', '遥望1.png', 'uploads/20180512/5d174f89d0059fa2c7574d3f59e4199c.png', '2380', '3366', 'png', '141074', '1526137906');
+INSERT INTO `cms_attach` VALUES ('50', '0', '1,2,3', '喜欢你2.png', 'uploads/20180512/3596ad0eb31470781a2a2c1b662fb6b3.png', '1785', '2525', 'png', '195864', '1526138001');
+INSERT INTO `cms_attach` VALUES ('51', '0', '1,2,3', '遥望1.png', 'uploads/20180512/e2e901340c0cae39c004ccf3175594c4.png', '2380', '3366', 'png', '141074', '1526138001');
+INSERT INTO `cms_attach` VALUES ('52', '0', '1,2,3', '喜欢你.png', 'uploads/20180512/bf7b6cfa0c14a7827b66943931ab6a7c.png', '1785', '2525', 'png', '209770', '1526141435');
+INSERT INTO `cms_attach` VALUES ('53', '0', '1,2,3', '喜欢你2.png', 'uploads/20180512/33806c21b1b3129e0f09bc1c842a47fe.png', '1785', '2525', 'png', '195864', '1526141435');
+INSERT INTO `cms_attach` VALUES ('54', '0', '1,2,3', '遥望1.png', 'uploads/20180512/f4c6666c503aa187b7ddc8a3b4c09375.png', '2380', '3366', 'png', '141074', '1526141435');
+INSERT INTO `cms_attach` VALUES ('56', '0', '1,2,3', '喜欢你2.png', 'uploads/20180513/4a2bfb80a5dbf811648d7cc32412cd55.png', '1785', '2525', 'png', '195864', '1526177511');
+INSERT INTO `cms_attach` VALUES ('57', '0', '1,2,3', '喜欢你2.png', 'uploads/20180513/5469981e004640cb8184b5b50b9fe25c.png', '1785', '2525', 'png', '195864', '1526178717');
+INSERT INTO `cms_attach` VALUES ('59', '0', '0', '喜欢你.png', 'uploads/20180513/8a79c0efe5989466fda222fb6ce79c31.png', '1785', '2525', 'png', '209770', '1526178816');
+INSERT INTO `cms_attach` VALUES ('61', '0', '1,2,3', '喜欢你2.png', 'uploads/20180513/4ff50ac51f5c089dd052d7bfa1e0b1f6.png', '1785', '2525', 'png', '195864', '1526178836');
+INSERT INTO `cms_attach` VALUES ('62', '0', '1,2,3', '喜欢你2.png', 'uploads/20180513/c6f1f2cea6dcf965d070585066181d5e.png', '1785', '2525', 'png', '195864', '1526178945');
+INSERT INTO `cms_attach` VALUES ('63', '0', '1,2,3', '遥望1.png', 'uploads/20180513/c58d8710b7a022e1769794863dcdd6ee.png', '2380', '3366', 'png', '141074', '1526178945');
+INSERT INTO `cms_attach` VALUES ('64', '0', '0', '喜欢你2.png', 'uploads/20180513/0327ec84ce95520c1b0e5e00b4e5c148.png', '1785', '2525', 'png', '195864', '1526179030');
+INSERT INTO `cms_attach` VALUES ('65', '0', '0', '遥望1.png', 'uploads/20180513/a1f67ce4e19332bae0ff5b038866e82d.png', '2380', '3366', 'png', '141074', '1526179030');
+INSERT INTO `cms_attach` VALUES ('66', '0', '0', '遥望1.png', 'uploads/20180513/05e6fe817362a741e6ab46e765a89b9c.png', '2380', '3366', 'png', '141074', '1526179155');
+INSERT INTO `cms_attach` VALUES ('67', '0', '0', '喜欢你2.png', 'uploads/20180513/7da14e0c014683a3529d383bc00a9991.png', '1785', '2525', 'png', '195864', '1526179155');
+INSERT INTO `cms_attach` VALUES ('68', '0', '流行, 民谣', '遥望1.png', 'uploads/20180513/2e59eb8e987e55cdc1da09a0e0a33c3c.png', '2380', '3366', 'png', '141074', '1526180515');
+INSERT INTO `cms_attach` VALUES ('69', '0', '1,3', '遥望1.png', 'uploads/20180513/8f54a59206f9c1673ad37781ebab7fa2.png', '2380', '3366', 'png', '141074', '1526180823');
+INSERT INTO `cms_attach` VALUES ('70', '0', '1,2,3', '喜欢你.png', 'uploads/20180515/579a0bec3c606beff4ae70e118b2cf7b.png', '1785', '2525', 'png', '209770', '1526402533');
+INSERT INTO `cms_attach` VALUES ('71', '0', '1,2,3', '喜欢你2.png', 'uploads/20180515/2122f5b9f5ddb4d8e4ddd44cb7473c7b.png', '1785', '2525', 'png', '195864', '1526402543');
+INSERT INTO `cms_attach` VALUES ('72', '0', '1,2,3', '遥望1.png', 'uploads/20180515/aa88133707ad9b068e632c2ffe97df0b.png', '2380', '3366', 'png', '141074', '1526402543');
+INSERT INTO `cms_attach` VALUES ('73', '0', '1,2,3', '喜欢你.png', 'uploads/20180515/df833b1e6f42d535501a0ff0b6a08994.png', '1785', '2525', 'png', '209770', '1526402543');
+
+-- ----------------------------
+-- Table structure for cms_attach_cate
+-- ----------------------------
+DROP TABLE IF EXISTS `cms_attach_cate`;
+CREATE TABLE `cms_attach_cate` (
+  `id` int(10) NOT NULL AUTO_INCREMENT,
+  `pid` int(10) NOT NULL DEFAULT '0' COMMENT '父类id',
+  `name` varchar(255) NOT NULL DEFAULT '' COMMENT '附件分类名称',
+  `addtime` int(10) NOT NULL DEFAULT '0' COMMENT '添加时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COMMENT='附件分类';
+
+-- ----------------------------
+-- Records of cms_attach_cate
+-- ----------------------------
+INSERT INTO `cms_attach_cate` VALUES ('1', '0', '摇滚', '1525878527');
+INSERT INTO `cms_attach_cate` VALUES ('2', '0', '流行', '1525878531');
+INSERT INTO `cms_attach_cate` VALUES ('3', '0', ' 民谣', '1525878544');
+
+-- ----------------------------
 -- Table structure for cms_tag
 -- ----------------------------
 DROP TABLE IF EXISTS `cms_tag`;
@@ -110,30 +181,6 @@ CREATE TABLE `cms_tag` (
 
 -- ----------------------------
 -- Records of cms_tag
--- ----------------------------
-
--- ----------------------------
--- Table structure for pp_qq_user
--- ----------------------------
-DROP TABLE IF EXISTS `pp_qq_user`;
-CREATE TABLE `pp_qq_user` (
-  `id` int(10) NOT NULL AUTO_INCREMENT,
-  `openid` varchar(255) NOT NULL DEFAULT '' COMMENT 'QQ用户唯一标示',
-  `user_id` bigint(10) NOT NULL DEFAULT '0' COMMENT '用户ID',
-  `nickname` varchar(60) NOT NULL DEFAULT '' COMMENT 'QQ用户昵称',
-  `figureurl_qq_1` varchar(255) NOT NULL DEFAULT '' COMMENT '大小为40×40像素的QQ头像URL',
-  `figureurl_qq_2` varchar(255) NOT NULL DEFAULT '' COMMENT '大小为100×100像素的QQ头像URL',
-  `gender` char(2) NOT NULL DEFAULT '' COMMENT '性别。 如果获取不到则默认返回"男"',
-  `province` varchar(20) NOT NULL DEFAULT '' COMMENT '省份',
-  `city` varchar(20) NOT NULL DEFAULT '' COMMENT '城市',
-  `year` smallint(4) NOT NULL DEFAULT '0' COMMENT '出生年份',
-  `addtime` int(10) NOT NULL DEFAULT '0' COMMENT '添加时间',
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `openid` (`openid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='QQ账号凭证';
-
--- ----------------------------
--- Records of pp_qq_user
 -- ----------------------------
 
 -- ----------------------------

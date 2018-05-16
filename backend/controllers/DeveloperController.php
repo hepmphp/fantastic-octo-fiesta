@@ -114,9 +114,11 @@ class DeveloperController extends BaseController{
      *  生成js
      */
     public function actionCreateJs(){
-        $table = Yii::$app->request->post('table','ga_platform','trim');
-        $fields = Yii::$app->request->post('fields','','trim');
-      //  var_dump($fields);
+        $table = Yii::$app->request->get('table','ga_platform');
+        $fields = Yii::$app->request->get('fields','');
+        $fields = explode(',',$fields);
+        $preview = Yii::$app->request->get('preview',1);
+     //  var_dump($fields);exit();
         $sql   = "SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name ='{$table}' and TABLE_SCHEMA='game_admin'";
         $command = Yii::$app->db->createCommand($sql);
         $table_field = $command->queryAll();
@@ -146,28 +148,26 @@ class DeveloperController extends BaseController{
             mkdir($logic_path,0755,true);
         }
         $logic_file = $logic_path.'/index.js';
-        echo $logic_file;
-        if(!file_exists($logic_file)){//不允许覆盖
-            $res = file_put_contents($logic_file,$template_content);
-            if($res){
-                $response = array(
-                    'status'=>0,
-                    'msg'=>Yii::t('app','create_js_file_success')
-                );
-            }else{
-                $response = array(
-                    'status'=>-2,
-                    'msg'=>Yii::t('app','js_file_exist')
-                );
+        if($preview!=1){
+            if(!file_exists($logic_file)){//不允许覆盖
+                $res = file_put_contents($logic_file,$template_content);
+                if($res){
+                    $response = array(
+                        'status'=>0,
+                        'msg'=>Yii::t('app','create_js_file_success')
+                    );
+                }else{
+                    $response = array(
+                        'status'=>-2,
+                        'msg'=>Yii::t('app','js_file_exist')
+                    );
+                }
+                return $this->asJson($response);
             }
-            return $this->asJson($response);
         }else{
             $this->layout = 'main_curd.php';
             return $this->render('preview_js',['data'=>$template_content]);
         }
-
-
-
    }
 
 
