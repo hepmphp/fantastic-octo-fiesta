@@ -52,7 +52,7 @@
                 }
                 return ($a['listorder'] < $b['listorder']) ? -1 : 1;
             });
-           // var_dump($admin_access);
+
             foreach($left_menu as $menu){
                 //var_dump($menu);
                 if(!in_array($menu['id'],$admin_access)){
@@ -72,7 +72,7 @@
                 <li class="nav-toggle"><span class="nav-open"><i class="fa fa-bar-chart" aria-hidden="true"></i><?=$menu['name']?></span>
                     <ul class="list-unstyled leftnav-view">
                         <?php
-                        //    var_dump($sub_menu);
+                            //var_dump($sub_menu);
 
                         foreach($sub_menu as $last_menu){
                             if(!in_array($last_menu['id'],$admin_access)){

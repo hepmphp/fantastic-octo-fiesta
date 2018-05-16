@@ -212,13 +212,11 @@ $(function () { $(".popover-options a").popover({
  * 修改密码开始
  */
 $('#edit_password').click(function(){
-    edit();
-});
-
-function edit() {
     var url = "?r=ga-admin-user/edit-password";
     user_form(url,2);
-}
+});
+
+
 //添加模板
 function user_form(url,action){
     var content = url;

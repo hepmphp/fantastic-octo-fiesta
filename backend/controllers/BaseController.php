@@ -40,7 +40,6 @@ class BaseController extends Controller{
             if($this->layout && Yii::$app->request->get('iframe')==1){
                 $this->layout = 'main_content.php';//详情页
             }
-
             return true;
         }else{
             return false;
@@ -112,13 +111,20 @@ class BaseController extends Controller{
         if(Yii::$app->controller->id=='site'){
             return true;
         }
+        //requestedRoute
+        if(Yii::$app->controller->module->id!='app-backend'){
+            $model = Yii::$app->controller->module->id."/".Yii::$app->controller->id;
+        }else{
+            $model = Yii::$app->controller->id;
+        }
 
         $where_menu = array(
-            'model'=>Yii::$app->controller->id,
+            'model'=>$model,
             'action'=>Yii::$app->controller->action->id,
         );
+
         $this->current_menu = GaAdminMenu::find()->where($where_menu)->andWhere(['<>','level',0])->limit(1)->asArray()->one();
-//        echo "<pre>";
+
 
         if(!in_array($this->current_menu['id'],Yii::$app->session['admin_user.mids']) && Yii::$app->controller->action->id != 'get_search_where'){//搜索条件拼接不做权限检测
                /*
@@ -132,7 +138,7 @@ class BaseController extends Controller{
                         'mids'=>Yii::$app->session['admin_user.mids'],
                     ),
                 );*/
-                throw new LogicException(-1,Yii::t('app','user_has_no_permission'));
+               // throw new LogicException(-1,Yii::t('app','user_has_no_permission'));
         }else{
             return true;
         }
@@ -235,8 +241,8 @@ class BaseController extends Controller{
         $ids = Yii::$app->request->post('ids');
         $ids_arr = explode(',',$ids);
         $ids_arr = array_map('intval',$ids_arr);
-        if(empty($ids_arr)){
-            $res = $this->model->findAll($ids_arr)->limit(10)->delete();
+        if(!empty($ids_arr)){
+            $res = $this->model->findAll($ids_arr)->limit(100)->delete();
             if($res){
                 $response =array(
                     'status'=>0,

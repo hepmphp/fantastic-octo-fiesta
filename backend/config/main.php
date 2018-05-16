@@ -15,6 +15,9 @@ return [
         'api' => [
             'class' => 'backend\modules\api\Api',//验证码api模块
         ],
+        'cms' => [
+            'class' => 'backend\modules\cms\Cms',//Cms模块
+        ],
      ],
     'components' => [
         'request' => [
@@ -90,7 +93,7 @@ return [
             ],
         ],
         'errorHandler' => [
-            'class'=>'backend\components\exception\ErrorHandler'
+           // 'class'=>'backend\components\exception\ErrorHandler'
         ]
 
         /*

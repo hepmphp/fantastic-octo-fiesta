@@ -93,6 +93,7 @@ class SiteController extends BaseController
      */
     public function actionLogout()
     {
+        Yii::$app->session->removeAll();
         Yii::$app->session->destroy();
         return Yii::$app->getResponse()->redirect('?r=site/index');
     }

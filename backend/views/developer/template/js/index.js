@@ -17,7 +17,7 @@ var urls = {
  */
 function add(){
     var url = urls.create_url;
-    user_form(url,1);
+    layer_form(url,1);
 }
 /**
  * 修改

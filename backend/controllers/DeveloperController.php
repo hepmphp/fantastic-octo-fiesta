@@ -114,7 +114,9 @@ class DeveloperController extends BaseController{
      *  生成js
      */
     public function actionCreateJs(){
-        $table = Yii::$app->request->get('table','ga_platform');
+        $table = Yii::$app->request->post('table','ga_platform','trim');
+        $fields = Yii::$app->request->post('fields','','trim');
+      //  var_dump($fields);
         $sql   = "SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name ='{$table}' and TABLE_SCHEMA='game_admin'";
         $command = Yii::$app->db->createCommand($sql);
         $table_field = $command->queryAll();
@@ -124,18 +126,29 @@ class DeveloperController extends BaseController{
         $form_name = str_replace(' ','',ucwords(str_replace('_',' ',$table)));
         $from_data = $form_name.':{';
         foreach($table_field as $v){
-            $from_data_str[] = "\t\t\t\t\t{$v['COLUMN_NAME']}:body.find('#{$v['COLUMN_NAME']}').val()";
+            if(in_array($v['COLUMN_NAME'],$fields)){
+                $from_data_str[] = "\t\t\t\t\t{$v['COLUMN_NAME']}:body.find('#{$v['COLUMN_NAME']}').val()";
+            }
+
         }
         $from_data .= PHP_EOL.implode(','.PHP_EOL,$from_data_str);
         $from_data .= PHP_EOL."}";
         $controller = str_replace('_','-',$table);
+        $controller_arr = explode('-',$controller);
+        if($controller_arr[0]!='ga'){//非管理后台的 为模块快发 cms_attach_cate 对应的目录为 cms/attach-cate/index.js
+            $module = $controller_arr[0];
+            unset($controller_arr[0]);
+            $controller = $module.'/'.implode('-',$controller_arr);
+        }
         $template_content = str_replace(array('[controller]','[form_data]','[from_name]'),array($controller,$from_data,$form_name),$template_content);
-       // echo $template_content;
+
+
         $logic_path = './static/js/logic/'.$controller;//目前就用到index.js
         if(!is_dir($logic_path)){
             mkdir($logic_path,0755,true);
         }
         $logic_file = $logic_path.'/index.js';
+        echo $logic_file;
         if(!file_exists($logic_file)){//不允许覆盖
             $res = file_put_contents($logic_file,$template_content);
             if($res){

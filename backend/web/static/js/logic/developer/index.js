@@ -41,5 +41,12 @@ $('#preview').click(function(){
 
 $('#btn_js').click(function(){
     var create_js_url = '?r=developer/create-js';
-    ajax_post(create_js_url,{table:$('#table').val()});
+    var fields = new Array();
+    $("input[name='ids[]']").each(function(){
+        if(this.checked){
+            fields.push($(this).val());
+        }
+    });
+
+    ajax_post(create_js_url,{table:$('#table').val(),fields:fields});
 });
