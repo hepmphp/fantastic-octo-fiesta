@@ -16,7 +16,7 @@
             <button class="btn btn-info m-l" type="submit"> 查询</button>
             <button class="btn" id="preview" type="button">预览from</button>
             <button class="btn" type="button">生成from</button>
-            <button class="btn" type="button" id="btn_js">生成js</button>
+            <button class="btn" type="button" id="btn_js">预览js</button>
             <button class="btn" type="button" id="btn_search">生成搜索项</button>
             <button class="btn" type="button" id="btn_list">生成列表</button>
             <button class="btn" type="button" id="btn_controller">生成控制器</button>
@@ -29,16 +29,19 @@
             <thead>
             <tr>
                 <th><input type="checkbox" class="chekck_all"></th>
+                <th>字段名</th>
+                <th>字段</th>
                 <th>生成类型</th>
                 <th>验证类型</th>
-                <th>字段</th>
-                <th>字段名</th>
+
             </tr>
             </thead>
             <tbody>
             <?php foreach($fields as $k=>$vo){ ?>
             <tr>
                 <td><input type="checkbox" name="ids[]" value="<?=$k?>"></td>
+                <td><?=$vo?></td>
+                <td><?=$k?></td>
                 <td>
                     <select  name="form_builder_type[]" class="form-control form_builder_type">
                         <?php
@@ -49,8 +52,7 @@
                     </select>
                 </td>
                 <td></td>
-                <td><?=$k?></td>
-                <td><?=$vo?></td>
+
             </tr>
             <?php }?>
             </tbody>

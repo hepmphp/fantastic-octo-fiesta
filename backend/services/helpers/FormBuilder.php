@@ -18,13 +18,18 @@ class FormBuilder {
 
     public static function get_config_form_builder_type(){
         $config = array(
-            'text_input'=>'普通文本',
-            'password_input'=>'密码',
-            'textarea_input'=>'文本框',
-            'select_input'=>'下拉框',
-            'multi_radio'=>'单选框',
-            'mutil_checkbox'=>'复选框',
-            'time'=>'时间',
+            'text_input'=>'1.普通文本',
+            'password_input'=>'2.密码',
+            'textarea_input'=>'3.文本框',
+            'select_input'=>'4.下拉框',
+            'multi_radio'=>'5.单选框',
+            'mutil_checkbox'=>'6.复选框',
+            'time'=>'7.时间',
+            'image'=>'8.单图',
+            'image_mutil'=>'9.多图',
+            'text_rich'=>'10.富文本',
+            'text_select'=>'11.文本多选',
+            'text_search'=>'12.下拉搜索',
         );
         return $config;
     }
@@ -198,4 +203,59 @@ EOT;
         $input = str_replace('[items]',$items_html,$input);
         return $input;
     }
+
+    public static function time($field,$name){
+
+        $input = <<<EOT
+       <div class="form-group">
+		<label class="control-label col-md-4">[name]：</label>
+		  <div class="col-md-4">
+		<input placeholder="[name]" class="form-control date-range-[field] date-ico" type="text" value="<?=\$form['[field]']?>">
+		</div>
+	   </div>
+EOT;
+        $input = str_replace(array('[name]','[field]'),array($name,$field),$input);
+        return $input;
+    }
+
+    public static function image($field,$name){
+        $input = <<<EOT
+            <div class="form-group">
+            <label class="col-md-4 control-label">[name]：</label>
+            <form name="image_form_[field]" id="image_form_[field]" action="" method="post" enctype="multipart/form-data" target="imageFrame">
+              <div class="col-md-4">
+                <input value="" name="[field]" class="imgPath form-control" type="text" id="pic_[field]">
+              </div>
+               <button type="button" class="btnImg btn btn-success">浏览</button>
+               <input name="submitImg" id="submitImg" class="submitImg" style="display:none" type="file" accept=".jpg,.png,.gif,.jpeg">
+               <iframe width="0" height="0" id="imageFrame" name="imageFrame" frameborder="0" scrolling="no"></iframe>
+            </div>
+EOT;
+        $input = str_replace(array('[name]','[field]'),array($name,$field),$input);
+        return $input;
+
+    }
+
+    /**
+     * 富文本编辑器
+     * @param $field  字段
+     * @param $name   字段名
+     * @return mixed
+     */
+    public static function text_rich($field,$name){
+        $input = <<<EOT
+      <div class="form-group">
+     <label class="col-sm-1 control-label">[name]：</label>
+     </div>
+     <div class="col-sm-12">
+        <script id="editor" type="text/plain" name="[field]" id="[field]" value="{\$form['field']}" style="width:100%;height: 400px;">
+        </script>
+      </div>
+EOT;
+        $input = str_replace(array('[name]','[field]'),array($name,$field),$input);
+        return $input;
+
+    }
+
+
 }

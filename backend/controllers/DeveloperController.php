@@ -29,8 +29,9 @@ class DeveloperController extends BaseController{
             $table_field = $command->queryAll();
             $fields = array();
             $select = array();//下拉框
+
             foreach($table_field as $k=>$v){
-                if(stripos($v['COLUMN_COMMENT'],'|')!==false){
+                if(stripos($v['COLUMN_COMMENT'],'|')!==false){//表注释含有|
                     $comment = explode('|',$v['COLUMN_COMMENT']);
                     $fields[$v['COLUMN_NAME']] = $comment[0];
                     $select_item = explode(',',$comment[1]);
@@ -75,7 +76,7 @@ class DeveloperController extends BaseController{
       $fields = array();
       $select = array();//下拉框
       foreach($table_field as $k=>$v){
-          if(stripos($v['COLUMN_COMMENT'],'|')!==false){
+          if(stripos($v['COLUMN_COMMENT'],'|')!==false){//统一的格式 状态|0:显示,1:不显示
                 $comment = explode('|',$v['COLUMN_COMMENT']);
               $fields[$v['COLUMN_NAME']] = $comment[0];
               $select_item = explode(',',$comment[1]);
@@ -87,7 +88,6 @@ class DeveloperController extends BaseController{
               $fields[$v['COLUMN_NAME']] = $v['COLUMN_COMMENT'];
           }
       }
-
       //生成html
       $form_html = '';
       foreach($fields as $field=>$name){
@@ -141,8 +141,6 @@ class DeveloperController extends BaseController{
             $controller = $module.'/'.implode('-',$controller_arr);
         }
         $template_content = str_replace(array('[controller]','[form_data]','[from_name]'),array($controller,$from_data,$form_name),$template_content);
-
-
         $logic_path = './static/js/logic/'.$controller;//目前就用到index.js
         if(!is_dir($logic_path)){
             mkdir($logic_path,0755,true);
@@ -158,17 +156,17 @@ class DeveloperController extends BaseController{
                 );
             }else{
                 $response = array(
-                    'status'=>-1,
-                    'msg'=>Yii::t('app','create_js_file_fail')
+                    'status'=>-2,
+                    'msg'=>Yii::t('app','js_file_exist')
                 );
             }
+            return $this->asJson($response);
         }else{
-            $response = array(
-                'status'=>-2,
-                'msg'=>Yii::t('app','js_file_exist')
-            );
+            $this->layout = 'main_curd.php';
+            return $this->render('preview_js',['data'=>$template_content]);
         }
-        return $this->asJson($response);
+
+
 
    }
 

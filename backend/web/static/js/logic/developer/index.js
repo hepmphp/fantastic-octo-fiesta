@@ -31,7 +31,7 @@ $('#preview').click(function(){
     });
     layer.open({
         type: 2, //iframe
-        area: ['500px', '560px'],
+        area: ['1200px', '750px'],
         title: '预览',
         btn: [],
         shade: 0.3, //遮罩透明度
@@ -49,4 +49,14 @@ $('#btn_js').click(function(){
     });
 
     ajax_post(create_js_url,{table:$('#table').val(),fields:fields});
+    var table = $('#table').val();
+    layer.open({
+        type: 2, //iframe
+        area: ['1200px', '750px'],
+        title: '预览',
+        btn: [],
+        shade: 0.3, //遮罩透明度
+        content:create_js_url+"&table="+table
+    });
+    //ajax_post(create_js_url,{table:$('#table').val()});
 });
