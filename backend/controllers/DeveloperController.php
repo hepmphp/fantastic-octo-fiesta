@@ -29,8 +29,9 @@ class DeveloperController extends BaseController{
             $table_field = $command->queryAll();
             $fields = array();
             $select = array();//下拉框
+
             foreach($table_field as $k=>$v){
-                if(stripos($v['COLUMN_COMMENT'],'|')!==false){
+                if(stripos($v['COLUMN_COMMENT'],'|')!==false){//表注释含有|
                     $comment = explode('|',$v['COLUMN_COMMENT']);
                     $fields[$v['COLUMN_NAME']] = $comment[0];
                     $select_item = explode(',',$comment[1]);
@@ -75,7 +76,7 @@ class DeveloperController extends BaseController{
       $fields = array();
       $select = array();//下拉框
       foreach($table_field as $k=>$v){
-          if(stripos($v['COLUMN_COMMENT'],'|')!==false){
+          if(stripos($v['COLUMN_COMMENT'],'|')!==false){//统一的格式 状态|0:显示,1:不显示
                 $comment = explode('|',$v['COLUMN_COMMENT']);
               $fields[$v['COLUMN_NAME']] = $comment[0];
               $select_item = explode(',',$comment[1]);
@@ -87,7 +88,6 @@ class DeveloperController extends BaseController{
               $fields[$v['COLUMN_NAME']] = $v['COLUMN_COMMENT'];
           }
       }
-
       //生成html
       $form_html = '';
       foreach($fields as $field=>$name){
@@ -115,6 +115,7 @@ class DeveloperController extends BaseController{
      */
     public function actionCreateJs(){
         $table = Yii::$app->request->get('table','ga_platform');
+        $preview = Yii::$app->request->get('preview','1');
         $sql   = "SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name ='{$table}' and TABLE_SCHEMA='game_admin'";
         $command = Yii::$app->db->createCommand($sql);
         $table_field = $command->queryAll();
@@ -131,31 +132,38 @@ class DeveloperController extends BaseController{
         $controller = str_replace('_','-',$table);
         $template_content = str_replace(array('[controller]','[form_data]','[from_name]'),array($controller,$from_data,$form_name),$template_content);
        // echo $template_content;
-        $logic_path = './static/js/logic/'.$controller;//目前就用到index.js
-        if(!is_dir($logic_path)){
-            mkdir($logic_path,0755,true);
-        }
-        $logic_file = $logic_path.'/index.js';
-        if(!file_exists($logic_file)){//不允许覆盖
-            $res = file_put_contents($logic_file,$template_content);
-            if($res){
-                $response = array(
-                    'status'=>0,
-                    'msg'=>Yii::t('app','create_js_file_success')
-                );
+        if($preview==0){
+            $logic_path = './static/js/logic/'.$controller;//目前就用到index.js
+            if(!is_dir($logic_path)){
+                mkdir($logic_path,0755,true);
+            }
+            $logic_file = $logic_path.'/index.js';
+            if(!file_exists($logic_file)){//不允许覆盖
+                $res = file_put_contents($logic_file,$template_content);
+                if($res){
+                    $response = array(
+                        'status'=>0,
+                        'msg'=>Yii::t('app','create_js_file_success')
+                    );
+                }else{
+                    $response = array(
+                        'status'=>-1,
+                        'msg'=>Yii::t('app','create_js_file_fail')
+                    );
+                }
             }else{
                 $response = array(
-                    'status'=>-1,
-                    'msg'=>Yii::t('app','create_js_file_fail')
+                    'status'=>-2,
+                    'msg'=>Yii::t('app','js_file_exist')
                 );
             }
+            return $this->asJson($response);
         }else{
-            $response = array(
-                'status'=>-2,
-                'msg'=>Yii::t('app','js_file_exist')
-            );
+            $this->layout = 'main_curd.php';
+            return $this->render('preview_js',['data'=>$template_content]);
         }
-        return $this->asJson($response);
+
+
 
    }
 
