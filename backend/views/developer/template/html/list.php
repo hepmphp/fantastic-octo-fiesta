@@ -8,10 +8,7 @@ use backend\components\PageWidget;
             <input type="hidden" name="r" value="<?=Yii::$app->request->get('r')?>">
             <input type="hidden" name="iframe" value="1">
             <input type="hidden" name="search" value="1">
-            <div class="form-group">
-                <label class="control-label">用户组：</label>
-                <input placeholder="文本" class="form-control" name="name" id="name" value="<?=Yii::$app->request->get('name')?>" type="text">
-            </div>
+            [search_field]
             <button class="btn btn-info m-l" type="submit"> 查询</button>
             <input class="btn btn-info m-l" value="添加" name="search" type="button" style="width:60px;" onclick="add()">
         </form>

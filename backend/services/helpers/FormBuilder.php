@@ -30,6 +30,10 @@ class FormBuilder {
             'text_rich'=>'10.富文本',
             'text_select'=>'11.文本多选',
             'text_search'=>'12.下拉搜索',
+            ''=>'-------',
+            'search_text'=>'1.文本搜索-控制器',
+            'search_like'=>'2.like搜索-控制器',
+            'search_time'=>'3.时间搜索-控制器'
         );
         return $config;
     }
@@ -205,12 +209,11 @@ EOT;
     }
 
     public static function time($field,$name){
-
         $input = <<<EOT
        <div class="form-group">
 		<label class="control-label col-md-4">[name]：</label>
 		  <div class="col-md-4">
-		<input placeholder="[name]" class="form-control date-range-[field] date-ico" type="text" value="<?=\$form['[field]']?>">
+		<input placeholder="[name]" class="form-control date-range-[field] date-ico" name="[field]" id="[field]"  type="text" value="<?=\$form['[field]']?>">
 		</div>
 	   </div>
 EOT;
@@ -251,6 +254,7 @@ EOT;
         <script id="editor" type="text/plain" name="[field]" id="[field]" value="{\$form['field']}" style="width:100%;height: 400px;">
         </script>
       </div>
+      
 EOT;
         $input = str_replace(array('[name]','[field]'),array($name,$field),$input);
         return $input;

@@ -17,9 +17,9 @@
             <button class="btn" id="preview" type="button">预览from</button>
             <button class="btn" type="button">生成from</button>
             <button class="btn" type="button" id="btn_js">预览js</button>
-            <button class="btn" type="button" id="btn_search">生成搜索项</button>
-            <button class="btn" type="button" id="btn_list">生成列表</button>
-            <button class="btn" type="button" id="btn_controller">生成控制器</button>
+            <!-- <button class="btn" type="button" id="btn_search">生成搜索项</button> -->
+            <button class="btn" type="button" id="btn_list">预览列表</button>
+            <button class="btn" type="button" id="btn_controller">预览控制器</button>
         </form>
 
     </div>

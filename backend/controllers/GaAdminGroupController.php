@@ -40,6 +40,7 @@ class GaAdminGroupController extends BaseController
      */
     public function get_search_where(){
         $where = array();
+        $and_where = array();
         if(Yii::$app->request->get('search')){
             $id = Yii::$app->request->get('id');
             if($id){
@@ -49,8 +50,13 @@ class GaAdminGroupController extends BaseController
             if($name){
                 $where['name'] = $name;
             }
+
         }
-        return $where;
+        //like搜索 $and_where[] = ['like','name',$name];
+        //时间搜索 $and_where[] = ['>=','begin_time',$begin_time];
+        //时间搜索 $and_where[] = ['<','end_time',$end_time];
+     //   $where[] = ['like', 'name', $name];
+        return array($where,$and_where);
     }
 
     /**
@@ -59,8 +65,14 @@ class GaAdminGroupController extends BaseController
      */
     public function actionIndex()
     {
-        $where = $this->get_search_where();
-        $model_ar = GaAdminGroup::find()->where($where)->asArray();
+        list($where,$and_where) = $this->get_search_where();
+        $query = GaAdminGroup::find()->where($where);
+        if(!empty($and_where)){
+            foreach($and_where as $aw){
+                $query->andWhere($aw);
+            }
+        }
+        $model_ar =   $query->asArray();
         $page = new Pagination([
             'defaultPageSize' => 20,
             'totalCount' => $model_ar->count(),
