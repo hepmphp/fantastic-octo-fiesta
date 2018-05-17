@@ -12,6 +12,7 @@ use backend\controllers\BaseController;
 use Yii;
 use backend\services\helpers\FormBuilder;
 use backend\services\helpers\FormBuilderSearch;
+use backend\services\helpers\FormValidator;
 use backend\services\helpers\InfoSchema;
 /***
  *  开发工具
@@ -32,6 +33,7 @@ class DeveloperController extends BaseController{
             [
              'config_table_id'=>$config_table_id,
              'config_form_builder_type'=>FormBuilder::get_config_form_builder_type(),
+             'config_form_validator_type'=>FormValidator::get_config_form_validator_type(),
              'fields'=>$fields
             ]
         );
@@ -209,7 +211,6 @@ class DeveloperController extends BaseController{
        }else{
            $namespace = 'backend\controllers';
        }
-
        // $id = Yii::$app->request->get('id');
        // if($id){
        //    $where['id'] = $id;
@@ -282,13 +283,87 @@ EOT;
        //时间搜索 $and_where[] = ['<','end_time',$end_time];
        // var_dump($content);
        highlight_string($content);
-
-
-
-
-
-
    }
+
+
+   public function actionCreateModel(){
+    $table = Yii::$app->request->get('table','ga_platform');
+    $fields = Yii::$app->request->get('fields');
+    $form_builder_types = Yii::$app->request->get('form_builder_types');
+    $fields = explode(',',$fields);
+    $form_builder_types = explode(',',$form_builder_types);
+
+    $table_arr = explode('_',$table);
+    $table_arr = array_map(function($a){
+        $a = ucfirst($a);
+        return $a;
+    },$table_arr);
+
+    $controller_name = implode('',$table_arr);
+
+    $tpl = Yii::$app->viewPath.'/developer/template/html/model.php';
+    $content = file_get_contents($tpl);
+
+    //替换模块名称 非后台的 全部替换成对应的模块
+    if($table_arr[0]!='ga'){
+        $table_arr[0] = strtolower($table_arr[0]);
+        $namespace = sprintf('backend\modules\%s\models',$table_arr[0]);
+    }else{
+        $namespace = 'backend\models';
+    }
+     
+    //搜索条件替换
+    $where_tpl = <<<EOT
+         \$[field] = Yii::\$app->request->get('[field]');
+         if(\$[field]){
+            \$where['[field]'] = \$[field];
+         }
+         \n
+EOT;
+    $where_time_range = <<<EOT
+        \$begin_[field] = Yii::\$app->request->get('begin_[field]');
+        \$end_[field] = Yii::\$app->request->get('end_[field]');
+        if(\$begin_[field]){
+           \$begin_[field] = strtotime(\$begin_[field]);
+            \$and_where[] = ['>=','begin_time',\$begin_[field]];
+        }
+        if(\$end_[field]){
+            \$end_[field] = strtotime(\$end_[field])+86400;
+            \$and_where[] = ['<','end_time',\$end_[field]];
+        }
+        \n
+
+EOT;
+    $where_like = <<<EOT
+          \$[field] = Yii::\$app->request->get('[field]');
+           if(\$[field]){
+               \$and_where[] = ['like','[field]',\$[field]];
+           }\n
+
+EOT;
+    $where_str = "\n";
+    //替换搜索项
+    foreach($fields as $k=>$field){
+         $form_builder_type = $form_builder_types[$k];
+         if($form_builder_type=='search_text'){
+             $where_str .= str_replace('[field]',$field,$where_tpl);
+         }else if($form_builder_type=='search_time'){
+             $where_str .= str_replace('[field]',$field,$where_time_range);
+         }else if($form_builder_type=='search_like'){
+             $where_str .= str_replace('[field]',$field,$where_like);
+         }
+    }
+    //[search]//
+    $content = str_replace(
+        array('app_templdate','GaAdminGroup','//[search]//'),
+        array($namespace,$controller_name,$where_str),
+        $content);
+  
+    highlight_string($content);
+}
+
+
+
 
 
 

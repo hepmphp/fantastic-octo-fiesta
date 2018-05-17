@@ -25,6 +25,7 @@ class GaAdminGroup extends \yii\db\ActiveRecord
         return '{{%ga_admin_group}}';
     }
 
+   
     /**
      * @inheritdoc
      */
