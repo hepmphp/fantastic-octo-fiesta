@@ -29,13 +29,19 @@ $('#preview').click(function(){
             form_builder_types.push(form_builder_type);
         }
     });
+    var preview_url = "?r=developer/preview&fields="+fields+"&form_builder_types="+form_builder_types+"&table="+table;
     layer.open({
         type: 2, //iframe
         area: ['1200px', '750px'],
-        title: '预览',
-        btn: [],
+        title: '预览视图',
         shade: 0.3, //遮罩透明度
-        content:"?r=developer/preview&fields="+fields+"&form_builder_types="+form_builder_types+"&table="+table
+        content:preview_url,
+        btn: ['生成','取消'],
+        yes: function(index, layero){
+            ajax_get(preview_url,{create_file:1});
+        },btn2: function(index, layero){
+
+        }
     });
 });
 
@@ -45,19 +51,25 @@ $('#btn_list').click(function(){
     var table = $('#table').val();
     $("input[name='ids[]']").each(function(){
         if(this.checked){
-            var search_list_types = $(this).parent().parent().find('.search_list_type').val();//查找对应的生成类型
+            var search_list_type = $(this).parent().parent().find('.search_list_type').val();//查找对应的生成类型
             fields.push($(this).val());
-            form_builder_types.push(form_builder_type);
             search_list_types.push(search_list_type);
         }
     });
+    var list_url = "?r=developer/create-list&fields="+fields+"&search_list_types="+search_list_types+"&table="+table;
     layer.open({
         type: 2, //iframe
         area: ['1200px', '750px'],
         title: '预览',
         btn: [],
         shade: 0.3, //遮罩透明度
-        content:"?r=developer/create-list&fields="+fields+"&search_list_types="+search_list_types+"&table="+table
+        content:list_url,
+        btn: ['生成','取消'],
+        yes: function(index, layero){
+            ajax_get(list_url,{create_file:1});
+        },btn2: function(index, layero){
+
+        }
     });
 });
 
@@ -72,13 +84,20 @@ $('#btn_controller').click(function(){
             search_builder_types.push(search_builder_type);
         }
     });
+    var controller_url = "?r=developer/create-controller&fields="+fields+"&search_builder_types="+search_builder_types+"&table="+table;
     layer.open({
         type: 2, //iframe
         area: ['1200px', '750px'],
         title: '预览',
         btn: [],
         shade: 0.3, //遮罩透明度
-        content:"?r=developer/create-controller&fields="+fields+"&search_builder_types="+search_builder_types+"&table="+table
+        content:controller_url,
+        btn: ['生成','取消'],
+        yes: function(index, layero){
+            ajax_get(controller_url,{create_file:1});
+        },btn2: function(index, layero){
+
+        }
     });
 });
 
@@ -93,24 +112,33 @@ $('#btn_model').click(function(){
             form_validator_types.push(form_validator_type);
         }
     });
+    var model_url = "?r=developer/create-model&fields="+fields+"&form_validator_types="+form_validator_types+"&table="+table;
     layer.open({
         type: 2, //iframe
         area: ['1200px', '750px'],
         title: '预览',
         btn: [],
         shade: 0.3, //遮罩透明度
-        content:"?r=developer/create-model&fields="+fields+"&form_validator_types="+form_validator_types+"&table="+table
+        content:model_url,
+        btn: ['生成','取消'],
+        yes: function(index, layero){
+            ajax_get(model_url,{create_file:1});
+        },btn2: function(index, layero){
+
+        }
     });
 });
 
 $('#btn_js').click(function(){
     var create_js_url = '?r=developer/create-js';
+    var table = $('#table').val();
     var fields = new Array();
     $("input[name='ids[]']").each(function(){
         if(this.checked){
             fields.push($(this).val());
         }
     });
+    var js_url = create_js_url+"&table="+table+"&fields="+fields;
   //  console.log(fields);
     var table = $('#table').val();
     layer.open({
@@ -119,7 +147,13 @@ $('#btn_js').click(function(){
         title: '预览',
         btn: [],
         shade: 0.3, //遮罩透明度
-        content:create_js_url+"&table="+table+"&fields="+fields
+        content:js_url,
+        btn: ['生成','取消'],
+        yes: function(index, layero){
+            ajax_get(js_url,{create_file:1});
+        },btn2: function(index, layero){
+
+        }
     });
     //ajax_post(create_js_url,{table:$('#table').val()});
 });

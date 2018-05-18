@@ -18,6 +18,24 @@ use backend\services\helpers\InfoSchema;
 use backend\services\helpers\SearchBuilder;
 
 /***
+ * 生成路径说明
+视图
+//modules/cms/view/cms-cate/create
+//modules/cms/view/cms-cate/index
+模型
+//modules/cms/models/CmsAttach.php
+//models/GaAdminMenu.php
+
+ 控制器
+//module/controllers/CmsArticleController.php  //模块
+//controllers/GaAdminMenuController            //后台
+
+ js
+//web/static/js/login/cms/article
+//web/static/js/logic/ga-admin-mneu
+ */
+
+/***
  *  开发工具
  * Class DeveloperController
  * @package backend\controllers
@@ -45,6 +63,7 @@ class DeveloperController extends BaseController{
     }
 
   public function actionPreview(){
+      $create_file = Yii::$app->request->get('create_file','0');
       $table = Yii::$app->request->get('table','ga_platform');
       $get_fields = Yii::$app->request->get('fields');
       $get_fields = explode(',',$get_fields);
@@ -69,9 +88,51 @@ class DeveloperController extends BaseController{
               $form_html .= FormBuilder::$fb_func($field,$name);
           }
       }
-      $this->layout = 'main_curd.php';
+      if($create_file==1){
+          $controller = str_replace('_','-',$table);
+          $controller_arr = explode('-',$controller);
+          if($controller_arr[0]!='ga'){//非管理后台的 为模块快发 cms_attach_cate 对应的目录为 cms/attach-cate/index.js
+              $module = $controller_arr[0];
+              unset($controller_arr[0]);
+              $controller = implode('-',$controller_arr);
+              $view_path = Yii::$app->viewPath."/../modules/%s/view/%s/";
+              $view_path = sprintf($view_path,$module,$controller);
+          }else{
+              $view_path =  Yii::$app->viewPath.'/'.$controller.'/';
+          }
+//          echo $view_path;exit();
+          if(!is_dir($view_path)){
+              mkdir($view_path,0755,true);
+          }
+          //视图
+          //modules/cms/view/cms-cate/create
+          $view_file = $view_path.'/create.php';
+          if(!file_exists($view_file)){//不允许覆盖
+              $res = file_put_contents($view_file,$form_html);
+              if($res){
+                  $response = array(
+                      'status'=>0,
+                      'msg'=>Yii::t('app','视图创建成功')
+                  );
+              }else{
+                  $response = array(
+                      'status'=>-2,
+                      'msg'=>Yii::t('app','视图创建失败')
+                  );
+              }
+          }else{
+              $response = array(
+                  'status'=>-1,
+                  'msg'=>Yii::t('app','视图已存在,请手动覆盖')
+              );
+          }
+          return $this->asJson($response);
+      }else{
+          $this->layout = 'main_curd.php';
+          return $this->render('preview',['form_html'=>$form_html]);
+      }
 
-      return $this->render('preview',['form_html'=>$form_html]);
+
       //echo FormBuilder::mutil_checkbox('stauts','状态',$select['status']);
 
   }
@@ -80,6 +141,7 @@ class DeveloperController extends BaseController{
      *  生成js
      */
     public function actionCreateJs(){
+        $create_file = Yii::$app->request->get('create_file','0');
         $table = Yii::$app->request->get('table','ga_platform');
         $fields = Yii::$app->request->get('fields','');
         $fields = explode(',',$fields);
@@ -106,7 +168,7 @@ class DeveloperController extends BaseController{
             $controller = $module.'/'.implode('-',$controller_arr);
         }
         $template_content = str_replace(array('[controller]','[form_data]','[from_name]'),array($controller,$from_data,$form_name),$template_content);
-        if($preview!=1){
+        if($create_file==1){
             $logic_path = './static/js/logic/'.$controller;//目前就用到index.js
             if(!is_dir($logic_path)){
                 mkdir($logic_path,0755,true);
@@ -125,8 +187,14 @@ class DeveloperController extends BaseController{
                         'msg'=>Yii::t('app','js_file_exist')
                     );
                 }
-                return $this->asJson($response);
+
+            }else{
+                $response = array(
+                    'status'=>-2,
+                    'msg'=>Yii::t('app','js_file_exist')
+                );
             }
+            return $this->asJson($response);
         }else{
             $this->layout = 'main_curd.php';
             return $this->render('preview_js',['data'=>$template_content]);
@@ -137,6 +205,7 @@ class DeveloperController extends BaseController{
     * 生成搜索列表
     */
    public function actionCreateList(){
+       $create_file = Yii::$app->request->get('create_file','0');
         $table = Yii::$app->request->get('table','ga_platform');
         $fields = Yii::$app->request->get('fields','');
         $fields = explode(',',$fields);
@@ -148,6 +217,7 @@ class DeveloperController extends BaseController{
         foreach($fields as $k=>$field){
             $config_search_list_types[$field] = $search_list_types[$k];
         }
+
         list($db_fields,$select) = (new InfoSchema())->get_all_fields($table);
         //  var_dump($fields);exit();
         $table_field = (new InfoSchema())->get_table_field($table);
@@ -158,7 +228,7 @@ class DeveloperController extends BaseController{
         foreach($db_fields as $field=>$name){
             $fb_func = $config_search_list_types[$field];
 
-            if(strpos($fb_func,'search_none')!==false){
+            if(strpos($fb_func,'search_none')!==false||empty($fb_func)){
                 continue;
             }
             if(isset($select[$field])){
@@ -188,11 +258,55 @@ class DeveloperController extends BaseController{
             array('[search_field]','[tr_head]','[tr_td]'),
             array($form_search,$tr_header,$tr_td),
         $template_content);
-        highlight_string($template_content);
+        if($create_file==1){
+            $controller = str_replace('_','-',$table);
+            $controller_arr = explode('-',$controller);
+            if($controller_arr[0]!='ga'){//非管理后台的 为模块快发 cms_attach_cate 对应的目录为 cms/attach-cate/index.js
+                $module = $controller_arr[0];
+                unset($controller_arr[0]);
+                $controller = implode('-',$controller_arr);
+                $view_path = Yii::$app->viewPath."/../modules/%s/views/%s/";
+                $view_path = sprintf($view_path,$module,$controller);
+            }else{
+                $view_path =  Yii::$app->viewPath.'/'.$controller.'/';
+            }
+//          echo $view_path;exit();
+            if(!is_dir($view_path)){
+                mkdir($view_path,0755,true);
+            }
+            //视图
+            //modules/cms/view/cms-cate/create
+            $view_file = $view_path.'/index.php';
+           // echo $view_file;
+            if(!file_exists($view_file)){//不允许覆盖
+                $res = file_put_contents($view_file,$template_content);
+                if($res){
+                    $response = array(
+                        'status'=>0,
+                        'msg'=>Yii::t('app','列表创建成功')
+                    );
+                }else{
+                    $response = array(
+                        'status'=>-2,
+                        'msg'=>Yii::t('app','列表创建失败')
+                    );
+                }
+            }else{
+                $response = array(
+                    'status'=>-1,
+                    'msg'=>Yii::t('app','列表已存在,请手动覆盖')
+                );
+            }
+            return $this->asJson($response);
+        }else{
+            highlight_string($template_content);
+        }
+
    }
 
 
    public function actionCreateController(){
+       $create_file = Yii::$app->request->get('create_file','0');
        $table = Yii::$app->request->get('table','ga_platform');
        $fields = Yii::$app->request->get('fields');
        $search_builder_types = Yii::$app->request->get('search_builder_types');
@@ -213,10 +327,12 @@ class DeveloperController extends BaseController{
        //替换模块名称 非后台的 全部替换成对应的模块
        $model = 'app\models';//app\models\GaAdminGroup
        $namespace = 'backend\controllers';
+       $controller_path = Yii::$app->viewPath."/../controllers/";
        if($table_arr[0]!='ga'){
            $table_arr[0] = strtolower($table_arr[0]);
            $namespace = sprintf('backend\modules\%s\controllers',$table_arr[0]);
            $model =  sprintf('backend\modules\%s\models',$table_arr[0]);
+           $controller_path = Yii::$app->viewPath."/../modules/{$table_arr[0]}/controllers/";
        }
        // $id = Yii::$app->request->get('id');
        // if($id){
@@ -274,6 +390,40 @@ EOT;
            array('app_templdate','app_model','GaAdminGroup','//[search]//'),
            array($namespace,$model,$controller_name,$where_str),
            $content);
+
+        if($create_file==1){
+            //$controller_path
+            $controller_file = $controller_path.$controller_name.".php";
+            if(!file_exists($controller_file)){//不允许覆盖
+                $res = file_put_contents($controller_file,$content);
+                if($res){
+                    $response = array(
+                        'status'=>0,
+                        'msg'=>Yii::t('app','控制器创建成功')
+                    );
+                }else{
+                    $response = array(
+                        'status'=>-2,
+                        'msg'=>Yii::t('app','控制器创建失败')
+                    );
+                }
+            }else{
+                $response = array(
+                    'status'=>-1,
+                    'msg'=>Yii::t('app','控制器已存在,请手动覆盖')
+                );
+            }
+            return $this->asJson($response);
+
+
+        }else{
+            highlight_string($content);
+        }
+
+
+ //      控制器
+//module/controllers/CmsArticleController.php  //模块
+//controllers/GaAdminMenuController            //后台
        /***
         * 搜索选项
         *  fields:title,addtime
@@ -289,13 +439,14 @@ EOT;
        //时间搜索 $and_where[] = ['>=','begin_time',$begin_time];
        //时间搜索 $and_where[] = ['<','end_time',$end_time];
        // var_dump($content);
-       highlight_string($content);
+
    }
 
     /**
      * 生成模型
      */
     public function actionCreateModel(){
+        $create_file = Yii::$app->request->get('create_file','0');
         $table = Yii::$app->request->get('table','ga_platform');
         $fields = Yii::$app->request->get('fields');
         $form_validator_types = Yii::$app->request->get('form_validator_types');
@@ -308,7 +459,7 @@ EOT;
             return $a;
         },$table_arr);
 
-        $controller_name = implode('',$table_arr);
+        $model_name = implode('',$table_arr);
 
         $tpl = Yii::$app->viewPath.'/developer/template/html/model.php';
         $content = file_get_contents($tpl);
@@ -317,8 +468,10 @@ EOT;
         if($table_arr[0]!='ga'){
             $table_arr[0] = strtolower($table_arr[0]);
             $namespace = sprintf('backend\modules\%s\models',$table_arr[0]);
+            $model_path = Yii::$app->viewPath."/../modules/{$table_arr[0]}/models/";
         }else{
             $namespace = 'backend\models';
+            $model_path = Yii::$app->viewPath."/../models/";
         }
         list($db_fields,$select) = (new InfoSchema())->get_all_fields($table);
         $rules = [];
@@ -338,10 +491,41 @@ EOT;
         //[search]//
         $content = str_replace(
             array('app_templdate','Model','[table]','[rule]','[field_comment]'),
-            array($namespace,$controller_name,$table,"\n".implode("\n",$rules),"\n".implode("\n",$attributes)),
+            array($namespace,$model_name,$table,"\n".implode("\n",$rules),"\n".implode("\n",$attributes)),
             $content);
-        highlight_string($content);
+
+        // 模型
+        //modules/cms/models/CmsAttach.php
+        //models/GaAdminMenu.php
+        if($create_file==1){
+            $model_file = $model_path."{$model_name}.php";
+            if(!file_exists($model_file)){//不允许覆盖
+                $res = file_put_contents($model_file,$content);
+                if($res){
+                    $response = array(
+                        'status'=>0,
+                        'msg'=>Yii::t('app','模型创建成功')
+                    );
+                }else{
+                    $response = array(
+                        'status'=>-2,
+                        'msg'=>Yii::t('app','模型创建失败')
+                    );
+                }
+            }else{
+                $response = array(
+                    'status'=>-1,
+                    'msg'=>Yii::t('app','模型已存在,请手动覆盖')
+                );
+            }
+            return $this->asJson($response);
+        }else{
+            highlight_string($content);
+        }
 }
+
+
+
 
 
 

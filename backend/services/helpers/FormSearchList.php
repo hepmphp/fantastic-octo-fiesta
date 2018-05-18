@@ -19,11 +19,11 @@ class FormSearchList {
     public static function get_config_search_list_type(){
         $config = array(
             'search_none'=>'0.请选择',
-            'text_input'=>'1.普通文本-列表搜索',
-            'select_input'=>'2.下拉框-列表搜索',
-            'time_range'=>'3.时间-列表搜索',
-            'text_select'=>'4.文本多选-列表搜索',
-            'text_search'=>'5.下拉搜索-列表搜索',
+            'text_input'=>'1.普通文本',
+            'select_input'=>'2.下拉框',
+            'time_range'=>'3.时间',
+            'text_select'=>'4.文本多选',
+            'text_search'=>'5.下拉搜索',
         );
         return $config;
     }

@@ -73,7 +73,7 @@ function layer_form(url,action){
 					listorder:body.find('#listorder').val(),
 					status:body.find('#status').val(),
 					is_mobile:body.find('#is_mobile').val()
-}
+                }
             };
             //todo生成js验证
             if(param.CmsAd.id){
