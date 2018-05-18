@@ -32,7 +32,9 @@
                 <th><input type="checkbox" class="chekck_all"></th>
                 <th>字段名</th>
                 <th>字段</th>
-                <th>生成类型</th>
+                <th>表单类型</th>
+                <th>列表搜索</th>
+                <th>控制器搜索</th>
                 <th>验证类型</th>
 
             </tr>
@@ -53,7 +55,26 @@
                     </select>
                 </td>
                 <td>
-                    <select  name="form_builder_type[]" class="form-control form_builder_type">
+                    <select  name="search_list_type[]" class="form-control search_list_type">
+                        <?php
+                        foreach($config_search_list_type as $t=>$fb){
+                            ?>
+                            <option value="<?=$t?>"><?=$fb?></option>
+                        <?php }?>
+                    </select>
+                </td>
+                <td>
+                    <select  name="search_builder_type[]" class="form-control search_builder_type">
+                        <?php
+                        foreach($config_search_builder_type as $t=>$fb){
+                            ?>
+                            <option value="<?=$t?>"><?=$fb?></option>
+                        <?php }?>
+                    </select>
+                </td>
+
+                <td>
+                    <select  name="form_validator_type[]" class="form-control form_validator_type">
                         <?php
                         foreach($config_form_validator_type as $t=>$vt){
                             ?>

@@ -30,10 +30,8 @@ class FormBuilder {
             'text_rich'=>'10.富文本',
             'text_select'=>'11.文本多选',
             'text_search'=>'12.下拉搜索',
-            ''=>'-------',
-            'search_text'=>'1.文本搜索-控制器',
-            'search_like'=>'2.like搜索-控制器',
-            'search_time'=>'3.时间搜索-控制器'
+
+
         );
         return $config;
     }

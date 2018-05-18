@@ -1,18 +1,18 @@
 <?php
 
-namespace app_templdate;
+namespace backend\modules\cms\controllers;
 
 use Yii;
-use app_model;
+use backend\modules\cms\models;
 use yii\filters\VerbFilter;
 use yii\data\Pagination;
 use backend\controllers\BaseController;
 
 
-class GaAdminGroupController extends BaseController
+class CmsArticleController extends BaseController
 {
     public function init(){
-       // $this->model = new GaAdminGroup();
+        // $this->model = new CmsArticle();
     }
     /**
      * @inheritdoc
@@ -35,28 +35,51 @@ class GaAdminGroupController extends BaseController
         $where = array();
         $and_where = array();
         if(Yii::$app->request->get('search')){
-            //[search]//
+
+            $admin = Yii::$app->request->get('admin');
+            if($admin){
+                $where['admin'] = $admin;
+            }
+
+            $title = Yii::$app->request->get('title');
+            if($title){
+                $where['title'] = $title;
+            }
+
+            $begin_addtime = Yii::$app->request->get('begin_addtime');
+            $end_addtime = Yii::$app->request->get('end_addtime');
+            if($begin_addtime){
+                $begin_addtime = strtotime($begin_addtime);
+                $and_where[] = ['>=','begin_time',$begin_addtime];
+            }
+            if($end_addtime){
+                $end_addtime = strtotime($end_addtime)+86400;
+                $and_where[] = ['<','end_time',$end_addtime];
+            }
+
+
+
         }
-        // $id = Yii::$app->request->get('id');
-        // if($id){
-        //    $where['id'] = $id;
-       // }
-        //文本搜索
-        //like搜索 $and_where[] = ['like','name',$name];
-        //时间搜索 $and_where[] = ['>=','begin_time',$begin_time];
-        //时间搜索 $and_where[] = ['<','end_time',$end_time];
-        //   $where[] = ['like', 'name', $name];
+        // $id = Yii::$app->request->get('id'); 
+        // if($id){ 
+        //    $where['id'] = $id; 
+        // }
+        //文本搜索 
+        //like搜索 $and_where[] = ['like','name',$name]; 
+        //时间搜索 $and_where[] = ['>=','begin_time',$begin_time]; 
+        //时间搜索 $and_where[] = ['<','end_time',$end_time]; 
+        //   $where[] = ['like', 'name', $name]; 
         return array($where,$and_where);
     }
 
     /**
-     * Lists all GaAdminGroup models.
+     * Lists all CmsArticle models.
      * @return mixed
      */
     public function actionIndex()
     {
         list($where,$and_where) = $this->get_search_where();
-        $query = GaAdminGroup::find()->where($where);
+        $query = CmsArticle::find()->where($where);
         if(!empty($and_where)){
             foreach($and_where as $aw){
                 $query->andWhere($aw);
@@ -83,14 +106,14 @@ class GaAdminGroupController extends BaseController
     public function actionView($id)
     {
         return $this->render('view', [
-            'model' => GaAdminGroup::findOne($id),
+            'model' => CmsArticle::findOne($id),
         ]);
     }
 
     public function actionCreate()
     {
         if(Yii::$app->request->isPost){
-            $model = new GaAdminGroup();
+            $model = new CmsArticle();
             return $this->commonCreate($model);
         }else{
             return $this->render('create',[]);
@@ -99,12 +122,12 @@ class GaAdminGroupController extends BaseController
 
     public function actionUpdate()
     {
-        if(Yii::$app->request->isPost){//Yii::$app->request->isPost
-            return $this->commonUpdate();//更新
+        if(Yii::$app->request->isPost){//Yii::$app->request->isPost 
+            return $this->commonUpdate();//更新 
         }else{
-            $model = GaAdminGroup::findOne(Yii::$app->request->get('id'));
+            $model = CmsArticle::findOne(Yii::$app->request->get('id'));
             return $this->render('create',[
-                'form'=>$model->attributes,//表单参数
+                'form'=>$model->attributes,//表单参数 
             ]);
         }
     }
@@ -113,8 +136,4 @@ class GaAdminGroupController extends BaseController
         return $this->commonDelete();
     }
 
-
-
-
-
-}
+} 

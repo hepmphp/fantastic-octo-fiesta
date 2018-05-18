@@ -78,6 +78,7 @@ class FormValidator {
 
     public static function get_config_form_validator_type(){
         $config = array(
+            ''=>'0.请选择',
             'required'=>'1.不能为空',
             'email'=>'2.邮箱验证',
             'phone'=>'3.手机号验证',
@@ -90,12 +91,12 @@ class FormValidator {
     }
 
     public static function required($field){
-        $tpl = " [[[field],'required','message'=>'{attribute}不能为空!'],";
+        $tpl = " ['[field]','required','message'=>'{attribute}不能为空!'],";
         $tpl = str_replace('[field]',$field,$tpl);
         return $tpl;
     }
     public static function email($field){
-        $tpl = " [[[field],'email','message'=>'邮箱格式不正确!'],";
+        $tpl = " ['[field]','email','message'=>'邮箱格式不正确!'],";
         $tpl = str_replace('[field]',$field,$tpl);
         return $tpl;
     }

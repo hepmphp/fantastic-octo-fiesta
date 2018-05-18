@@ -19,11 +19,11 @@ use Yii;
     <script src="<?=$asset->baseUrl;?>/static/js/respond.min.js"></script>
     <![endif]-->
 </head>
+<script src="<?=$asset->baseUrl?>/static/js/jquery.min.js"></script>
 <body>
 <body>
 <?=$content?>
 </body>
-<script src="<?=$asset->baseUrl?>/static/js/jquery.min.js"></script>
 <script src="<?=$asset->baseUrl?>/static/js/bootstrap.min.js"></script>
 <script src="<?=$asset->baseUrl?>/static/js/logic/<?=Yii::$app->controller->id?>/<?=Yii::$app->controller->action->id?>.js"></script>
 

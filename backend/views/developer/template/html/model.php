@@ -20,7 +20,7 @@ class Model extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-
+            [rule]
         ];
     }
 
