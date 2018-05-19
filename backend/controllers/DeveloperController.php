@@ -88,14 +88,25 @@ class DeveloperController extends BaseController{
               $form_html .= FormBuilder::$fb_func($field,$name);
           }
       }
+
+      $html = <<<HTML
+<div class="container col-sm-12" style="margin-top: 10px;">
+    <div class="form-horizontal">
+        <input type="hidden" id="id" value="<?=\$form['id']?>">
+        [form_html]
+    </div>
+</div>
+HTML;
+      $html = str_replace(array('[form_html]'),array($form_html),$html);
+
       if($create_file==1){
           $controller = str_replace('_','-',$table);
           $controller_arr = explode('-',$controller);
           if($controller_arr[0]!='ga'){//非管理后台的 为模块快发 cms_attach_cate 对应的目录为 cms/attach-cate/index.js
               $module = $controller_arr[0];
-              unset($controller_arr[0]);
+             // unset($controller_arr[0]);
               $controller = implode('-',$controller_arr);
-              $view_path = Yii::$app->viewPath."/../modules/%s/view/%s/";
+              $view_path = Yii::$app->viewPath."/../modules/%s/views/%s/";
               $view_path = sprintf($view_path,$module,$controller);
           }else{
               $view_path =  Yii::$app->viewPath.'/'.$controller.'/';
@@ -104,11 +115,14 @@ class DeveloperController extends BaseController{
           if(!is_dir($view_path)){
               mkdir($view_path,0755,true);
           }
+
+
           //视图
           //modules/cms/view/cms-cate/create
           $view_file = $view_path.'/create.php';
+        //  echo $view_file;
           if(!file_exists($view_file)){//不允许覆盖
-              $res = file_put_contents($view_file,$form_html);
+              $res = file_put_contents($view_file,$html);
               if($res){
                   $response = array(
                       'status'=>0,
@@ -128,8 +142,9 @@ class DeveloperController extends BaseController{
           }
           return $this->asJson($response);
       }else{
-          $this->layout = 'main_curd.php';
-          return $this->render('preview',['form_html'=>$form_html]);
+          highlight_string($html);
+//          $this->layout = 'main_curd.php';
+//          return $this->render('preview',['form_html'=>$form_html]);
       }
 
 
@@ -164,7 +179,7 @@ class DeveloperController extends BaseController{
         $controller_arr = explode('-',$controller);
         if($controller_arr[0]!='ga'){//非管理后台的 为模块快发 cms_attach_cate 对应的目录为 cms/attach-cate/index.js
             $module = $controller_arr[0];
-            unset($controller_arr[0]);
+            //unset($controller_arr[0]);
             $controller = $module.'/'.implode('-',$controller_arr);
         }
         $template_content = str_replace(array('[controller]','[form_data]','[from_name]'),array($controller,$from_data,$form_name),$template_content);
@@ -196,8 +211,11 @@ class DeveloperController extends BaseController{
             }
             return $this->asJson($response);
         }else{
-            $this->layout = 'main_curd.php';
-            return $this->render('preview_js',['data'=>$template_content]);
+
+
+            highlight_string($template_content);
+//            $this->layout = 'main_curd.php';
+//            return $this->render('preview_js',['data'=>$template_content]);
         }
    }
 
@@ -263,7 +281,7 @@ class DeveloperController extends BaseController{
             $controller_arr = explode('-',$controller);
             if($controller_arr[0]!='ga'){//非管理后台的 为模块快发 cms_attach_cate 对应的目录为 cms/attach-cate/index.js
                 $module = $controller_arr[0];
-                unset($controller_arr[0]);
+               // unset($controller_arr[0]);
                 $controller = implode('-',$controller_arr);
                 $view_path = Yii::$app->viewPath."/../modules/%s/views/%s/";
                 $view_path = sprintf($view_path,$module,$controller);
@@ -319,7 +337,9 @@ class DeveloperController extends BaseController{
            return $a;
        },$table_arr);
 
-       $controller_name = implode('',$table_arr);
+       $controller_name_arr = $table_arr;
+      // unset($controller_name_arr[0]);//去掉表前缀
+       $controller_name = implode('',$controller_name_arr);
 
        $tpl = Yii::$app->viewPath.'/developer/template/html/controller.php';
        $content = file_get_contents($tpl);
@@ -388,12 +408,12 @@ EOT;
        //[search]//
        $content = str_replace(
            array('app_templdate','app_model','GaAdminGroup','//[search]//'),
-           array($namespace,$model,$controller_name,$where_str),
+           array($namespace,$model.'\\'.$controller_name,$controller_name,$where_str),
            $content);
 
         if($create_file==1){
             //$controller_path
-            $controller_file = $controller_path.$controller_name.".php";
+            $controller_file = $controller_path.$controller_name."Controller.php";
             if(!file_exists($controller_file)){//不允许覆盖
                 $res = file_put_contents($controller_file,$content);
                 if($res){
@@ -458,8 +478,9 @@ EOT;
             $a = ucfirst($a);
             return $a;
         },$table_arr);
-
-        $model_name = implode('',$table_arr);
+        $model_name_arr = $table_arr;
+      //  unset($model_name_arr[0]);
+        $model_name = implode('',$model_name_arr);
 
         $tpl = Yii::$app->viewPath.'/developer/template/html/model.php';
         $content = file_get_contents($tpl);
@@ -476,7 +497,8 @@ EOT;
         list($db_fields,$select) = (new InfoSchema())->get_all_fields($table);
         $rules = [];
         //替换搜索项
-
+       // var_dump($db_fields);
+        $rules[] = FormValidator::required_all(array_keys($db_fields));
         foreach($fields as $k=>$field){
              $form_validator_type = $form_validator_types[$k];
             if(empty($form_validator_type)){

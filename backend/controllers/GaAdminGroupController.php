@@ -125,10 +125,10 @@ class GaAdminGroupController extends BaseController
      */
     public function actionUpdate()
     {
+        $model = $this->findModel(Yii::$app->request->get('id'));
         if(Yii::$app->request->isPost){//Yii::$app->request->isPost
-            return $this->commonUpdate();//更新
+            return $this->commonUpdate($model);//更新
         }else{
-            $model = $this->findModel(Yii::$app->request->get('id'));
             return $this->render('create',[
                 'form'=>$model->attributes,//表单参数
 
@@ -144,7 +144,7 @@ class GaAdminGroupController extends BaseController
      */
     public function actionDelete()
     {
-        return $this->commonDelete();
+        return $this->commonDelete($this->model);
     }
 
     /**

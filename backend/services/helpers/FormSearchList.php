@@ -93,7 +93,7 @@ EOT;
     /***
      * 时间范围搜索
      */
-    public static function time_ragne($field,$name){
+    public static function time_range($field,$name){
         $input = <<<EOT
         <div class="form-group">
             <label class="control-label">[name]：</label>

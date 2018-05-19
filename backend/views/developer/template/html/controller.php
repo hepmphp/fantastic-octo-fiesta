@@ -12,7 +12,7 @@ use backend\controllers\BaseController;
 class GaAdminGroupController extends BaseController
 {
     public function init(){
-       // $this->model = new GaAdminGroup();
+        $this->model = new GaAdminGroup();
     }
     /**
      * @inheritdoc
@@ -90,8 +90,7 @@ class GaAdminGroupController extends BaseController
     public function actionCreate()
     {
         if(Yii::$app->request->isPost){
-            $model = new GaAdminGroup();
-            return $this->commonCreate($model);
+            return $this->commonCreate($this->model);
         }else{
             return $this->render('create',[]);
         }
@@ -99,10 +98,10 @@ class GaAdminGroupController extends BaseController
 
     public function actionUpdate()
     {
+        $model = GaAdminGroup::findOne(Yii::$app->request->get('id'));
         if(Yii::$app->request->isPost){//Yii::$app->request->isPost
-            return $this->commonUpdate();//更新
+            return $this->commonUpdate($model);//更新
         }else{
-            $model = GaAdminGroup::findOne(Yii::$app->request->get('id'));
             return $this->render('create',[
                 'form'=>$model->attributes,//表单参数
             ]);
@@ -110,7 +109,7 @@ class GaAdminGroupController extends BaseController
     }
     public function actionDelete()
     {
-        return $this->commonDelete();
+        return $this->commonDelete($this->model);
     }
 
 

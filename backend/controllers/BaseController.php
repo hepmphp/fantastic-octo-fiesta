@@ -199,8 +199,8 @@ class BaseController extends Controller{
      * 通用的更新方法
      * @param $model
      */
-    public function commonUpdate(){
-        $model = $this->findModel(Yii::$app->request->get('id'));
+    public function commonUpdate($model){
+       // $model = $this->findModel(Yii::$app->request->get('id'));
         $model->load(Yii::$app->request->post());
         if($model->validate()){
             $res = $model->save();
@@ -232,7 +232,7 @@ class BaseController extends Controller{
     /**
      * 通用的删除方法
      */
-    public function commonDelete(){
+    public function commonDelete($model){
         $response = array(
             'status'=>-1,
             'msg'=>Yii::t('app','delete_fail'),
@@ -242,7 +242,9 @@ class BaseController extends Controller{
         $ids_arr = explode(',',$ids);
         $ids_arr = array_map('intval',$ids_arr);
         if(!empty($ids_arr)){
-            $res = $this->model->findAll($ids_arr)->limit(100)->delete();
+            //deleteAll
+            $where = ['in', 'id', $ids_arr];
+            $res = $this->model->deleteAll($where);
             if($res){
                 $response =array(
                     'status'=>0,

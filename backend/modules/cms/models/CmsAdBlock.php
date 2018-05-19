@@ -20,8 +20,8 @@ class CmsAdBlock extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            
-				 ['name','required','message'=>'{attribute}不能为空!'],
+
+				 [['name'],'required','message'=>'{attribute}不能为空!'],
         ];
     }
 
@@ -36,5 +36,16 @@ class CmsAdBlock extends \yii\db\ActiveRecord
 				 'name' => Yii::t('app', '区块名称'),
 				 'addtime' => Yii::t('app', '添加时间'),
         ];
+    }
+
+    public function beforeSave($insert){
+        if (parent::beforeSave($insert)) {
+            if($this->isNewRecord) {
+                $this->addtime = time();//添加时间
+            }
+            return true;
+        } else {
+            return false;
+        }
     }
 }

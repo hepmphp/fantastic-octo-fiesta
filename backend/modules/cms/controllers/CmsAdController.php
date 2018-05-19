@@ -3,16 +3,17 @@
 namespace backend\modules\cms\controllers;
 
 use Yii;
-use backend\modules\cms\models;
+use backend\modules\cms\models\CmsAd;
 use yii\filters\VerbFilter;
 use yii\data\Pagination;
 use backend\controllers\BaseController;
+use yii\helpers\ArrayHelper;
 
 
-class CmsAdBlockController extends BaseController
+class CmsAdController extends BaseController
 {
     public function init(){
-       // $this->model = new CmsAdBlock();
+        $this->model = new CmsAd();
     }
     /**
      * @inheritdoc
@@ -28,6 +29,8 @@ class CmsAdBlockController extends BaseController
             ],
         ];
     }
+
+
     /**
      * 搜索条件
      */
@@ -36,11 +39,16 @@ class CmsAdBlockController extends BaseController
         $and_where = array();
         if(Yii::$app->request->get('search')){
             
-            $name = Yii::$app->request->get('name');
-            if($name){
-               $where['name'] = $name;
+            $block_id = Yii::$app->request->get('block_id');
+            if($block_id){
+               $where['block_id'] = $block_id;
             }
             
+             $title = Yii::$app->request->get('title');
+              if($title){
+                  $and_where[] = ['like','title',$title];
+              }
+
 
         }
         // $id = Yii::$app->request->get('id');
@@ -56,13 +64,13 @@ class CmsAdBlockController extends BaseController
     }
 
     /**
-     * Lists all CmsAdBlock models.
+     * Lists all CmsAd models.
      * @return mixed
      */
     public function actionIndex()
     {
         list($where,$and_where) = $this->get_search_where();
-        $query = CmsAdBlock::find()->where($where);
+        $query = CmsAd::find()->where($where);
         if(!empty($and_where)){
             foreach($and_where as $aw){
                 $query->andWhere($aw);
@@ -82,6 +90,8 @@ class CmsAdBlockController extends BaseController
         return $this->render('index', [
             'page' => $page,
             'data'=>$data,
+            'config_status' =>CmsAd::getConfigStatus(),
+            'config_is_mobile'=>CmsAd::getConfigisMobile(),
         ]);
     }
 
@@ -89,34 +99,40 @@ class CmsAdBlockController extends BaseController
     public function actionView($id)
     {
         return $this->render('view', [
-            'model' => CmsAdBlock::findOne($id),
+            'model' => CmsAd::findOne($id),
+            'config_status' =>CmsAd::getConfigStatus(),
+            'config_is_mobile'=>CmsAd::getConfigisMobile(),
         ]);
     }
 
     public function actionCreate()
     {
         if(Yii::$app->request->isPost){
-            $model = new CmsAdBlock();
-            return $this->commonCreate($model);
+            return $this->commonCreate($this->model);
         }else{
-            return $this->render('create',[]);
+            return $this->render('create',[
+                'config_status' =>CmsAd::getConfigStatus(),
+                'config_is_mobile'=>CmsAd::getConfigisMobile(),
+            ]);
         }
     }
 
     public function actionUpdate()
     {
+        $model = CmsAd::findOne(Yii::$app->request->get('id'));
         if(Yii::$app->request->isPost){//Yii::$app->request->isPost
-            return $this->commonUpdate();//更新
+            return $this->commonUpdate($model);//更新
         }else{
-            $model = CmsAdBlock::findOne(Yii::$app->request->get('id'));
             return $this->render('create',[
                 'form'=>$model->attributes,//表单参数
+                'config_status' =>CmsAd::getConfigStatus(),
+                'config_is_mobile'=>CmsAd::getConfigisMobile(),
             ]);
         }
     }
     public function actionDelete()
     {
-        return $this->commonDelete();
+        return $this->commonDelete($this->model);
     }
 
 

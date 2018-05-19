@@ -7,9 +7,9 @@
  */
 
 var urls = {
-    create_url:'?r=cms/ad-block/create',
-    update_url:'?r=cms/ad-block/update',
-    delete_url:'?r=cms/ad-block/delete'
+    create_url:'?r=cms/cms-ad-block/create',
+    update_url:'?r=cms/cms-ad-block/update',
+    delete_url:'?r=cms/cms-ad-block/delete'
 };
 
 /***
@@ -66,8 +66,8 @@ function layer_form(url,action){
 }
             };
             //todo生成js验证
-            if(param.CmsAdBlock.id){
-                var url = urls.update_url+'&id='+param.CmsAdBlock.id;
+            if(param.id){
+                var url = urls.update_url+'&id='+param.id;
             }else{
                 var url = urls.create_url
             }

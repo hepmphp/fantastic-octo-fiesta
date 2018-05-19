@@ -7,9 +7,9 @@
  */
 
 var urls = {
-    create_url:'?r=[controller]/create',
-    update_url:'?r=[controller]/update',
-    delete_url:'?r=[controller]/delete'
+    create_url:'?r=cms/cms-ad/create',
+    update_url:'?r=cms/cms-ad/update',
+    delete_url:'?r=cms/cms-ad/delete'
 };
 
 /***
@@ -33,7 +33,7 @@ function edit(id) {
  */
 function del(id) {
     layer.confirm('确定要删除?',{
-            btn: ['确定','取消'], //按钮
+            btn: ['确定','取消'], //按钮 
             icon: 3,
             title:'提示'
         }, function(){
@@ -45,25 +45,36 @@ function del(id) {
     );
 }
 
-//表单
+//表单 
 function layer_form(url,action,area){
     var content = url;
     var title = action==2?'修改':'添加';
     var btn =  action==2?['确认修改','取消']:['确认添加','取消'];
     layer.open({
-        type: 2, //iframe
+        type: 2, //iframe 
         area:area ,
         title: title,
         btn: btn,
-        shade: 0.3, //遮罩透明度
+        shade: 0.3, //遮罩透明度 
         content:content,
         yes: function(index, layero){
             var body = layer.getChildFrame('body', index);
             var param ={
                 id:body.find('#id').val(),
-                [form_data]
+                CmsAd:{
+                    block_id:body.find('#block_id').val(),
+                    title:body.find('#title').val(),
+                    pic_url:body.find('#pic_url').val(),
+                    link_address:body.find('#link_address').val(),
+                    addtime:body.find('#addtime').val(),
+                    start_time:body.find('#start_time').val(),
+                    end_time:body.find('#end_time').val(),
+                    listorder:body.find('#listorder').val(),
+                    status:body.find('#status').val(),
+                    is_mobile:body.find('#is_mobile').val()
+                }
             };
-            //todo生成js验证
+            //todo生成js验证 
             if(param.id){
                 var url = urls.update_url+'&id='+param.id;
             }else{
@@ -74,6 +85,6 @@ function layer_form(url,action,area){
         },btn2: function(index, layero){
 
         }
-        // content:"{:U('Serverpolicy/add')}" //iframe的url
+        // content:"{:U('Serverpolicy/add')}" //iframe的url 
     });
 }

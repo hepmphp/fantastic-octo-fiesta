@@ -90,6 +90,17 @@ class FormValidator {
         return $config;
     }
 
+    public static function required_all($fields){
+          array_shift($fields);
+     //   var_dump($fields);
+        $fields = array_map(function($field){
+            return "'{$field}'";
+        },$fields);
+        $tpl = " [[[field]],'required','message'=>'{attribute}不能为空!'],";
+        $tpl = str_replace('[field]',implode(",",$fields),$tpl);
+        return $tpl;
+    }
+
     public static function required($field){
         $tpl = " ['[field]','required','message'=>'{attribute}不能为空!'],";
         $tpl = str_replace('[field]',$field,$tpl);

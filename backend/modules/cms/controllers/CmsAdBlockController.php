@@ -3,16 +3,16 @@
 namespace backend\modules\cms\controllers;
 
 use Yii;
-use backend\modules\cms\models;
+use backend\modules\cms\models\CmsAdBlock;
 use yii\filters\VerbFilter;
 use yii\data\Pagination;
 use backend\controllers\BaseController;
 
 
-class CmsArticleController extends BaseController
+class CmsAdBlockController extends BaseController
 {
     public function init(){
-        // $this->model = new CmsArticle();
+        $this->model = new CmsAdBlock();
     }
     /**
      * @inheritdoc
@@ -36,27 +36,10 @@ class CmsArticleController extends BaseController
         $and_where = array();
         if(Yii::$app->request->get('search')){
 
-            $admin = Yii::$app->request->get('admin');
-            if($admin){
-                $where['admin'] = $admin;
+            $name = Yii::$app->request->get('name');
+            if($name){
+                $where['name'] = $name;
             }
-
-            $title = Yii::$app->request->get('title');
-            if($title){
-                $where['title'] = $title;
-            }
-
-            $begin_addtime = Yii::$app->request->get('begin_addtime');
-            $end_addtime = Yii::$app->request->get('end_addtime');
-            if($begin_addtime){
-                $begin_addtime = strtotime($begin_addtime);
-                $and_where[] = ['>=','begin_time',$begin_addtime];
-            }
-            if($end_addtime){
-                $end_addtime = strtotime($end_addtime)+86400;
-                $and_where[] = ['<','end_time',$end_addtime];
-            }
-
 
 
         }
@@ -73,13 +56,13 @@ class CmsArticleController extends BaseController
     }
 
     /**
-     * Lists all CmsArticle models.
+     * Lists all CmsAdBlock models.
      * @return mixed
      */
     public function actionIndex()
     {
         list($where,$and_where) = $this->get_search_where();
-        $query = CmsArticle::find()->where($where);
+        $query = CmsAdBlock::find()->where($where);
         if(!empty($and_where)){
             foreach($and_where as $aw){
                 $query->andWhere($aw);
@@ -106,15 +89,14 @@ class CmsArticleController extends BaseController
     public function actionView($id)
     {
         return $this->render('view', [
-            'model' => CmsArticle::findOne($id),
+            'model' => CmsAdBlock::findOne($id),
         ]);
     }
 
     public function actionCreate()
     {
         if(Yii::$app->request->isPost){
-            $model = new CmsArticle();
-            return $this->commonCreate($model);
+            return $this->commonCreate($this->model);
         }else{
             return $this->render('create',[]);
         }
@@ -122,10 +104,10 @@ class CmsArticleController extends BaseController
 
     public function actionUpdate()
     {
+        $model = CmsAdBlock::findOne(Yii::$app->request->get('id'));
         if(Yii::$app->request->isPost){//Yii::$app->request->isPost 
-            return $this->commonUpdate();//更新 
+            return $this->commonUpdate($model);//更新 
         }else{
-            $model = CmsArticle::findOne(Yii::$app->request->get('id'));
             return $this->render('create',[
                 'form'=>$model->attributes,//表单参数 
             ]);
@@ -133,7 +115,8 @@ class CmsArticleController extends BaseController
     }
     public function actionDelete()
     {
-        return $this->commonDelete();
+        return $this->commonDelete($this->model);
     }
+
 
 } 

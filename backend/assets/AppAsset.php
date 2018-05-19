@@ -36,6 +36,7 @@ class AppAsset extends AssetBundle
         '/static/js/jquery.min.js',
         '/static/js/bootstrap.min.js',
         '/static/js/layer/layer.js',
+        '/static/js/logic/lib/image_upload.js',
 
         //Bootstrap table
         '/static/js/bootstrap-table/bootstrap-table.min.js',
