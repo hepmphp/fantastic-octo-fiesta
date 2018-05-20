@@ -71,8 +71,6 @@ class GaAdminUserController extends BaseController
             if($status){
                 $where['status'] = $status;
             }
-
-
         }
         return $where;
     }
@@ -95,8 +93,6 @@ class GaAdminUserController extends BaseController
             print_r($data);
             print_r($page);
         }
-
-
 
         return $this->render('index', [
             'page' => $page,
