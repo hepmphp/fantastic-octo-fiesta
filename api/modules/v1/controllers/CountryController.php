@@ -4,8 +4,10 @@ namespace api\modules\v1\controllers;
 
 
 use api\controllers\ApiController;
+use api\controllers\ApiTokenValidateController;
 use api\modules\v1\models\Country;
 use yii\filters\auth\HttpBearerAuth;
+use api\services\HttpAccessTokenAuth;
 /**
  * Country Controller API
  *
@@ -24,7 +26,7 @@ use yii\filters\auth\HttpBearerAuth;
     - OPTIONS /countries/AU: show the supported verbs regarding endpoint /countries/AU.
  *
  */
-class CountryController extends ApiController
+class CountryController extends ApiTokenValidateController
 {
     public $modelClass = 'api\modules\v1\models\Country';//关联的模型
     public $serializer = [
@@ -32,20 +34,20 @@ class CountryController extends ApiController
         'collectionEnvelope' => 'items',
     ];
 
-    public function behaviors()
-    {
-        $behaviors = parent::behaviors();
-        $behaviors['authenticator'] = [
-            'class'=>HttpBearerAuth::className(),
-            'optional'=>[
-                'login',//登录接口排除
-                'reg'//注册用户排除
-            ],
-        ];
-        #定义返回格式是：JSON
-       // $behaviors['contentNegotiator']['formats']['text/html'] = Response::FORMAT_JSON;
-        return $behaviors;
-    }
+//    public function behaviors()
+//    {
+//        $behaviors = parent::behaviors();
+//        $behaviors['authenticator'] = [
+//            'class'=>HttpBearerAuth::className(),
+//            'optional'=>[
+//                'login',//登录接口排除
+//                'reg'//注册用户排除
+//            ],
+//        ];
+//        #定义返回格式是：JSON
+//       // $behaviors['contentNegotiator']['formats']['text/html'] = Response::FORMAT_JSON;
+//        return $behaviors;
+//    }
 
     public function actions(){
         $actions = parent::actions();
@@ -55,6 +57,11 @@ class CountryController extends ApiController
     public function actionSearch($name){
         $one = Country::findOne(['name'=>$name]);
         return $one;
+    }
+
+    public function actionOrder(){
+
+        return ['status'=>0,'msg'=>'','data'=>['id'=>1]];
     }
 
     public function afterAction($action,$result){

@@ -31,7 +31,7 @@ class UploadSingleController extends Controller{
             $uploader = UploadedFile::getInstanceByName('submitImg');
             $filePath = 'uploads/'.date("Ymd").'/';
             if(!file_exists($filePath)){
-             mkdir($filePath,0755,true);
+               mkdir($filePath,0755,true);
             }
             $uploadFilename =  $filePath.md5($uploader->tempName) . '.' . $uploader->extension;
             $res = $uploader->saveAs($uploadFilename);

@@ -57,6 +57,7 @@ return [
                     ],
                     'extraPatterns'=>[
                        'GET search/<name>' => 'search',//#额外的参数 这边只需要添加需要添加的参数即可
+                       'GET order/'=>'order',
                     ],
                 ],
                 [

@@ -9,7 +9,7 @@ use api\modules\v1\models\Country;
  *
  * @author Budi Irawan <deerawan@gmail.com>
  *
- *   - GET /countries: list all countries
+ *  - GET /countries: list all countries
     - HEAD /countries: show the overview information of country listing
     - POST /countries: create a new country
     - GET /countries/AU: return the details of the country AU
@@ -21,7 +21,7 @@ use api\modules\v1\models\Country;
     - OPTIONS /countries/AU: show the supported verbs regarding endpoint /countries/AU.
  *
  */
-class CountryController extends ApiController
+class CountryController extends ApiTokenValidateController
 {
     public $modelClass = 'api\modules\v2\models\Country';
     public $serializer = [

@@ -9,7 +9,7 @@
 
 ###认证使用AUTH1.0
 
-      $behaviors = parent::behaviors();
+        $behaviors = parent::behaviors();
         $behaviors['authenticator'] = [
             'class'=>HttpBearerAuth::className(),
             'optional'=>[
@@ -102,6 +102,15 @@ REST要求定义资源,采用不同HTTP方式进行访问。
 - DELETE /country/CN: 删除国家CN
 - OPTIONS /country: 显示关于末端 /users 支持的动词
 - OPTIONS /country/CN: 显示有关末端 /users/123 支持的动词
+
+#获取登录授权
+http://yiiapi.local/index.php/user/login
+#1.access_token可以通过get方式传送
+http://yiiapi.local/index.php/v1/country/order?access_token=faac73bd4a4b7c5b68c3c902e7d16693
+#2.access_token通常设置Authorization头部 Authorization: Bearer  faac73bd4a4b7c5b68c3c902e7d16693
+
+
+
 
 ###示列
 **GET /country: 逐页列出所有国家**
@@ -295,6 +304,33 @@ HTTP状态码的说明如下
 |500	|GET,PSOT,PUT,DELETE,PATCH	|错误提示(消息)	|系统内部错误|
 |501	|GET,PSOT,PUT,DELETE,PATCH	|错误提示(消息)	||
 
+业务逻辑返回数据说明
+
+```
+{
+    "code": 200,
+    "msg": "OK",
+    "data": {
+        "status": 0,
+        "msg": "",
+        "data": {
+            "access_token": "faac73bd4a4b7c5b68c3c902e7d16693"
+        }
+    }
+}
+status=0  正常
+status=-1 非正常状态
+msg       消息描述
+data      数据返回
+
+"data": {
+    "status":0,
+    "msg": "",
+    "data": {
+
+    }
+}
+```
 ### 概括结构
 
 一个合格的API文档应该包含下面几项

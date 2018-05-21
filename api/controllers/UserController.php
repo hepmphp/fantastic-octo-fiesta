@@ -35,9 +35,10 @@ class UserController extends ActiveController{
         $model = new LoginForm;
         $model->setAttributes(Yii::$app->request->post());
         if($user = $model->login()){
-            return ['access_token'=>$user->access_token];
+            return ['status'=>0,'msg'=>'','data'=>['access_token'=>$user->access_token]];
         }else{
-            return $model->errors;
+            Yii::$app->response->statusCode=400;
+            return ['status'=>-1,'msg'=>$model->errors,'data'=>[]];
         }
     }
 
