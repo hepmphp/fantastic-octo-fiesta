@@ -7,12 +7,12 @@
  * To change this template use File | Settings | File Templates.
  */
 
-namespace app\models;
+namespace backend\models;
 
 /***
  * 模型父类
  * Class Model
- * @package app\models
+ * @package backend\models\
  */
 class Model extends \yii\db\ActiveRecord{
 
@@ -25,7 +25,7 @@ class Model extends \yii\db\ActiveRecord{
     public function getAutoCompeleteSearch($keywords){
         $where = ['like', 'name',$keywords];
         //  var_dump($where);
-        $attach_cate =  static::find()Cat->select('id,name')->andFilterWhere($where)->limit(30)->asArray(true)->all();
+        $attach_cate =  static::find()->select('id,name')->andFilterWhere($where)->limit(30)->asArray(true)->all();
         $result  = array();
         foreach($attach_cate as $key=>$v){
             $result[] = array(

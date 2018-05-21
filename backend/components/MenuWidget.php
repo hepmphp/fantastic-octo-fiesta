@@ -9,7 +9,7 @@
 
 namespace backend\components;
 use yii\base\Widget;
-use app\models\GaAdminMenu;
+use backend\models\GaAdminMenu;
 use Yii;
 class MenuWidget extends Widget{
 

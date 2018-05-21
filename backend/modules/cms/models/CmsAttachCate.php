@@ -3,7 +3,7 @@
 namespace backend\modules\cms\models;
 
 use Yii;
-
+use backend\models\Model;
 /**
  * This is the model class for table "{{%cms_attach_cate}}".
  *
@@ -12,7 +12,7 @@ use Yii;
  * @property string $name 附件分类名称
  * @property int $addtime 添加时间
  */
-class CmsAttachCate extends \yii\db\ActiveRecord
+class CmsAttachCate extends Model
 {
     /**
      * @inheritdoc

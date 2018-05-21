@@ -8,9 +8,9 @@
  */
 
 namespace backend\modules\cms\models;
-use yii\db\ActiveRecord;
+use backend\models\Model;
 
-class CmsAttach extends ActiveRecord {
+class CmsAttach extends Model {
     /**
      * @return string Active Record 类关联的数据库表名称
      */

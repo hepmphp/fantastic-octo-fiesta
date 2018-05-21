@@ -1,3 +1,10 @@
+<?php
+use backend\assets\AppCurdAsset;
+AppCurdAsset::register($this);
+AppCurdAsset::addCss($this,"/static/js/autocomplete/autocomplete.css");
+AppCurdAsset::addScript($this,"/static/js/autocomplete/autocomplete.js");
+
+?>
 <div class="container col-sm-12" style="margin-top: 10px;">
 
     <div class="form-horizontal">

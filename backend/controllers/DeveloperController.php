@@ -345,7 +345,7 @@ HTML;
        $content = file_get_contents($tpl);
 
        //替换模块名称 非后台的 全部替换成对应的模块
-       $model = 'app\models';//app\models\GaAdminGroup
+       $model = 'backend\models';//backend\models\GaAdminGroup
        $namespace = 'backend\controllers';
        $controller_path = Yii::$app->viewPath."/../controllers/";
        if($table_arr[0]!='ga'){

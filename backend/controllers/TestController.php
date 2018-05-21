@@ -8,7 +8,7 @@
  */
 
 namespace backend\controllers;
-use app\models\GaAdminMenu;
+use backend\models\GaAdminMenu;
 use yii;
 use backend\controllers\BaseController;
 use yii\data\Pagination;

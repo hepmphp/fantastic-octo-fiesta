@@ -9,7 +9,7 @@
 
 namespace backend\controllers;
 use Yii;
-use app\models\GaAdminMenu;
+use backend\models\GaAdminMenu;
 use yii\web\Controller;
 use backend\components\exception\LogicException;
 
@@ -303,8 +303,25 @@ class BaseController extends Controller{
         $this->asJson($response);
     }
 
-
-
+    /**
+     * 自动完成搜索
+     */
+    public function actionAutoCompeleteSearch(){
+        $keywords = Yii::$app->request->get('term');
+        $data = $this->model->getAutoCompeleteSearch($keywords);
+        if($data){
+            $response = array(
+                'status'=>0,
+                'data'=>$data,
+            );
+        }else{
+            $response = array(
+                'status'=>-1,
+                'data'=>'',
+            );
+        }
+        $this->asJson($response);
+    }
 
     /**
      * 获取操作日志类型

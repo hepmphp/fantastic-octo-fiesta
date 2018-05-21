@@ -12,8 +12,8 @@
  **/
 namespace backend\controllers;
 use Yii;
-use app\models\GaAdminMenu;
-use app\models\GaAdminUser;
+use backend\models\GaAdminMenu;
+use backend\models\GaAdminUser;
 use backend\controllers\BaseController;
 use yii\data\Pagination;
 use backend\services\helpers\Log;

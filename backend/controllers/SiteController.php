@@ -2,8 +2,8 @@
 namespace backend\controllers;
 
 use Yii;
-use app\models\GaAdminMenu;
-use app\models\GaAdminUser;
+use backend\models\GaAdminMenu;
+use backend\models\GaAdminUser;
 use yii\db\Query;
 use backend\controllers\BaseController;
 use yii\filters\VerbFilter;

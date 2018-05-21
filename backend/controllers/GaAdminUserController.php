@@ -3,10 +3,10 @@
 namespace backend\controllers;
 
 use Yii;
-use app\models\GaAdminGroup;
-use app\models\GaAdminUser;
-use app\models\GaPlatform;
-use app\models\GaAdminMenu;
+use backend\models\GaAdminGroup;
+use backend\models\GaAdminUser;
+use backend\models\GaPlatform;
+use backend\models\GaAdminMenu;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\data\Pagination;

@@ -4,8 +4,8 @@ namespace backend\controllers;
 
 
 use Yii;
-use app\models\GaAdminLog;
-use app\models\GaAdminLogSearch;
+use backend\models\GaAdminLog;
+use backend\models\GaAdminLogSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;

@@ -3,8 +3,9 @@
 namespace backend\modules\cms\models;
 
 use Yii;
+use backend\models\Model;
 
-class CmsAdBlock extends \yii\db\ActiveRecord
+class CmsAdBlock extends Model
 {
     /**
      * @inheritdoc
