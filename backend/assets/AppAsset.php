@@ -43,8 +43,9 @@ class AppAsset extends AssetBundle
         '/static/js/bootstrap-table/locale/bootstrap-table-zh-CN.min.js',
         '/static/js/table-demo.js',
         //日期
-//        '/static/js/date/moment.min.js',
-//        '/static/js/date/jquery.daterangepicker.js',
+        '/static/js/date/moment.min.js',
+        '/static/js/date/jquery.daterangepicker.js',
+        '/static/js/logic/lib/date_picker.js',
 
         //通用
         '/static/js/common.js',

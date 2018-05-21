@@ -283,6 +283,26 @@ class BaseController extends Controller{
         $this->asJson($response);
     }
 
+    /**
+     *Select2 搜索
+     */
+    public function actionSelect2Search(){
+        $keywords = Yii::$app->request->get('term');
+        $cate_names = $this->model->getSelect2Search($keywords);
+        if($cate_names){
+            $response = array(
+                'status'=>0,
+                'data'=>$cate_names,
+            );
+        }else{
+            $response = array(
+                'status'=>-1,
+                'data'=>'',
+            );
+        }
+        $this->asJson($response);
+    }
+
 
 
 
