@@ -24,12 +24,14 @@ class FormBuilder {
             'select_input'=>'4.下拉框',
             'multi_radio'=>'5.单选框',
             'mutil_checkbox'=>'6.复选框',
-            'time'=>'7.时间',
-            'image'=>'8.单图',
-            'image_mutil'=>'9.多图',
-            'text_rich'=>'10.富文本',
-            'text_select'=>'11.文本多选',
-            'text_search'=>'12.下拉搜索',
+            'date_time'=>'7.时间',
+            'date'=>'8.日期',
+            'image'=>'9.单图',
+            'image_mutil'=>'10.多图',
+            'text_rich'=>'11.富文本',
+            'text_multi_select'=>'12.文本多选',
+            'text_search'=>'13.下拉搜索',
+            'select_tree'=>'14.树形菜单'
 
 
         );
@@ -43,6 +45,39 @@ class FormBuilder {
      * @return mixed
      */
     public static  function text_input($field,$name){
+        $input = <<<EOT
+        <div class="form-group">
+          <label class="col-sm-4 control-label" for="[field]">[name]</label>
+          <div class="col-sm-4">
+          <input id="[field]" name="[field]" type="text" value="<?=\$form['[field]']?>" placeholder="[name]" class="form-control input-md">
+          </div>
+       </div>
+EOT;
+        $input = str_replace(array('[name]','[field]'),array($name,$field),$input);
+        return $input;
+    }
+
+
+    /**
+     * 下拉搜索
+     * @param $field
+     * @param $name
+     * @return mixed
+     */
+    public static  function text_search($field,$name){
+        $input = <<<EOT
+        <div class="form-group">
+          <label class="col-sm-4 control-label" for="[field]">[name]</label>
+          <div class="col-sm-4">
+          <input id="[field]" name="[field]" type="text" value="<?=\$form['[field]']?>" placeholder="[name]" class="form-control input-md">
+          </div>
+       </div>
+EOT;
+        $input = str_replace(array('[name]','[field]'),array($name,$field),$input);
+        return $input;
+    }
+
+    public static function text_multi_select($field,$name){
         $input = <<<EOT
         <div class="form-group">
           <label class="col-sm-4 control-label" for="[field]">[name]</label>
@@ -114,6 +149,25 @@ EOT;
                         ?>
                         <option value="<?=\$vo['id']?>" <?php if(\$vo['id']==\$form['[field]'] && is_numeric(\$vo['id'])){ echo "selected";}?>><?=\$vo['name']?></option>
                     <?php }?>
+            </select>
+          </div>
+        </div>
+EOT;
+        $input = str_replace(array('[name]','[field]'),array($name,$field),$input);
+        return $input;
+
+    }
+
+
+    public static function select_tree($field,$name){
+        $input = <<<EOT
+        <!-- Select Basic -->
+        <div class="form-group">
+          <label class="col-sm-4 control-label" for="[field]">[name]</label>
+          <div class="col-sm-4">
+            <select id="[field]" name="[field]" class="form-control">
+              <option value="">请选择</option>
+                <?=\$select_tree?>
             </select>
           </div>
         </div>
@@ -206,12 +260,25 @@ EOT;
         return $input;
     }
 
-    public static function time($field,$name){
+    public static function date_time($field,$name){
         $input = <<<EOT
        <div class="form-group">
 		<label class="control-label col-sm-4">[name]：</label>
 		  <div class="col-sm-4">
-		<input placeholder="[name]" class="form-control date-range-[field] date-ico table-date" name="[field]" id="[field]"  type="text" value="<?php if(!empty(\$form['[field]'])){echo \$form['[field]']}?>">
+		<input placeholder="[name]" class="form-control date-range-[field] date-ico form-date-time" name="[field]" id="[field]"  type="text" value="<?php if(!empty(\$form['[field]'])){echo date('Y-m-d H:i:s',\$form['[field]']);}?>">
+		</div>
+	   </div>
+EOT;
+        $input = str_replace(array('[name]','[field]'),array($name,$field),$input);
+        return $input;
+    }
+
+    public static function date($field,$name){
+        $input = <<<EOT
+       <div class="form-group">
+		<label class="control-label col-sm-4">[name]：</label>
+		  <div class="col-sm-4">
+		<input placeholder="[name]" class="form-control date-range-[field] date-ico  form-date" name="[field]" id="[field]"  type="text" value="<?php if(!empty(\$form['[field]'])){echo date('Y-m-d H:i:s',\$form['[field]']);}?>">
 		</div>
 	   </div>
 EOT;
@@ -249,11 +316,30 @@ EOT;
         $input = <<<EOT
       <div class="form-group">
      <label class="col-sm-1 control-label">[name]：</label>
-     </div>
-     <div class="col-sm-12">
-        <script id="editor" type="text/plain" name="[field]" id="[field]" value="{\$form['field']}" style="width:100%;height: 400px;">
-        </script>
+       <div class="col-sm-11">
+        <script id="editor" type="text/plain" name="[field]" id="[field]" value="{\$form['field']}" style="width:100%;height: 400px;"></script>
+        <script>
+        var um = UM.getEditor('editor', {
+        toolbar: [
+                ['fullscreen', 'source', 'undo', 'redo', 'bold', 'italic',
+                'underline','fontborder', 'backcolor', 'fontsize', 'fontfamily',
+                'justifyleft', 'justifyright','justifycenter', 'justifyjustify',
+                'strikethrough','superscript', 'subscript', 'removeformat',
+                'formatmatch','autotypeset', 'blockquote', 'pasteplain', '|',
+                'forecolor', 'backcolor','insertorderedlist', 'insertunorderedlist',
+                'selectall', 'cleardoc', 'link', 'unlink','emotion', 'help']
+               ]
+        });
+        um.ready(function() {
+            //设置编辑器的内容
+            um.setContent("<?=addslashes(\$form['content'])?>");
+            $('.edui-container').width("900px");
+            $('.edui-body-container').width("900px");
+        });
+         </script>
       </div>
+     </div>
+
       
 EOT;
         $input = str_replace(array('[name]','[field]'),array($name,$field),$input);

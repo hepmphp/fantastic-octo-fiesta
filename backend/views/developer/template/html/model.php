@@ -33,4 +33,6 @@ class Model extends \yii\db\ActiveRecord
            [field_comment]
         ];
     }
+
+    //config_str
 }

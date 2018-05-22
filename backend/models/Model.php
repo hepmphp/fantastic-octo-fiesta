@@ -30,11 +30,8 @@ class Model extends \yii\db\ActiveRecord{
         foreach($attach_cate as $key=>$v){
             $result[] = array(
                 'id'=>$v['id'],
-                'name'=>$v['name'],
-                'full_name'=>$v['name'],
-                'text'=>$v['name']
-//                'label'=>$v['name'],
-//                'value'=>$v['name']
+                'label'=>$v['name'],
+                'value'=>$v['name']
             );
         }
         return $result;

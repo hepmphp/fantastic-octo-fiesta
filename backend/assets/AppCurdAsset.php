@@ -32,10 +32,10 @@ class AppCurdAsset extends AssetBundle
    // public $cssOptions = ['condition' => 'lte IE9'];
     public $js = [
          //全局js
-        '/static/js/jquery.min.js',
+       // '/static/js/jquery.min.js',
         '/static/js/bootstrap.min.js',
         '/static/js/layer/layer.js',
-
+        '/static/js/logic/lib/ajax.js',
         //Bootstrap table
 //        '/static/js/bootstrap-table/bootstrap-table.min.js',
 //        '/static/js/bootstrap-table/locale/bootstrap-table-zh-CN.min.js',
@@ -43,7 +43,7 @@ class AppCurdAsset extends AssetBundle
         //日期
         '/static/js/date/moment.min.js',
         '/static/js/date/jquery.daterangepicker.js',
-        '/static/js/logic/lib/date_picker.js',
+//        '/static/js/logic/lib/date_picker.js',
 
         //通用
 //        '/static/js/common.js',
@@ -62,6 +62,11 @@ class AppCurdAsset extends AssetBundle
     //定义按需加载css方法，注意加载顺序在最后
     public static function addCss($view, $cssfile) {
         $view->registerCssFile($cssfile, [AppCurdAsset::className(), 'depends' => 'backend\assets\AppCurdAsset']);
+    }
+
+    //，注意加载顺序在最后
+    public static function addScriptHead($view, $jsfile) {
+        $view->registerJsFile($jsfile, [AppCurdAsset::className(),'position'=>2]);
     }
 
     /**

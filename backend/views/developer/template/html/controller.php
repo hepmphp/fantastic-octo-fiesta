@@ -76,6 +76,7 @@ class GaAdminGroupController extends BaseController
         return $this->render('index', [
             'page' => $page,
             'data'=>$data,
+//[config]//
         ]);
     }
 
@@ -84,6 +85,7 @@ class GaAdminGroupController extends BaseController
     {
         return $this->render('view', [
             'model' => GaAdminGroup::findOne($id),
+//[config]//
         ]);
     }
 
@@ -92,7 +94,9 @@ class GaAdminGroupController extends BaseController
         if(Yii::$app->request->isPost){
             return $this->commonCreate($this->model);
         }else{
-            return $this->render('create',[]);
+            return $this->render('create',[
+//[config]//
+            ]);
         }
     }
 
@@ -104,6 +108,7 @@ class GaAdminGroupController extends BaseController
         }else{
             return $this->render('create',[
                 'form'=>$model->attributes,//表单参数
+//[config]//
             ]);
         }
     }

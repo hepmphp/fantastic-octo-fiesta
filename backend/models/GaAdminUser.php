@@ -4,7 +4,7 @@ namespace backend\models;
 
 use Yii;
 use backend\services\helpers\Unique;
-use backend\models\\GaAdminGroup;
+use backend\models\GaAdminGroup;
 use backend\components\exception\LogicException;
 /**
  * This is the model class for table "{{%ga_admin_user}}".

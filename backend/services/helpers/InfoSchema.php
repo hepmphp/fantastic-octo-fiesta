@@ -3,14 +3,14 @@ namespace backend\services\helpers;
 use Yii;
 class InfoSchema{
  
-    public function get_table_field($table,$table_schema='game_admin'){
+    public function get_table_field($table,$table_schema='yii_admin'){
         $sql   = "SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name ='{$table}' and TABLE_SCHEMA='{$table_schema}'";
         $command = Yii::$app->db->createCommand($sql);
         $table_field = $command->queryAll();
         return $table_field;
     }
 
-    public function get_table($table_schema='game_admin'){
+    public function get_table($table_schema='yii_admin'){
         $sql   = "SELECT table_name as id,table_comment as name from INFORMATION_SCHEMA.`TABLES` where TABLE_SCHEMA='{$table_schema}'";
         $command = Yii::$app->db->createCommand($sql);
         $config_table_id = $command->queryAll();
@@ -19,7 +19,7 @@ class InfoSchema{
     /**
      * 获取所有字段  字段名=>备注
      */
-    public function get_all_fields($table,$table_schema='game_admin'){
+    public function get_all_fields($table,$table_schema='yii_admin'){
         $table_field = $this->get_table_field($table,$table_schema);
         $fields = array();
         $select = array();//下拉框

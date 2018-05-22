@@ -52,6 +52,7 @@ function layer_form(url,action,area){
     var btn =  action==2?['确认修改','取消']:['确认添加','取消'];
     layer.open({
         type: 2, //iframe
+        maxmin: true,
         area:area ,
         title: title,
         btn: btn,

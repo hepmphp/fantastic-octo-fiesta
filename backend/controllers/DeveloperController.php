@@ -16,6 +16,7 @@ use backend\services\helpers\FormSearchList;
 use backend\services\helpers\FormValidator;
 use backend\services\helpers\InfoSchema;
 use backend\services\helpers\SearchBuilder;
+use yii\base\View;
 
 /***
  * 生成路径说明
@@ -45,6 +46,7 @@ class DeveloperController extends BaseController{
     public function actionIndex(){
         $fields = array();
         $select = array();
+        //print_r(Yii::$app);
         if(Yii::$app->request->get('search')){
             $table = Yii::$app->request->get('table','ga_platform');
             list($fields,$select) = (new InfoSchema())->get_all_fields($table);
@@ -83,9 +85,9 @@ class DeveloperController extends BaseController{
           }
 
           if(isset($select[$field])){
-              $form_html .= FormBuilder::$fb_func($field,$name,$select[$field]);
+              $form_html .= FormBuilder::$fb_func($field,$name,$select[$field])."\n";
           }else{
-              $form_html .= FormBuilder::$fb_func($field,$name);
+              $form_html .= FormBuilder::$fb_func($field,$name)."\n";
           }
       }
 
@@ -97,7 +99,80 @@ class DeveloperController extends BaseController{
     </div>
 </div>
 HTML;
-      $html = str_replace(array('[form_html]'),array($form_html),$html);
+
+        $css = array();
+        $js = array();
+
+        //包含 时间 日期 单图 多图 富文本 文本多选 下拉搜索 自动注入js
+        if(in_array('date_time',$get_form_builder_types)
+           ||in_array('date',$get_form_builder_types)
+        ){
+            $js[] = '/static/js/logic/lib/date_picker.js';
+        }
+
+        if(in_array('image',$get_form_builder_types)){
+
+            //"/static/js/logic/lib/image_upload_callback.js"
+            //"/static/js/logic/lib/image_upload_callback.js"
+            $js[] = '/static/js/logic/lib/image_upload.js';
+        }
+        if(in_array('image_mutil',$get_form_builder_types)){
+
+        }
+        if(in_array('text_rich',$get_form_builder_types)){
+            $css[] = "/static/js/umeditor/themes/default/css/umeditor.css";
+            $js[] = "/static/js/umeditor/lang/zh-cn/zh-cn.js";
+            $js[] = "/static/js/umeditor/umeditor.config.js";
+            $js[] = "/static/js/umeditor/umeditor.js";
+        }
+
+        if(in_array('text_multi_select',$get_form_builder_types)){
+            $css[] = "/static/js/select2/css/select2.min.css";
+            $js[] = "/static/js/select2/js/select2.full.min.js";
+        }
+        if(in_array('text_search',$get_form_builder_types)){
+            $css[] = '/static/js/autocomplete/jquery-ui.css';
+            $js[] = '/static/js/autocomplete/jquery-ui.js';
+        }
+        $css_js = '';
+        $css_register= 'AppCurdAsset::addCss($this,"%s");';
+        $js_register= 'AppCurdAsset::addScript($this,"%s");';
+        $js_register_head = 'AppCurdAsset::addScriptHead($this,"%s");';
+        if(!empty($css) ||!empty($js)){
+            $php_html = <<<EOT
+<?php
+    use backend\assets\AppCurdAsset;
+    AppCurdAsset::register(\$this);
+    [css_js]
+
+?>
+EOT;
+
+            foreach($css as $c){
+                $css_js[] = sprintf($css_register,$c);
+            }
+            foreach($js as $j){
+                if(strpos($j,'lang')!==false){
+                    $css_js[] = sprintf($js_register,$j);
+                }else if(strpos($j,'umeditor')!==false){
+                    $css_js[] = sprintf($js_register_head,$j);
+                }else{
+                    $css_js[] = sprintf($js_register,$j);
+                }
+            }
+            foreach($css_js as $k=>&$v){
+                if($k==0){
+                    continue;
+                }
+                $v = "\t".$v;
+            }
+            $php_html = str_replace('[css_js]',implode("\n",$css_js),$php_html);
+            $html = $php_html."\n".$html;
+
+        }
+
+
+        $html = str_replace(array('[form_html]'),array($form_html),$html);
 
       if($create_file==1){
           $controller = str_replace('_','-',$table);
@@ -230,8 +305,8 @@ HTML;
         $preview = Yii::$app->request->get('preview',1);
 
         $search_list_types = Yii::$app->request->get("search_list_types");
-       $search_list_types = explode(',',$search_list_types);
-       $config_search_list_types = array();
+        $search_list_types = explode(',',$search_list_types);
+        $config_search_list_types = array();
         foreach($fields as $k=>$field){
             $config_search_list_types[$field] = $search_list_types[$k];
         }
@@ -255,9 +330,9 @@ HTML;
                 $form_search .= FormSearchList::$fb_func($field,$name);
             }
         }
-     
-        $tr_header = '';
-        $tr_td = '';    
+
+        $tr_header = "\n";
+        $tr_td = "\n";
         //print_r($db_fields);
         foreach($db_fields as $k=>$name){
             if(in_array($k,$fields)){
@@ -267,6 +342,7 @@ HTML;
                     $tr_td .= "\t\t\t<td><?=\$vo['{$k}']?></td>\n";
 
                 }
+
                 $tr_header .= "\t\t\t<th>{$name}</th>\n";
             }
         }
@@ -405,10 +481,19 @@ EOT;
                 $where_str .= str_replace('[field]',$field,$where_like);
             }
        }
+
+       //自动添加配置
+       //get_config_[field]
+       list($db_fields,$select) = (new InfoSchema())->get_all_fields($table);
+       $config_str = array();
+      // var_dump($select);
+       foreach($select as $k=>$s){
+           $config_str[] ="\t\t\t\t'config_{$k}'=>". sprintf("%s::get_config_%s()",$controller_name,$k).",\n";
+       }
        //[search]//
        $content = str_replace(
-           array('app_templdate','app_model','GaAdminGroup','//[search]//'),
-           array($namespace,$model.'\\'.$controller_name,$controller_name,$where_str),
+           array('app_templdate','app_model','GaAdminGroup','//[search]//','//[config]//'),
+           array($namespace,$model.'\\'.$controller_name,$controller_name,$where_str,implode("",$config_str)),
            $content);
 
         if($create_file==1){
@@ -495,10 +580,30 @@ EOT;
             $model_path = Yii::$app->viewPath."/../models/";
         }
         list($db_fields,$select) = (new InfoSchema())->get_all_fields($table);
+
+        //状态配置
+        $config_tpl = <<<EOT
+public static function get_config_[field](){
+            return [
+                tpl
+            ];
+    }
+EOT;
+        $config_data= array();
+        $config_str = '';
+        foreach($select as $k=>$s){
+            $formart_arr = array();
+            foreach($s as $k2=>$s2){
+                $formart_arr[] = "{$k2}=>['id'=>{$s2['id']},'name'=>'{$s2['name']}'],\n";
+            }
+            $config_data[] = str_replace(array('[field]','tpl'),array($k,implode("\t\t\t\t",$formart_arr)),$config_tpl)."\n";
+        }
+        $config_str = implode("\n\t",$config_data);
+
         $rules = [];
         //替换搜索项
        // var_dump($db_fields);
-        $rules[] = FormValidator::required_all(array_keys($db_fields));
+        $rules[] = FormValidator::required_all($fields);
         foreach($fields as $k=>$field){
              $form_validator_type = $form_validator_types[$k];
             if(empty($form_validator_type)){
@@ -512,8 +617,8 @@ EOT;
         }
         //[search]//
         $content = str_replace(
-            array('app_templdate','Model','[table]','[rule]','[field_comment]'),
-            array($namespace,$model_name,$table,"\n".implode("\n",$rules),"\n".implode("\n",$attributes)),
+            array('app_templdate','Model','[table]','[rule]','[field_comment]','//config_str'),
+            array($namespace,$model_name,$table,"\n".implode("\n",$rules),"\n".implode("\n",$attributes),$config_str),
             $content);
 
         // 模型

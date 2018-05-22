@@ -16,15 +16,13 @@ use backend\components\PageWidget;
     <div class="table-wrap">
         <table  data-toggle="table" class="table-item table">
             <thead>
-            <tr>
-                [tr_head]
+            <tr>[tr_head]
                 <th>操作</th>
             </tr>
             </thead>
             <tbody>
             <?php foreach($data as $k=>$vo):?>
-            <tr>
-               [tr_td]
+            <tr>[tr_td]
                 <td>
                     <a href="javascript:void(0);" onclick="edit('<?=$vo['id']?>')">[编辑]</a>
                     <a href="javascript:void(0);" onclick="del('<?=$vo['id']?>')">[删除]</a>

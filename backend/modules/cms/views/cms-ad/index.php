@@ -3,7 +3,7 @@
 use backend\components\PageWidget;
 use backend\assets\AppAsset;
 AppAsset::register($this);
-AppAsset::addScript($this,"/static/js/logic/lib/image_upload.js");
+AppAsset::addScript($this,"/static/js/logic/lib/image_upload_callback.js");
 ?>
 <div class="form-wrapper">
     <div class="form-item">
@@ -47,7 +47,7 @@ AppAsset::addScript($this,"/static/js/logic/lib/image_upload.js");
             <tbody>
             <?php foreach($data as $k=>$vo):?>
             <tr>
-                <td><?=$vo['id']?>/td>
+                <td><?=$vo['id']?></td>
                 <td><?=$vo['block_id']?></td>
                 <td><?=$vo['title']?></td>
                 <td><?=$vo['pic_url']?></td>

@@ -22,6 +22,7 @@ $asset = AppCurdAsset::register($this);
     <script src="<?=$asset->baseUrl?>/static/js/html5shiv.min.js"></script>
     <script src="<?=$asset->baseUrl;?>/static/js/respond.min.js"></script>
     <![endif]-->
+    <script src="<?=$asset->baseUrl;?>/static/js/jquery.min.js"></script>
 </head>
 <body>
 <?php $this->beginBody() ?>

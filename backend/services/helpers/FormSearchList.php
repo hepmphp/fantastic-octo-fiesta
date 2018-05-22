@@ -60,7 +60,7 @@ EOT;
     public static function select_input($field,$name){
         $input = <<<EOT
         <div class="form-group">
-        <label class="control-label">平台：</label>
+        <label class="control-label">[name]：</label>
         <select id="[field]" name="[field]" class="form-control">
         <option value="">请选择</option>
           <?php

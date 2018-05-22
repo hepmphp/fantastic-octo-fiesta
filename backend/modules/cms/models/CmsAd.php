@@ -21,7 +21,7 @@ class CmsAd extends Model
     public function rules()
     {
         return [
-            [['block_id','title','pic_url','link_address','addtime','start_time','end_time','listorder','status','is_mobile'],'required','message'=>'{attribute}不能为空!'],
+            [['block_id','title','pic_url','link_address','start_time','end_time','listorder','status','is_mobile'],'required','message'=>'{attribute}不能为空!'],
         ];
     }
 

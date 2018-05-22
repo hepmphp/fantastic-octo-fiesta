@@ -38,7 +38,7 @@ $('#preview').click(function(){
         content:preview_url,
         btn: ['生成','取消'],
         yes: function(index, layero){
-            ajax_get(preview_url,{create_file:1});
+            ajax_get_alert_success(preview_url,{create_file:1});
         },btn2: function(index, layero){
 
         }
@@ -66,7 +66,7 @@ $('#btn_list').click(function(){
         content:list_url,
         btn: ['生成','取消'],
         yes: function(index, layero){
-            ajax_get(list_url,{create_file:1});
+            ajax_get_alert_success(list_url,{create_file:1});
         },btn2: function(index, layero){
 
         }
@@ -94,7 +94,7 @@ $('#btn_controller').click(function(){
         content:controller_url,
         btn: ['生成','取消'],
         yes: function(index, layero){
-            ajax_get(controller_url,{create_file:1});
+            ajax_get_alert_success(controller_url,{create_file:1});
         },btn2: function(index, layero){
 
         }
@@ -122,7 +122,7 @@ $('#btn_model').click(function(){
         content:model_url,
         btn: ['生成','取消'],
         yes: function(index, layero){
-            ajax_get(model_url,{create_file:1});
+            ajax_get_alert_success(model_url,{create_file:1});
         },btn2: function(index, layero){
 
         }
@@ -150,7 +150,7 @@ $('#btn_js').click(function(){
         content:js_url,
         btn: ['生成','取消'],
         yes: function(index, layero){
-            ajax_get(js_url,{create_file:1});
+            ajax_get_alert_success(js_url,{create_file:1});
         },btn2: function(index, layero){
 
         }
