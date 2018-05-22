@@ -1,16 +1,16 @@
 /*
 Navicat MySQL Data Transfer
 
-Source Server         : docker_mysql
-Source Server Version : 50716
+Source Server         : 127.0.0.1
+Source Server Version : 50721
 Source Host           : localhost:3306
 Source Database       : game_admin
 
 Target Server Type    : MYSQL
-Target Server Version : 50716
+Target Server Version : 50721
 File Encoding         : 65001
 
-Date: 2018-01-15 23:45:19
+Date: 2018-05-23 00:37:13
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -32,7 +32,7 @@ CREATE TABLE `ga_admin_group` (
 -- ----------------------------
 -- Records of ga_admin_group
 -- ----------------------------
-INSERT INTO `ga_admin_group` VALUES ('1', '超级管理员123', '超级管理员123', '1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99,100,101,102,103,104,105,106,107,110,111,116,117,118,119,120,121,122,123,124,125,126,127,128,129,130,131,135,136,142,143,144,145,146,147,152,153', '1', '0');
+INSERT INTO `ga_admin_group` VALUES ('1', '超级管理员', '超级管理员', '1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61', '1', '0');
 INSERT INTO `ga_admin_group` VALUES ('2', '运营人员(查询)', '运营人员(查询)', '1,5,6,7,8,9,10,11', '1', '1510747472');
 INSERT INTO `ga_admin_group` VALUES ('3', '运营人员(查询+充值)', '运营人员(查询+充值)', '7,11,10,9,8', '1', '1510748173');
 INSERT INTO `ga_admin_group` VALUES ('4', '运营人员(查询+充值)', '运营人员(查询+充值)', '7,11,10,9,8,1,6,5,4,3,2', '1', '1510748299');
@@ -42,7 +42,7 @@ INSERT INTO `ga_admin_group` VALUES ('7', '分组测试', '123456', '', '1', '15
 INSERT INTO `ga_admin_group` VALUES ('8', 'sogou', 'sogou', '1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,25,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,74,75,76,77,78,79,93,94,95,96,97,98,99,100,101,110,111', '1', '1512972626');
 INSERT INTO `ga_admin_group` VALUES ('9', '客服', '客服', '21,23,49,50,54,55,57,61,62,63,64,65,66,67,68,69,70,71,72,74,75,76,77,78,79,93,94,95,96,97,98,99,100,101,126,127,128,129,130,131,136,138,139,140,141,143', '1', '1513301166');
 INSERT INTO `ga_admin_group` VALUES ('10', '测试分组', '分组测试', 'init', '1', '0');
-INSERT INTO `ga_admin_group` VALUES ('11', '外联11', '外联', 'init', '1', '0');
+INSERT INTO `ga_admin_group` VALUES ('11', '外联', '外联', 'init', '1', '0');
 INSERT INTO `ga_admin_group` VALUES ('12', '测试分组', '分组测试测试', 'init', '1', '0');
 INSERT INTO `ga_admin_group` VALUES ('13', '测试分组1', '分组测试的', '24,73,80,81,82,83,84,85,86,87,88,89,90,91,92,102,103,104,105,106,107,108,109,112,113,114,115,118,119,120,121,122,134,135,154,155,156,157,158,159,160,161,162,163,164,165,166,167,168,169,170,182,183,184,185,203,204,205,206,207', '1', '0');
 
@@ -64,12 +64,11 @@ CREATE TABLE `ga_admin_log` (
   `status` tinyint(3) NOT NULL DEFAULT '0' COMMENT '登录状态 1成功0失败',
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1029 DEFAULT CHARSET=utf8 COMMENT='管理员操作日志';
+) ENGINE=InnoDB AUTO_INCREMENT=1086 DEFAULT CHARSET=utf8 COMMENT='管理员操作日志';
 
 -- ----------------------------
 -- Records of ga_admin_log
 -- ----------------------------
-INSERT INTO `ga_admin_log` VALUES ('986', '0', '0', 'sysadmin', '192.168.71.21', '', '', '1515665260', '4', '登录成功', '1');
 INSERT INTO `ga_admin_log` VALUES ('987', '0', '0', 'sysadmin', '192.168.71.21', '', '', '1515667133', '5', '密码错误', '0');
 INSERT INTO `ga_admin_log` VALUES ('988', '0', '0', 'sysadmin', '192.168.71.21', '', '', '1515667140', '4', '登录成功', '1');
 INSERT INTO `ga_admin_log` VALUES ('989', '0', '0', 'sysadmin', '192.168.71.21', '', '', '1515723846', '5', '密码错误', '0');
@@ -112,6 +111,63 @@ INSERT INTO `ga_admin_log` VALUES ('1025', '0', '0', 'sysadmin', '127.0.0.1', ''
 INSERT INTO `ga_admin_log` VALUES ('1026', '1', '0', 'sysadmin', '127.0.0.1', '', '', '1516023496', '4', '登录成功', '1');
 INSERT INTO `ga_admin_log` VALUES ('1027', '1', '0', 'sysadmin', '127.0.0.1', '', '', '1516023853', '4', '登录成功', '1');
 INSERT INTO `ga_admin_log` VALUES ('1028', '1', '0', 'sysadmin', '127.0.0.1', '', '', '1516027778', '4', '登录成功', '1');
+INSERT INTO `ga_admin_log` VALUES ('1029', '1', '0', 'sysadmin', '127.0.0.1', '', '', '1523719497', '4', '登录成功', '1');
+INSERT INTO `ga_admin_log` VALUES ('1030', '1', '0', 'sysadmin', '127.0.0.1', '', '', '1524061495', '5', '密码错误', '0');
+INSERT INTO `ga_admin_log` VALUES ('1031', '1', '0', 'sysadmin', '127.0.0.1', '', '', '1524061500', '5', '密码错误', '0');
+INSERT INTO `ga_admin_log` VALUES ('1032', '1', '0', 'sysadmin', '127.0.0.1', '', '', '1524061529', '5', '密码错误', '0');
+INSERT INTO `ga_admin_log` VALUES ('1033', '1', '0', 'sysadmin', '127.0.0.1', '', '', '1524061587', '5', '密码错误', '0');
+INSERT INTO `ga_admin_log` VALUES ('1034', '1', '0', 'sysadmin', '127.0.0.1', '', '', '1524061595', '5', '密码错误', '0');
+INSERT INTO `ga_admin_log` VALUES ('1035', '1', '0', 'sysadmin', '127.0.0.1', '', '', '1524061714', '5', '密码错误', '0');
+INSERT INTO `ga_admin_log` VALUES ('1036', '1', '0', 'sysadmin', '127.0.0.1', '', '', '1524061793', '4', '登录成功', '1');
+INSERT INTO `ga_admin_log` VALUES ('1037', '1', '0', 'sysadmin', '127.0.0.1', '', '', '1524233545', '4', '登录成功', '1');
+INSERT INTO `ga_admin_log` VALUES ('1038', '1', '0', 'sysadmin', '127.0.0.1', '', '', '1524324586', '4', '登录成功', '1');
+INSERT INTO `ga_admin_log` VALUES ('1039', '1', '0', 'sysadmin', '127.0.0.1', '', '', '1524325143', '4', '登录成功', '1');
+INSERT INTO `ga_admin_log` VALUES ('1040', '1', '0', 'sysadmin', '127.0.0.1', '', '', '1524325604', '4', '登录成功', '1');
+INSERT INTO `ga_admin_log` VALUES ('1041', '1', '0', 'sysadmin', '127.0.0.1', '', '', '1524403544', '4', '登录成功', '1');
+INSERT INTO `ga_admin_log` VALUES ('1042', '1', '0', 'sysadmin', '127.0.0.1', '', '', '1524404866', '4', '登录成功', '1');
+INSERT INTO `ga_admin_log` VALUES ('1043', '1', '0', 'sysadmin', '127.0.0.1', '', '', '1524404923', '4', '登录成功', '1');
+INSERT INTO `ga_admin_log` VALUES ('1044', '1', '0', 'sysadmin', '127.0.0.1', '', '', '1524405057', '4', '登录成功', '1');
+INSERT INTO `ga_admin_log` VALUES ('1045', '1', '0', 'sysadmin', '127.0.0.1', '', '', '1524405069', '4', '登录成功', '1');
+INSERT INTO `ga_admin_log` VALUES ('1046', '1', '0', 'sysadmin', '127.0.0.1', '', '', '1524405078', '4', '登录成功', '1');
+INSERT INTO `ga_admin_log` VALUES ('1047', '1', '0', 'sysadmin', '127.0.0.1', '', '', '1524405111', '4', '登录成功', '1');
+INSERT INTO `ga_admin_log` VALUES ('1048', '1', '0', 'sysadmin', '127.0.0.1', '', '', '1524405145', '4', '登录成功', '1');
+INSERT INTO `ga_admin_log` VALUES ('1049', '1', '0', 'sysadmin', '127.0.0.1', '', '', '1524405257', '4', '登录成功', '1');
+INSERT INTO `ga_admin_log` VALUES ('1050', '1', '0', 'sysadmin', '127.0.0.1', '', '', '1524405290', '4', '登录成功', '1');
+INSERT INTO `ga_admin_log` VALUES ('1051', '1', '0', 'sysadmin', '127.0.0.1', '', '', '1524405498', '4', '登录成功', '1');
+INSERT INTO `ga_admin_log` VALUES ('1052', '1', '0', 'sysadmin', '127.0.0.1', '', '', '1524579928', '4', '登录成功', '1');
+INSERT INTO `ga_admin_log` VALUES ('1053', '1', '0', 'sysadmin', '127.0.0.1', '', '', '1524660792', '4', '登录成功', '1');
+INSERT INTO `ga_admin_log` VALUES ('1054', '1', '0', 'sysadmin', '127.0.0.1', '', '', '1524755142', '4', '登录成功', '1');
+INSERT INTO `ga_admin_log` VALUES ('1055', '1', '0', 'sysadmin', '127.0.0.1', '', '', '1524757466', '4', '登录成功', '1');
+INSERT INTO `ga_admin_log` VALUES ('1056', '1', '0', 'sysadmin', '127.0.0.1', '', '', '1525188343', '4', '登录成功', '1');
+INSERT INTO `ga_admin_log` VALUES ('1057', '1', '1000', 'zhangshan', '127.0.0.1', 'm', 'a', '1525621288', '1', '', '0');
+INSERT INTO `ga_admin_log` VALUES ('1058', '1', '1000', 'zhangshan', '127.0.0.1', 'm', 'a', '1525621300', '1', '', '0');
+INSERT INTO `ga_admin_log` VALUES ('1059', '1', '1000', 'zhangshan', '127.0.0.1', 'm', 'a', '1525621303', '1', '', '0');
+INSERT INTO `ga_admin_log` VALUES ('1060', '1', '1000', 'aaaaaaaaaa', '127.0.0.1', 'm', 'a', '1525621304', '1', '', '0');
+INSERT INTO `ga_admin_log` VALUES ('1061', '1', '1000', 'zhangshan', '127.0.0.1', 'm', 'a', '1525621315', '1', '', '0');
+INSERT INTO `ga_admin_log` VALUES ('1062', '1', '1000', 'zhangshan', '127.0.0.1', 'm', 'a', '1525621316', '1', '', '0');
+INSERT INTO `ga_admin_log` VALUES ('1063', '1', '1000', 'zhangshan', '127.0.0.1', 'm', 'a', '1525621317', '1', '', '0');
+INSERT INTO `ga_admin_log` VALUES ('1064', '1', '1000', 'zhangshan', '127.0.0.1', 'm', 'a', '1525621318', '1', '', '0');
+INSERT INTO `ga_admin_log` VALUES ('1065', '1', '1000', 'zhangshan', '127.0.0.1', 'm', 'a', '1525621340', '1', '', '0');
+INSERT INTO `ga_admin_log` VALUES ('1066', '1', '1000', 'zhangshan', '127.0.0.1', 'm', 'a', '1525621355', '1', '', '0');
+INSERT INTO `ga_admin_log` VALUES ('1067', '1', '0', 'sysadmin', '127.0.0.1', '', '', '1525704277', '4', '登录成功', '1');
+INSERT INTO `ga_admin_log` VALUES ('1068', '1', '0', 'sysadmin', '127.0.0.1', '', '', '1525787289', '4', '登录成功', '1');
+INSERT INTO `ga_admin_log` VALUES ('1069', '1', '0', 'sysadmin', '127.0.0.1', '', '', '1525874800', '4', '登录成功', '1');
+INSERT INTO `ga_admin_log` VALUES ('1070', '1', '0', 'sysadmin', '127.0.0.1', '', '', '1525963429', '4', '登录成功', '1');
+INSERT INTO `ga_admin_log` VALUES ('1071', '1', '0', 'sysadmin', '127.0.0.1', '', '', '1526133183', '4', '登录成功', '1');
+INSERT INTO `ga_admin_log` VALUES ('1072', '1', '0', 'sysadmin', '127.0.0.1', '', '', '1526173145', '4', '登录成功', '1');
+INSERT INTO `ga_admin_log` VALUES ('1073', '1', '0', 'sysadmin', '127.0.0.1', '', '', '1526200024', '4', '登录成功', '1');
+INSERT INTO `ga_admin_log` VALUES ('1074', '1', '0', 'sysadmin', '127.0.0.1', '', '', '1526226012', '4', '登录成功', '1');
+INSERT INTO `ga_admin_log` VALUES ('1075', '1', '0', 'sysadmin', '127.0.0.1', '', '', '1526396433', '4', '登录成功', '1');
+INSERT INTO `ga_admin_log` VALUES ('1076', '1', '0', 'sysadmin', '127.0.0.1', '', '', '1526473436', '4', '登录成功', '1');
+INSERT INTO `ga_admin_log` VALUES ('1077', '1', '0', 'sysadmin', '127.0.0.1', '', '', '1526564064', '4', '登录成功', '1');
+INSERT INTO `ga_admin_log` VALUES ('1078', '1', '0', 'sysadmin', '127.0.0.1', '', '', '1526649575', '4', '登录成功', '1');
+INSERT INTO `ga_admin_log` VALUES ('1079', '1', '0', 'sysadmin', '127.0.0.1', '', '', '1526651715', '4', '登录成功', '1');
+INSERT INTO `ga_admin_log` VALUES ('1080', '1', '0', 'sysadmin', '127.0.0.1', '', '', '1526651750', '4', '登录成功', '1');
+INSERT INTO `ga_admin_log` VALUES ('1081', '1', '0', 'sysadmin', '127.0.0.1', '', '', '1526655596', '4', '登录成功', '1');
+INSERT INTO `ga_admin_log` VALUES ('1082', '1', '0', 'sysadmin', '127.0.0.1', '', '', '1526655627', '4', '登录成功', '1');
+INSERT INTO `ga_admin_log` VALUES ('1083', '1', '0', 'sysadmin', '127.0.0.1', '', '', '1526830647', '4', '登录成功', '1');
+INSERT INTO `ga_admin_log` VALUES ('1084', '1', '0', 'sysadmin', '127.0.0.1', '', '', '1526912204', '4', '登录成功', '1');
+INSERT INTO `ga_admin_log` VALUES ('1085', '1', '0', 'sysadmin', '127.0.0.1', '', '', '1527006987', '4', '登录成功', '1');
 
 -- ----------------------------
 -- Table structure for ga_admin_menu
@@ -133,12 +189,12 @@ CREATE TABLE `ga_admin_menu` (
   KEY `status` (`status`),
   KEY `parentid` (`parentid`),
   KEY `model` (`model`)
-) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=utf8 COMMENT='后台菜单';
+) ENGINE=InnoDB AUTO_INCREMENT=62 DEFAULT CHARSET=utf8 COMMENT='后台菜单';
 
 -- ----------------------------
 -- Records of ga_admin_menu
 -- ----------------------------
-INSERT INTO `ga_admin_menu` VALUES ('1', '0', '1', 'ga-admin-menu', 'index', '', '0', '系统设置', '一级菜单', '1', '0');
+INSERT INTO `ga_admin_menu` VALUES ('1', '0', '1', 'ga-admin-menu', 'index', '', '0', '系统设置', '一级菜单', '101', '0');
 INSERT INTO `ga_admin_menu` VALUES ('2', '1', '1', 'ga-admin-menu', 'index', '', '0', '菜单列表', '', '1', '1');
 INSERT INTO `ga_admin_menu` VALUES ('3', '2', '1', 'ga-admin-menu', 'create', '', '-1', '菜单添加', '', '2', '2');
 INSERT INTO `ga_admin_menu` VALUES ('4', '2', '1', 'ga-admin-menu', 'update', '', '-1', '菜单修改', '', '3', '2');
@@ -159,12 +215,46 @@ INSERT INTO `ga_admin_menu` VALUES ('18', '15', '1', 'ga-admin-user', 'update', 
 INSERT INTO `ga_admin_menu` VALUES ('19', '15', '1', 'ga-admin-user', 'delete', '', '-1', '用户删除', '', '0', '2');
 INSERT INTO `ga_admin_menu` VALUES ('20', '15', '1', 'ga-admin-user', 'edit-password', '', '-1', '修改密码', '', '0', '2');
 INSERT INTO `ga_admin_menu` VALUES ('21', '15', '1', 'ga-admin-user', 'edit-permission', '', '-1', '权限修改', '', '0', '2');
-INSERT INTO `ga_admin_menu` VALUES ('22', '0', '22', 'developer', 'index', '', '0', '开发工具', '', '0', '0');
+INSERT INTO `ga_admin_menu` VALUES ('22', '0', '22', 'developer', 'index', '', '0', '开发工具', '', '100', '0');
 INSERT INTO `ga_admin_menu` VALUES ('23', '22', '22', 'gii', '', '', '0', '开发工具', '', '0', '1');
 INSERT INTO `ga_admin_menu` VALUES ('24', '23', '22', 'gii', '', '', '0', 'gii', '', '2', '2');
 INSERT INTO `ga_admin_menu` VALUES ('25', '23', '22', 'developer', 'index', '', '0', '开发工具', '', '1', '2');
 INSERT INTO `ga_admin_menu` VALUES ('26', '23', '22', 'developer', 'preview', '', '-1', '表单生成预览', '', '2', '2');
 INSERT INTO `ga_admin_menu` VALUES ('27', '23', '22', 'developer', 'create-js', '', '-1', '生成js', '', '2', '2');
+INSERT INTO `ga_admin_menu` VALUES ('28', '0', '28', 'cms/default', 'index', '', '0', 'CMS', 'cms', '3', '0');
+INSERT INTO `ga_admin_menu` VALUES ('29', '28', '28', 'cms/default', 'index', '', '0', '附件管理', '0', '0', '1');
+INSERT INTO `ga_admin_menu` VALUES ('30', '29', '28', 'cms/default', 'index', '', '0', '附件列表', '备注', '0', '2');
+INSERT INTO `ga_admin_menu` VALUES ('31', '30', '28', 'cms/default', 'add', '', '0', '附件添加', '附件', '0', '3');
+INSERT INTO `ga_admin_menu` VALUES ('32', '29', '28', 'cms/attach-cate', 'index', '0', '-1', '附件分类管理', 'cms', '0', '2');
+INSERT INTO `ga_admin_menu` VALUES ('33', '32', '28', 'cms/attach-cate', 'add', '', '0', '添加', '附件分类', '0', '3');
+INSERT INTO `ga_admin_menu` VALUES ('34', '32', '28', 'cms/attach-cate', 'search', '', '-1', '附件下拉搜索', '', '1', '3');
+INSERT INTO `ga_admin_menu` VALUES ('35', '28', '28', 'cms/ad', 'index', '', '0', '广告管理', 'cms', '0', '1');
+INSERT INTO `ga_admin_menu` VALUES ('36', '35', '28', 'cms/cms-ad', 'index', '', '0', '广告管理', 'cms', '0', '2');
+INSERT INTO `ga_admin_menu` VALUES ('37', '35', '28', 'cms/cms-ad-block', 'index', '', '0', '广告区块', 'cms', '0', '2');
+INSERT INTO `ga_admin_menu` VALUES ('38', '36', '28', 'cms/cms-ad', 'index', '', '0', '广告列表', 'cms', '1', '3');
+INSERT INTO `ga_admin_menu` VALUES ('39', '36', '28', 'cms/cms-ad', 'create', '', '0', '广告添加', 'cms', '1', '3');
+INSERT INTO `ga_admin_menu` VALUES ('40', '36', '28', 'cms/cms-ad', 'update', '', '0', '广告修改', 'cms', '1', '3');
+INSERT INTO `ga_admin_menu` VALUES ('41', '36', '28', 'cms/cms-ad', 'delete', '', '0', '广告删除', 'cms', '1', '3');
+INSERT INTO `ga_admin_menu` VALUES ('42', '37', '28', 'cms/cms-ad-block', 'index', '', '0', '区块列表', 'cms', '0', '3');
+INSERT INTO `ga_admin_menu` VALUES ('43', '37', '28', 'cms/cms-ad-block', 'create', '', '0', '区块添加', 'cms', '0', '3');
+INSERT INTO `ga_admin_menu` VALUES ('44', '37', '28', 'cms/cms-ad-block', 'update', '', '0', '区块修改', 'cms', '0', '3');
+INSERT INTO `ga_admin_menu` VALUES ('45', '37', '28', 'cms/cms-ad-block', 'delete', '', '0', '区块删除', 'cms', '0', '3');
+INSERT INTO `ga_admin_menu` VALUES ('46', '28', '28', 'cms-article', 'index', '', '0', '资讯管理', 'cms', '0', '1');
+INSERT INTO `ga_admin_menu` VALUES ('47', '51', '28', 'cms/article', 'index', '', '0', '资讯列表', 'cms', '0', '2');
+INSERT INTO `ga_admin_menu` VALUES ('48', '51', '28', 'cms/article', 'create', '', '0', '资讯添加', 'cms', '0', '2');
+INSERT INTO `ga_admin_menu` VALUES ('49', '51', '28', 'cms/article', 'update', '', '0', '资讯修改', 'cms', '0', '2');
+INSERT INTO `ga_admin_menu` VALUES ('50', '51', '28', 'cms/article', 'delete', '', '0', '资讯删除', 'cms', '0', '2');
+INSERT INTO `ga_admin_menu` VALUES ('51', '46', '28', 'cms/article', 'index', '', '0', '资讯管理', 'cms', '0', '2');
+INSERT INTO `ga_admin_menu` VALUES ('52', '46', '28', 'cms/article-category', 'index', '', '0', '分类管理', 'cms', '0', '2');
+INSERT INTO `ga_admin_menu` VALUES ('53', '46', '28', 'cms/tag', 'index', '', '0', '标签管理', 'cms', '0', '2');
+INSERT INTO `ga_admin_menu` VALUES ('54', '52', '28', 'cms/article-category', 'index', '', '0', '分类列表', 'cms', '0', '3');
+INSERT INTO `ga_admin_menu` VALUES ('55', '52', '28', 'cms/article-category', 'create', '', '0', '分类添加', 'cms', '0', '3');
+INSERT INTO `ga_admin_menu` VALUES ('56', '52', '28', 'cms/article-category', 'update', '', '0', '分类修改', 'cms', '0', '3');
+INSERT INTO `ga_admin_menu` VALUES ('57', '52', '28', 'cms/article-category', 'delete', '', '0', '分类删除', 'cms', '0', '3');
+INSERT INTO `ga_admin_menu` VALUES ('58', '53', '28', 'cms/tag', 'index', '', '0', '标签列表', 'cms', '0', '3');
+INSERT INTO `ga_admin_menu` VALUES ('59', '53', '28', 'cms/tag', 'create', '', '0', '标签添加', 'cms', '0', '3');
+INSERT INTO `ga_admin_menu` VALUES ('60', '53', '28', 'cms/tag', 'update', '', '0', '标签修改', 'cms', '0', '3');
+INSERT INTO `ga_admin_menu` VALUES ('61', '53', '28', 'cms/tag', 'delete', '', '0', '标签删除', 'cms', '4', '3');
 
 -- ----------------------------
 -- Table structure for ga_admin_user
@@ -190,7 +280,7 @@ CREATE TABLE `ga_admin_user` (
 -- ----------------------------
 -- Records of ga_admin_user
 -- ----------------------------
-INSERT INTO `ga_admin_user` VALUES ('1', 'sysadmin', '系统管理', '', '3885662a78b79c45ade750345fe0b679', 'i4BeVr', '1479393090', '0', '1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27', '1000', '1', 'duiqmab0vumfiktg3uu3oe5vf6', '1516027778');
+INSERT INTO `ga_admin_user` VALUES ('1', 'sysadmin', '系统管理', '', '3885662a78b79c45ade750345fe0b679', 'i4BeVr', '1479393090', '0', '1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61', '1000', '1', 'cdj4jloaj16n68sjkk8pv2t7a2', '1527006987');
 INSERT INTO `ga_admin_user` VALUES ('2', 'test', 'test', '', 'c51f62115947f3689e5f440819ae7032', 'v6KJ4v', '1510814911', '0', '1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99,100,101,102,103,104,105,106,107,110,111,116,117,118,119,120,121,122,123,124,125,126,127,128,129,130,131,135,136,142,143,144,145,146,147,152,153', '61000', '1', 'emklcqulrtkgk1266soo8m07s2', '1513322025');
 INSERT INTO `ga_admin_user` VALUES ('3', 'xhd', 'xhd', '', 'b8dd2d160aac9e9da4add8b4143b0d9a', 'BSmWrr', '1511182801', '0', '1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99,100,101,102,103,104,105,106,107,110,111,116,117,118,119,120,121,122,123,124,125,126,127,128,129,130,131,135,136,138,139,140,141,142,143,144,145,146,147,148,152,153,155,156,157,162,163,164,165,166,167,168,169,170,171,172,191,192,193,194,195,196,197,198,199', '1', '1', 'ta9asqvhjv9d5a7eg64i7m4i62', '1515205636');
 INSERT INTO `ga_admin_user` VALUES ('4', 'wenbin', 'wenbin', '', '4173033fd3a048645eff75ee6f00a5f6', 'z4TGpO', '1511837805', '0', '1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99,100,101,102,103,104,105,106,107,110,111,116,117,118,119,120,121,122,123,124,125,126,127,128,129,130,131,135,136,142,143,144,145,146,147,152,153', '0', '1', 'fonqs26aiifh1hv4fap9rqlu87', '1511847554');
