@@ -9,10 +9,11 @@ use yii\filters\VerbFilter;
 use yii\data\Pagination;
 use backend\controllers\BaseController;
 use yii\helpers\ArrayHelper;
+use  backend\modules\cms\models\CmsAttachCate;
 /**
  * Default controller for the `cms` module
  */
-class DefaultController extends BaseController
+class AttachController extends BaseController
 {
     public function init(){
         $this->model = new CmsAttach();
@@ -24,13 +25,16 @@ class DefaultController extends BaseController
     public function get_search_where(){
         $where = array();
         if(Yii::$app->request->get('search')){
+            $cate_id = Yii::$app->request->get('cate_id');
+            if($cate_id){
+                $where  = sprintf(" FIND_IN_SET(%s,cate_ids) ",$cate_id);
+            }
             $name = Yii::$app->request->get('name');
             if($name){
-                //['like', 'title', $search]
-                $where['name'] = $name;
+                $and_where[] = ['like','name',$name];
             }
         }
-        return $where;
+        return array($where,$and_where);
     }
 
     /**
@@ -39,8 +43,14 @@ class DefaultController extends BaseController
      */
     public function actionIndex()
     {
-        $where = $this->get_search_where();
-        $model_ar = CmsAttach::find()->where($where)->asArray();
+        list($where,$and_where) = $this->get_search_where();
+        $query = CmsAttach::find()->where($where);
+        if(!empty($and_where)){
+            foreach($and_where as $aw){
+                $query->andWhere($aw);
+            }
+        }
+        $model_ar =   $query->asArray();
         $page = new Pagination([
             'defaultPageSize' => 20,
             'totalCount' => $model_ar->count(),
@@ -54,6 +64,7 @@ class DefaultController extends BaseController
         return $this->render('index', [
             'page' => $page,
             'data'=>$data,
+            'config_attach_cate_id'=>CmsAttachCate::get_config_id(),
         ]);
     }
 
@@ -109,16 +120,16 @@ class DefaultController extends BaseController
         if(Yii::$app->request->isPost){
             $ids = Yii::$app->request->post("attach_ids");
             $tag_names = Yii::$app->request->post("tag_names");
-            $tag_ids =  (new \yii\db\Query())
+            $cate_ids =  (new \yii\db\Query())
                         ->select(['id', 'name'])
                         ->from('cms_attach_cate')
                         ->where(['in','name',$tag_names])
                         ->limit(10)
                         ->all();
-            $tag_ids =ArrayHelper::getColumn($tag_ids,'id');
+            $cate_ids =ArrayHelper::getColumn($cate_ids,'id');
 //            var_dump($tag_names);
-            $res = Yii::$app->db->createCommand()->update('cms_attach',['tag_ids'=>implode(',',$tag_ids)],['in','id',$ids])->execute();
-          //  echo    Yii::$app->db->createCommand()->getSql();exit();
+            $res = Yii::$app->db->createCommand()->update('cms_attach',['cate_ids'=>implode(',',$cate_ids)],['in','id',$ids])->execute();
+          //  echo    Yii::$app->db->createCommand()->getRawSql();exit();
             if ($res) {
                 $response = array(
                     'status'=>0,
@@ -131,7 +142,7 @@ class DefaultController extends BaseController
                     'status'=>-1,
                     'msg'=>Yii::t('app','db_error'),
                     'data'=>$model->errors,
-                    'last_sql'=>   Yii::$app->db->createCommand()-getRawSql(),
+                    'last_sql'=>   Yii::$app->db->createCommand()->getSql(),
                 );
             }
             $this->asJson($response);

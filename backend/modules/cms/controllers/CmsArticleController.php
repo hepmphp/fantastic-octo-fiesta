@@ -3,12 +3,11 @@
 namespace backend\modules\cms\controllers;
 
 use Yii;
-use backend\modules\cms\models\CmsArticle;
 use yii\filters\VerbFilter;
 use yii\data\Pagination;
 use backend\controllers\BaseController;
-
-
+use backend\modules\cms\models\CmsArticle;
+use backend\modules\cms\models\CmsArticleCategory;
 class CmsArticleController extends BaseController
 {
     public function init(){
@@ -97,8 +96,8 @@ class CmsArticleController extends BaseController
         return $this->render('index', [
             'page' => $page,
             'data'=>$data,
-				'config_is_top'=>CmsArticle::get_config_is_top(),
-				'config_status'=>CmsArticle::get_config_status(),
+            'config_is_top'=>CmsArticle::get_config_is_top(),
+            'config_status'=>CmsArticle::get_config_status(),
 
         ]);
     }
@@ -108,8 +107,8 @@ class CmsArticleController extends BaseController
     {
         return $this->render('view', [
             'model' => CmsArticle::findOne($id),
-				'config_is_top'=>CmsArticle::get_config_is_top(),
-				'config_status'=>CmsArticle::get_config_status(),
+            'config_is_top'=>CmsArticle::get_config_is_top(),
+            'config_status'=>CmsArticle::get_config_status(),
 
         ]);
     }
@@ -121,7 +120,8 @@ class CmsArticleController extends BaseController
         }else{
             return $this->render('create',[
 				'config_is_top'=>CmsArticle::get_config_is_top(),
-				'config_status'=>CmsArticle::get_config_status(),
+                'config_status'=>CmsArticle::get_config_status(),
+                'select_tree'=>CmsArticleCategory::get_config_menu()
 
             ]);
         }
@@ -137,13 +137,13 @@ class CmsArticleController extends BaseController
                 'form'=>$model->attributes,//表单参数
 				'config_is_top'=>CmsArticle::get_config_is_top(),
 				'config_status'=>CmsArticle::get_config_status(),
-
+                'select_tree'=>CmsArticleCategory::get_config_menu($model->cate_id)
             ]);
         }
     }
     public function actionDelete()
     {
-        return $this->commonDelete($this->model);
+        return $this->commonLogicDelete($this->model);
     }
 
 

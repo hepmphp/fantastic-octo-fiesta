@@ -8,9 +8,9 @@
 
 
 var urls = {
-    create_url:'?r=cms/default/create',
-    update_url:'?r=cms/default/updatetag',
-    delete_url:'?r=cms/default/delete'
+    create_url:'?r=cms/attach/create',
+    update_url:'?r=cms/attach/updatetag',
+    delete_url:'?r=cms/attach/delete'
 };
 
 /***

@@ -27,10 +27,7 @@ class AttachCateController extends BaseController
     public function get_search_where(){
         $where = array();
         if(Yii::$app->request->get('search')){
-            $id = Yii::$app->request->get('id');
-            if($id){
-                $where['id'] = $id;
-            }
+
             $name = Yii::$app->request->get('name');
             if($name){
                 $where['name'] = $name;

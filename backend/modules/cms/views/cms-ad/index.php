@@ -22,7 +22,8 @@ AppAsset::addScript($this,"/static/js/logic/lib/image_upload_callback.js");
             <input placeholder="开始时间" class="form-control date-range00 date-ico" name="begin_addtime" type="text" value="<?=Yii::$app->request->get('begin_addtime')?>">
             <input placeholder="结束时间" class="form-control date-range01 date-ico" name="end_addtime" type="text" value="<?=Yii::$app->request->get('end_addtime')?>">
             </span>
-            </div>        <div class="form-group">
+            </div>
+            <div class="form-group">
                 <label class="control-label">状态：</label>
                 <select id="status" name="status" class="form-control">
                     <option value="">请选择</option>
@@ -32,7 +33,8 @@ AppAsset::addScript($this,"/static/js/logic/lib/image_upload_callback.js");
                         <option value="<?=$vo['id']?>" <?php if(is_numeric(Yii::$app->request->get('status')) && $vo['id']==Yii::$app->request->get('status')){ echo "selected";}?>><?=$vo['name']?></option>
                         <?php }?>
                 </select>
-            </div>        <div class="form-group">
+            </div>
+            <div class="form-group">
                 <label class="control-label">m版：</label>
                 <select id="is_mobile" name="is_mobile" class="form-control">
                     <option value="">请选择</option>

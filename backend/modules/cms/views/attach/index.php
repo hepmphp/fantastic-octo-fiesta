@@ -15,7 +15,7 @@ use backend\components\PageWidget;
 <body class="form-body">
 <div   class="form-wrapper"   style="padding-top: 0">
     <ul class="list-inline page-tab clearfix">
-        <li class="cur"><a href="/?r=cms/default/index&iframe=1">附件列表</a></li>
+        <li class="cur"><a href="/?r=cms/attach/index&iframe=1">附件列表</a></li>
         <li><a href="/?r=cms/attach-cate/index&iframe=1">分类管理</a></li>
     </ul>
     <div class="form-item">
@@ -25,11 +25,18 @@ use backend\components\PageWidget;
             <input type="hidden" name="search" value="1">
             <div class="form-group">
                 <label class="control-label">分类名称：</label>
-                <input type="text" class="form-control">
+                <select id="cate_id" name="cate_id" class="form-control">
+                    <option value="">请选择</option>
+                    <?php
+                    foreach($config_attach_cate_id as $k=>$vo){
+                        ?>
+                        <option value="<?=$vo['id']?>" <?php if(is_numeric(Yii::$app->request->get('cate_id')) && $vo['id']==Yii::$app->request->get('cate_id')){ echo "selected";}?>><?=$vo['name']?></option>
+                    <?php }?>
+                </select>
             </div>
             <div class="form-group">
                 <label class="control-label">文件名：</label>
-                <input type="text" class="form-control" name="name">
+                <input type="text" class="form-control" name="name" value="<?=Yii::$app->request->get('name')?>">
             </div>
 
             <button class="btn btn-info m-l" type="submit"> 查询</button>

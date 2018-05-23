@@ -57,7 +57,7 @@ return [
 
         'db' => [
             'class' => 'yii\db\Connection',
-            'dsn' => 'mysql:host=localhost;dbname=game_admin',
+            'dsn' => 'mysql:host=localhost;dbname=yii_admin',
             'username' => 'root',
             'password' => '',
             'charset' => 'utf8',

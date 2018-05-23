@@ -242,7 +242,7 @@ class BaseController extends Controller{
         if(!empty($ids_arr)){
             //deleteAll
             $where = ['in', 'id', $ids_arr];
-            $res = $this->model->deleteAll($where);
+            $res = $model->deleteAll($where);
             if($res){
                 $response =array(
                     'status'=>0,
@@ -256,18 +256,18 @@ class BaseController extends Controller{
     /***
      * 通用逻辑删除
      */
-    public function commonLogicDelete(){
+    public function commonLogicDelete($model){
         $response = array(
             'status'=>-1,
             'msg'=>Yii::t('app','delete_fail'),
             'data'=>'',
         );
-        $status = Yii::$app->request->post('status','1');
+        $status = Yii::$app->request->post('status','-1');
         $ids = Yii::$app->request->post('ids');
         $ids_arr = explode(',',$ids);
         $ids_arr = array_map('intval',$ids_arr);
         if(!empty($ids_arr)){
-            $res = $this->model->updateAll(['status'=>$status],['id'=>$ids_arr]);
+            $res = $model->updateAll(['status'=>$status],['id'=>$ids_arr]);
             if($res){
              //   $m = clone $this->model;
                 $response =array(

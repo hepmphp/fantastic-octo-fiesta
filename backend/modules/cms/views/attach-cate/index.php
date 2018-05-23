@@ -7,7 +7,7 @@ use backend\components\PageWidget;
 ?>
 <div class="form-wrapper" style="padding-top: 0">
     <ul class="list-inline page-tab clearfix">
-        <li ><a href="/?r=cms/default/index&iframe=1">附件列表</a></li>
+        <li ><a href="/?r=cms/attach/index&iframe=1">附件列表</a></li>
         <li class="cur"><a href="/?r=cms/attach-cate/index&iframe=1">分类管理</a></li>
     </ul>
     <div class="form-item">

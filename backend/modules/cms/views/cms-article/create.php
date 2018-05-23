@@ -48,83 +48,6 @@ AppCurdAsset::addScript($this,"/static/js/select2/js/select2.full.min.js");
                 <textarea class="form-control" id="description" name="description">default text</textarea>
             </div>
         </div>
-        <div class="form-group">
-            <label class="col-sm-1 control-label">内容：</label>
-            <div class="col-sm-11">
-                <script   type="text/plain" name="content" id="content" value="{$form['field']}" style="width:100%;height: 400px;"></script>
-                <style>
-                        /*设置按扭样式*/
-                    .edui-icon-test{
-                        background-position: -380px 0;
-                    }
-                </style>
-                <script>
-                    var um = UM.getEditor('content',{
-                        toolbar: [
-                            'source | undo redo | bold italic underline strikethrough | superscript subscript | forecolor backcolor | removeformat |',
-                            'insertorderedlist insertunorderedlist | selectall cleardoc paragraph | fontfamily fontsize' ,
-                            '| justifyleft justifycenter justifyright justifyjustify |',
-                            'link unlink | emotion image video  | map',
-                            '| horizontal print preview fullscreen', 'drafts', 'formula','test'
-                        ]
-                    });
-                    um.ready(function() {
-                        //设置编辑器的内容
-                        um.setContent("<?=addslashes($form['content'])?>");
-                        $('.edui-container').width("900px");
-                        $('.edui-body-container').width("900px");
-                    });
-                    UM.registerUI('test',
-                        function(name) {
-                            var me = this;
-                            var $btn = $.eduibutton({
-                                icon : name,
-                                click : function(){
-
-                                    layer.open({
-                                        type: 2, //iframe
-                                        area: ['900px', '560px'],
-                                        title: '选择图片',
-                                        btn: ['确认','取消'],
-                                        shade: 0.3, //遮罩透明度
-                                        content:'http://yiiadmin.local/?r=cms/default/index&iframe=1',
-                                        yes: function(index, layero){
-
-                                            var body = layer.getChildFrame('body', index);
-
-                                            var image_list = '<p><img src="[src]" _src="[src]" ></p>'+"\n";
-                                            var html_image_list = '';
-                                            body.find('.image_border').each(function(){
-                                                html_image_list = html_image_list+image_list.replace('[src]',$(this).attr('src')).replace('[_src]',$(this).attr('_src'));
-                                                //attach_urls.push($(this).attr('src'));
-                                            });
-
-                                            $('#content').append(html_image_list);
-                                            layero.close();
-                                            console.log("checked...");
-//                                            ajax_post(url,param);
-                                        },btn2: function(index, layero){
-
-                                        }
-                                        // content:"{:U('Serverpolicy/add')}" //iframe的url
-                                    });
-                                },
-                                title: '相册插入图片'
-                            });
-
-                            this.addListener('selectionchange',function(){
-                                //切换为不可编辑时，把自己变灰
-                                var state = this.queryCommandState(name);
-                                $btn.edui().disabled(state == -1).active(state == 1)
-                            });
-                            return $btn;
-                        }
-                    );
-                </script>
-            </div>
-        </div>
-
-
         <!-- Select Basic -->
         <div class="form-group">
             <label class="col-sm-1 control-label" for="is_top">是否置顶</label>
@@ -165,6 +88,84 @@ AppCurdAsset::addScript($this,"/static/js/select2/js/select2.full.min.js");
                 </select>
             </div>
         </div>
+        <div class="form-group">
+            <label class="col-sm-1 control-label">内容：</label>
+            <div class="col-sm-11">
+                <script   type="text/plain" name="content" id="content" value="{$form['field']}" style="width:100%;height: 400px;"></script>
+                <style>
+                        /*设置按扭样式*/
+                    .edui-icon-test{
+                        background-position: -380px 0;
+                    }
+                </style>
+                <script>
+                    var um = UM.getEditor('content',{
+                        toolbar: [
+                            'source | undo redo | bold italic underline strikethrough | superscript subscript | forecolor backcolor | removeformat |',
+                            'insertorderedlist insertunorderedlist | selectall cleardoc paragraph | fontfamily fontsize' ,
+                            '| justifyleft justifycenter justifyright justifyjustify |',
+                            'link unlink | emotion image video  | map',
+                            '| horizontal print preview fullscreen', 'drafts', 'formula','test'
+                        ]
+                    });
+                    um.ready(function() {
+                        //设置编辑器的内容
+                        um.setContent("<?=addslashes($form['content'])?>");
+                        $('.edui-container').width("900px");
+                        $('.edui-body-container').width("900px");
+                    });
+                    UM.registerUI('test',
+                        function(name) {
+                            var me = this;
+                            var $btn = $.eduibutton({
+                                icon : name,
+                                click : function(){
+
+                                    layer.open({
+                                        type: 2, //iframe
+                                        area: ['900px', '560px'],
+                                        title: '选择图片',
+                                        btn: ['确认','取消'],
+                                        shade: 0.3, //遮罩透明度
+                                        content:'http://yiiadmin.local/?r=cms/attach/index&iframe=1',
+                                        yes: function(index, layero){
+
+                                            var body = layer.getChildFrame('body', index);
+
+                                            var image_list = '<p><img src="[src]" _src="[src]" ></p>'+"\n";
+                                            var html_image_list = '';
+                                            body.find('.image_border').each(function(){
+                                                html_image_list = html_image_list+image_list.replace('[src]',$(this).attr('src')).replace('[_src]',$(this).attr('_src'));
+                                                //attach_urls.push($(this).attr('src'));
+                                            });
+
+                                            $('#content').append(html_image_list);
+                                            layero.close();
+                                            console.log("checked...");
+//                                            ajax_post(url,param);
+                                        },btn2: function(index, layero){
+
+                                        }
+                                        // content:"{:U('Serverpolicy/add')}" //iframe的url
+                                    });
+                                },
+                                title: '相册插入图片'
+                            });
+
+                            this.addListener('selectionchange',function(){
+                                //切换为不可编辑时，把自己变灰
+                                var state = this.queryCommandState(name);
+                                $btn.edui().disabled(state == -1).active(state == 1)
+                            });
+                            return $btn;
+                        }
+                    );
+                </script>
+            </div>
+        </div>
+
+
+
 
     </div>
 </div>
