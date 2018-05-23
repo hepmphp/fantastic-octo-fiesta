@@ -51,16 +51,15 @@ AppCurdAsset::addScript($this,"/static/js/select2/js/select2.full.min.js");
         <div class="form-group">
             <label class="col-sm-1 control-label">内容：</label>
             <div class="col-sm-11">
-                <script id="editor" type="text/plain" name="content" id="content" value="{$form['field']}" style="width:100%;height: 400px;"></script>
+                <script   type="text/plain" name="content" id="content" value="{$form['field']}" style="width:100%;height: 400px;"></script>
                 <style>
-
                         /*设置按扭样式*/
                     .edui-icon-test{
                         background-position: -380px 0;
                     }
                 </style>
                 <script>
-                    var um = UM.getEditor('editor',{
+                    var um = UM.getEditor('content',{
                         toolbar: [
                             'source | undo redo | bold italic underline strikethrough | superscript subscript | forecolor backcolor | removeformat |',
                             'insertorderedlist insertunorderedlist | selectall cleardoc paragraph | fontfamily fontsize' ,
@@ -81,7 +80,34 @@ AppCurdAsset::addScript($this,"/static/js/select2/js/select2.full.min.js");
                             var $btn = $.eduibutton({
                                 icon : name,
                                 click : function(){
-                                    alert("test");
+
+                                    layer.open({
+                                        type: 2, //iframe
+                                        area: ['900px', '560px'],
+                                        title: '选择图片',
+                                        btn: ['确认','取消'],
+                                        shade: 0.3, //遮罩透明度
+                                        content:'http://yiiadmin.local/?r=cms/default/index&iframe=1',
+                                        yes: function(index, layero){
+
+                                            var body = layer.getChildFrame('body', index);
+
+                                            var image_list = '<p><img src="[src]" _src="[src]" ></p>'+"\n";
+                                            var html_image_list = '';
+                                            body.find('.image_border').each(function(){
+                                                html_image_list = html_image_list+image_list.replace('[src]',$(this).attr('src')).replace('[_src]',$(this).attr('_src'));
+                                                //attach_urls.push($(this).attr('src'));
+                                            });
+
+                                            $('#content').append(html_image_list);
+                                            layero.close();
+                                            console.log("checked...");
+//                                            ajax_post(url,param);
+                                        },btn2: function(index, layero){
+
+                                        }
+                                        // content:"{:U('Serverpolicy/add')}" //iframe的url
+                                    });
                                 },
                                 title: '相册插入图片'
                             });

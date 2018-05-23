@@ -10,7 +10,7 @@
 <script src="/static/js/jquery.min.js"></script>
 <script src="/static/js/layer/layer.js"></script>
 <script src="/static/js/common.js"></script>
-
+<script src="/static/js/logic/lib/ajax.js"></script>
 <script type="text/javascript">
     layer.config({
         skin:'layer-ext-moon',

@@ -7,9 +7,9 @@
  */
 
 var urls = {
-    create_url:'?r=cms/cms-article/create',
-    update_url:'?r=cms/cms-article/update',
-    delete_url:'?r=cms/cms-article/delete'
+    create_url:'?r=cms/cms-tag/create',
+    update_url:'?r=cms/cms-tag/update',
+    delete_url:'?r=cms/cms-tag/delete'
 };
 
 /***
@@ -17,7 +17,7 @@ var urls = {
  */
 function add(){
     var url = urls.create_url;
-    layer_form(url,1,['100%', '100%']);
+    layer_form(url,1,['900px', '600px']);
 }
 /**
  * 修改
@@ -25,7 +25,7 @@ function add(){
  */
 function edit(id) {
     var url = urls.update_url+"&id="+id;
-    layer_form(url,2,['100%', '100%']);
+    layer_form(url,2,['900px', '600px']);
 }
 
 /***
@@ -62,18 +62,8 @@ function layer_form(url,action,area){
             var body = layer.getChildFrame('body', index);
             var param ={
                 id:body.find('#id').val(),
-                CmsArticle:{
-					cate_id:body.find('#cate_id').val(),
-					tag_ids:body.find('#tag_ids').val(),
-					title:body.find('#title').val(),
-					keywords:body.find('#keywords').val(),
-					description:body.find('#description').val(),
-					content:body.find('#content').html(),
-					addtime:body.find('#addtime').val(),
-					update_time:body.find('#update_time').val(),
-					is_top:body.find('#is_top').val(),
-					list_image_url:body.find('#list_image_url').val(),
-					status:body.find('#status').val()
+                CmsTag:{
+					name:body.find('#name').val()
 }
             };
             //todo生成js验证

@@ -20,8 +20,8 @@
      * window.UMEDITOR_HOME_URL = "/xxxx/xxxx/";
      */
     if(window.location.host.indexOf('local')!=-1){
-        var PHP_URL = 'http://localhost:40003/?r=api/upload-umeditor/index';
-        var STATIC_URL = 'http://localhost:40003/';
+        var PHP_URL = 'http://yiiadmin.local/?r=api/upload-umeditor/index';
+        var STATIC_URL = 'http://yiiadmin.local/';
     }else{
         var PHP_URL = 'http://back.youxi53.com/api.php?m=imgUp';
         var STATIC_URL = 'http://www.youxi53.com/';

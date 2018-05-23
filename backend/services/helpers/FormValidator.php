@@ -91,7 +91,7 @@ class FormValidator {
     }
 
     public static function required_all($fields){
-          array_shift($fields);
+     //     array_shift($fields);
      //   var_dump($fields);
         $fields = array_map(function($field){
             return "'{$field}'";

@@ -76,15 +76,18 @@ $('#btn_list').click(function(){
 $('#btn_controller').click(function(){
     var fields = new Array();
     var search_builder_types = new Array();
+    var form_builder_types = new Array();
     var table = $('#table').val();
     $("input[name='ids[]']").each(function(){
         if(this.checked){
             var search_builder_type =  $(this).parent().parent().find('.search_builder_type').val();//查找对应的生成类型
             fields.push($(this).val());
             search_builder_types.push(search_builder_type);
+            var form_builder_type =  $(this).parent().parent().find('.form_builder_type').val();//查找对应的生成类型
+            form_builder_types.push(form_builder_type);
         }
     });
-    var controller_url = "?r=developer/create-controller&fields="+fields+"&search_builder_types="+search_builder_types+"&table="+table;
+    var controller_url = "?r=developer/create-controller&fields="+fields+"&search_builder_types="+search_builder_types+"&table="+table+"&form_builder_types="+form_builder_types;
     layer.open({
         type: 2, //iframe
         area: ['1200px', '750px'],

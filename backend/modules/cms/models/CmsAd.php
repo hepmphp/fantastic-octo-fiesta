@@ -68,7 +68,7 @@ class CmsAd extends Model
     public static function getConfigisMobile(){
         return [
             0=>['id'=>0,'name'=>'是'],
-            1=>['id'=>-1,'name'=>'否'],
+            -1=>['id'=>-1,'name'=>'否'],
         ];
     }
 }

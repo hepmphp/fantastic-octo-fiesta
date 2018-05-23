@@ -60,7 +60,7 @@ class CmsArticle extends \yii\db\ActiveRecord
 	public static function get_config_status(){
             return [
                 0=>['id'=>0,'name'=>'正常'],
-				1=>['id'=>-1,'name'=>'删除'],
+				-1=>['id'=>-1,'name'=>'删除'],
 
             ];
     }

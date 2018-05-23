@@ -15,7 +15,7 @@ use backend\services\helpers\FormBuilderSearch;
 use backend\services\helpers\FormSearchList;
 use backend\services\helpers\FormValidator;
 use backend\services\helpers\InfoSchema;
-use backend\services\helpers\SearchBuilder;
+use backend\services\helpers\SearchController;
 use yii\base\View;
 
 /***
@@ -57,7 +57,7 @@ class DeveloperController extends BaseController{
              'config_table_id'=>$config_table_id,
              'config_form_builder_type'=>FormBuilder::get_config_form_builder_type(),
              'config_form_validator_type'=>FormValidator::get_config_form_validator_type(),
-             'config_search_builder_type'=>SearchBuilder::get_config_search_builder_type(),
+             'config_search_builder_type'=>SearchController::get_config_search_builder_type(),
              'config_search_list_type'=>FormSearchList::get_config_search_list_type(),
              'fields'=>$fields
             ]
@@ -333,16 +333,20 @@ EOT;
 
         $tr_header = "\n";
         $tr_td = "\n";
-        //print_r($db_fields);
+        $slect_keys = array_keys($select);
+//        echo "<pre>";
+//        var_dump($fields);
+//        print_r($db_fields);
         foreach($db_fields as $k=>$name){
             if(in_array($k,$fields)){
-                if(strpos($k,'time')!==false){
+                if(in_array($k,$slect_keys)){
+                    $tr_td .= "\t\t\t<td><?=\$config_{$k}[\$vo['$k']]['name']?></td>\n";
+                }else if(strpos($k,'time')!==false){
                     $tr_td .= "\t\t\t<td><?=date('Y-m-d H:i:s',\$vo['{$k}'])?></td>\n";
                 }else{
                     $tr_td .= "\t\t\t<td><?=\$vo['{$k}']?></td>\n";
 
                 }
-
                 $tr_header .= "\t\t\t<th>{$name}</th>\n";
             }
         }
@@ -404,8 +408,10 @@ EOT;
        $table = Yii::$app->request->get('table','ga_platform');
        $fields = Yii::$app->request->get('fields');
        $search_builder_types = Yii::$app->request->get('search_builder_types');
+       $form_builder_types = Yii::$app->request->get('form_builder_types');
        $fields = explode(',',$fields);
        $search_builder_types = explode(',',$search_builder_types);
+       $form_builder_types = explode(',',$form_builder_types);
 
        $table_arr = explode('_',$table);
        $table_arr = array_map(function($a){
@@ -448,6 +454,14 @@ EOT;
             }
             \n
 EOT;
+       $where_select =  <<<EOT
+            \$[field] = Yii::\$app->request->get('[field]');
+            if(is_numeric(\$[field])){
+               \$where['[field]'] = \$[field];
+            }
+            \n
+EOT;
+
        $where_time_range = <<<EOT
            \$begin_[field] = Yii::\$app->request->get('begin_[field]');
            \$end_[field] = Yii::\$app->request->get('end_[field]');
@@ -471,15 +485,25 @@ EOT;
 EOT;
        $where_str = "\n";
        //替换搜索项
+       $select_tree_str="";
+       $select_tree_id_str="";
        foreach($fields as $k=>$field){
             $searc_builder_type = $search_builder_types[$k];
             if($searc_builder_type=='search_text'){
                 $where_str .= str_replace('[field]',$field,$where_tpl);
+            }else if($searc_builder_type=='search_select'){
+                $where_str .= str_replace('[field]',$field,$where_time_range);
             }else if($searc_builder_type=='search_time'){
                 $where_str .= str_replace('[field]',$field,$where_time_range);
             }else if($searc_builder_type=='search_like'){
                 $where_str .= str_replace('[field]',$field,$where_like);
             }
+
+           $form_builder_type = $form_builder_types[$k];
+           if($form_builder_type=='select_tree'){
+               $select_tree_str .= sprintf("\t\t\t\t'select_tree'=>%s::get_config_menu()",$controller_name).",\n";
+               $select_tree_id_str .= sprintf("\t\t\t\t'select_tree'=>%s::get_config_menu(\$model['parent_id'])",$controller_name).",\n";
+           }
        }
 
        //自动添加配置
@@ -488,12 +512,12 @@ EOT;
        $config_str = array();
       // var_dump($select);
        foreach($select as $k=>$s){
-           $config_str[] ="\t\t\t\t'config_{$k}'=>". sprintf("%s::get_config_%s()",$controller_name,$k).",\n";
+           $config_str[] ="\t\t\t'config_{$k}'=>". sprintf("%s::get_config_%s()",$controller_name,$k).",\n";
        }
        //[search]//
        $content = str_replace(
-           array('app_templdate','app_model','GaAdminGroup','//[search]//','//[config]//'),
-           array($namespace,$model.'\\'.$controller_name,$controller_name,$where_str,implode("",$config_str)),
+           array('app_templdate','app_model','GaAdminGroup','//[search]//','//[config]//','//[select_tree]//','//[select_tree_id]//'),
+           array($namespace,$model.'\\'.$controller_name,$controller_name,$where_str,implode("",$config_str),$select_tree_str,$select_tree_id_str),
            $content);
 
         if($create_file==1){
@@ -581,6 +605,9 @@ EOT;
         }
         list($db_fields,$select) = (new InfoSchema())->get_all_fields($table);
 
+
+
+
         //状态配置
         $config_tpl = <<<EOT
 public static function get_config_[field](){
@@ -594,7 +621,7 @@ EOT;
         foreach($select as $k=>$s){
             $formart_arr = array();
             foreach($s as $k2=>$s2){
-                $formart_arr[] = "{$k2}=>['id'=>{$s2['id']},'name'=>'{$s2['name']}'],\n";
+                $formart_arr[] = "{$s2['id']}=>['id'=>{$s2['id']},'name'=>'{$s2['name']}'],\n";
             }
             $config_data[] = str_replace(array('[field]','tpl'),array($k,implode("\t\t\t\t",$formart_arr)),$config_tpl)."\n";
         }
@@ -602,23 +629,46 @@ EOT;
 
         $rules = [];
         //替换搜索项
-       // var_dump($db_fields);
+        //验证规则
         $rules[] = FormValidator::required_all($fields);
+
         foreach($fields as $k=>$field){
              $form_validator_type = $form_validator_types[$k];
             if(empty($form_validator_type)){
                 continue;
             }
-             $rules[] = "\t\t\t\t".FormValidator::$form_validator_type($field);
+            $rules[] = "\t\t\t\t".FormValidator::$form_validator_type($field);
         }
         $attributes = [];//属性
         foreach($db_fields as $field=>$name){
             $attributes[] = "\t\t\t\t '{$field}' => Yii::t('app', '{$name}'),";
         }
-        //[search]//
+        //beforeSave//自动添加时间
+        $config_beforesave_tpl = <<<EOT
+      public function beforeSave(\$insert){
+            if(parent::beforeSave(\$insert)){
+                if(\$this->isNewRecord){
+                    \$this->addtime = time();
+                }
+                //update_time//
+                return true;
+            }else{
+                return false;
+            }
+        }
+EOT;
+
+        $beforesave = '';
+        if(in_array('addtime',array_keys($db_fields))){
+            $beforesave = $config_beforesave_tpl."\n";
+        }
+        if(in_array('update_time',array_keys($db_fields))){
+            $beforesave = str_replace('//update_time//',"\$this->update_time=time();",$beforesave);
+        }
+
         $content = str_replace(
-            array('app_templdate','Model','[table]','[rule]','[field_comment]','//config_str'),
-            array($namespace,$model_name,$table,"\n".implode("\n",$rules),"\n".implode("\n",$attributes),$config_str),
+            array('app_templdate','Model','[table]','[rule]','[field_comment]','//config_str//','//beforeSave//'),
+            array($namespace,$model_name,$table,"\n".implode("\n",$rules),"\n".implode("\n",$attributes),$config_str,$beforesave),
             $content);
 
         // 模型

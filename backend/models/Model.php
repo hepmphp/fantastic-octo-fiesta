@@ -9,6 +9,9 @@
 
 namespace backend\models;
 
+use yii\helpers\ArrayHelper;
+use backend\services\helpers\Tree;
+
 /***
  * 模型父类
  * Class Model
@@ -60,5 +63,34 @@ class Model extends \yii\db\ActiveRecord{
         return $result;
     }
 
+    public static function get_config_id(){
+        $config_id = static::find()->select('id,name')->limit(100)->asArray(true)->all();
+        $config_id = ArrayHelper::index($config_id,'id');
+        return $config_id;
+    }
+
+
+    /**
+     * 获取菜单配置
+     * @param null $parentid
+     * @param null $app_id
+     * @return mixed
+     */
+    public static function get_config_menu($parentid=null){
+        $tree = new Tree();
+        $admin_menu = static::find()->select('id,name,parent_id as parentid')->asArray(true)->all();
+        foreach ($admin_menu as $r) {
+            if($parentid !=null){
+                $r['selected'] = $r['id'] == $parentid ? 'selected' : '';
+            }else{
+                $r['selected'] = '';
+            }
+            $array[] = $r;
+        }
+        $str = "<option value='\$id' \$selected>\$spacer \$name</option>";
+        $tree->init($array);
+        $select_categorys = $tree->get_tree(0, $str);
+        return $select_categorys;
+    }
 
 }

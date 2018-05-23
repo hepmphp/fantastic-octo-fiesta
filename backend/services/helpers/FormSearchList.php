@@ -64,9 +64,9 @@ EOT;
         <select id="[field]" name="[field]" class="form-control">
         <option value="">请选择</option>
           <?php
-              foreach(\$config_[field]_id as \$k=>\$vo){
+              foreach(\$config_[field] as \$k=>\$vo){
                   ?>
-                  <option value="<?=\$vo['id']?>" <?php if(\$vo['id']==\$form['[field]']){ echo "selected";}?>><?=\$vo['name']?></option>
+                  <option value="<?=\$vo['id']?>" <?php if(is_numeric(Yii::\$app->request->get('[field]')) && \$vo['id']==Yii::\$app->request->get('[field]')){ echo "selected";}?>><?=\$vo['name']?></option>
               <?php }?>
         </select>
 	    </div>

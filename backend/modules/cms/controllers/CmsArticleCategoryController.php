@@ -1,18 +1,18 @@
 <?php
 
-namespace app_templdate;
+namespace backend\modules\cms\controllers;
 
 use Yii;
-use app_model;
+use backend\modules\cms\models\CmsArticleCategory;
 use yii\filters\VerbFilter;
 use yii\data\Pagination;
 use backend\controllers\BaseController;
 
 
-class GaAdminGroupController extends BaseController
+class CmsArticleCategoryController extends BaseController
 {
     public function init(){
-        $this->model = new GaAdminGroup();
+        $this->model = new CmsArticleCategory();
     }
     /**
      * @inheritdoc
@@ -35,28 +35,34 @@ class GaAdminGroupController extends BaseController
         $where = array();
         $and_where = array();
         if(Yii::$app->request->get('search')){
-            //[search]//
+
+            $name = Yii::$app->request->get('name');
+            if($name){
+                $and_where[] = ['like','name',$name];
+            }
+
+
         }
-        // $id = Yii::$app->request->get('id');
-        // if($id){
-        //    $where['id'] = $id;
-       // }
-        //文本搜索
-        //like搜索 $and_where[] = ['like','name',$name];
-        //时间搜索 $and_where[] = ['>=','begin_time',$begin_time];
-        //时间搜索 $and_where[] = ['<','end_time',$end_time];
-        //   $where[] = ['like', 'name', $name];
+        // $id = Yii::$app->request->get('id'); 
+        // if($id){ 
+        //    $where['id'] = $id; 
+        // }
+        //文本搜索 
+        //like搜索 $and_where[] = ['like','name',$name]; 
+        //时间搜索 $and_where[] = ['>=','begin_time',$begin_time]; 
+        //时间搜索 $and_where[] = ['<','end_time',$end_time]; 
+        //   $where[] = ['like', 'name', $name]; 
         return array($where,$and_where);
     }
 
     /**
-     * Lists all GaAdminGroup models.
+     * Lists all CmsArticleCategory models.
      * @return mixed
      */
     public function actionIndex()
     {
         list($where,$and_where) = $this->get_search_where();
-        $query = GaAdminGroup::find()->where($where);
+        $query = CmsArticleCategory::find()->where($where);
         if(!empty($and_where)){
             foreach($and_where as $aw){
                 $query->andWhere($aw);
@@ -76,8 +82,9 @@ class GaAdminGroupController extends BaseController
         return $this->render('index', [
             'page' => $page,
             'data'=>$data,
-//[config]//
-//[select_tree]//
+
+            'select_tree'=>CmsArticleCategory::get_config_menu(),
+
         ]);
     }
 
@@ -85,9 +92,10 @@ class GaAdminGroupController extends BaseController
     public function actionView($id)
     {
         return $this->render('view', [
-            'model' => GaAdminGroup::findOne($id),
-//[config]//
-//[select_tree]//
+            'model' => CmsArticleCategory::findOne($id),
+
+            'select_tree'=>CmsArticleCategory::get_config_menu(),
+
         ]);
     }
 
@@ -97,22 +105,23 @@ class GaAdminGroupController extends BaseController
             return $this->commonCreate($this->model);
         }else{
             return $this->render('create',[
-//[config]//
-//[select_tree]//
+
+                'select_tree'=>CmsArticleCategory::get_config_menu(),
+
             ]);
         }
     }
 
     public function actionUpdate()
     {
-        $model = GaAdminGroup::findOne(Yii::$app->request->get('id'));
-        if(Yii::$app->request->isPost){//Yii::$app->request->isPost
-            return $this->commonUpdate($model);//更新
+        $model = CmsArticleCategory::findOne(Yii::$app->request->get('id'));
+        if(Yii::$app->request->isPost){//Yii::$app->request->isPost 
+            return $this->commonUpdate($model);//更新 
         }else{
             return $this->render('create',[
-                'form'=>$model->attributes,//表单参数
-//[config]//
-//[select_tree_id]//
+                'form'=>$model->attributes,//表单参数 
+                'select_tree'=>CmsArticleCategory::get_config_menu($model['parent_id']),
+
             ]);
         }
     }
@@ -121,8 +130,4 @@ class GaAdminGroupController extends BaseController
         return $this->commonDelete($this->model);
     }
 
-
-
-
-
-}
+} 

@@ -4,6 +4,7 @@ namespace backend\modules\cms\controllers;
 
 use Yii;
 use backend\modules\cms\models\CmsAd;
+use backend\modules\cms\models\CmsAdBlock;
 use yii\filters\VerbFilter;
 use yii\data\Pagination;
 use backend\controllers\BaseController;
@@ -39,15 +40,25 @@ class CmsAdController extends BaseController
         $and_where = array();
         if(Yii::$app->request->get('search')){
             
-            $block_id = Yii::$app->request->get('block_id');
-            if($block_id){
-               $where['block_id'] = $block_id;
-            }
-            
-             $title = Yii::$app->request->get('title');
-              if($title){
-                  $and_where[] = ['like','title',$title];
-              }
+        $block_id = Yii::$app->request->get('block_id');
+        if($block_id){
+        $where['block_id'] = $block_id;
+        }
+
+        $title = Yii::$app->request->get('title');
+        if($title){
+          $and_where[] = ['like','title',$title];
+        }
+
+        $status = Yii::$app->request->get('status');
+        if(is_numeric($status)){
+            $where['status'] = $status;
+        }
+
+        $is_mobile = Yii::$app->request->get('is_mobile');
+        if(is_numeric($is_mobile)){
+            $where['is_mobile'] = $is_mobile;
+        }
 
 
         }
@@ -92,6 +103,7 @@ class CmsAdController extends BaseController
             'data'=>$data,
             'config_status' =>CmsAd::getConfigStatus(),
             'config_is_mobile'=>CmsAd::getConfigisMobile(),
+            'config_block_id'=>CmsAdBlock::get_config_id()
         ]);
     }
 
@@ -102,6 +114,7 @@ class CmsAdController extends BaseController
             'model' => CmsAd::findOne($id),
             'config_status' =>CmsAd::getConfigStatus(),
             'config_is_mobile'=>CmsAd::getConfigisMobile(),
+            'config_block_id'=>CmsAdBlock::get_config_id()
         ]);
     }
 
@@ -113,6 +126,7 @@ class CmsAdController extends BaseController
             return $this->render('create',[
                 'config_status' =>CmsAd::getConfigStatus(),
                 'config_is_mobile'=>CmsAd::getConfigisMobile(),
+                'config_block_id'=>CmsAdBlock::get_config_id()
             ]);
         }
     }
@@ -127,6 +141,7 @@ class CmsAdController extends BaseController
                 'form'=>$model->attributes,//表单参数
                 'config_status' =>CmsAd::getConfigStatus(),
                 'config_is_mobile'=>CmsAd::getConfigisMobile(),
+                'config_block_id'=>CmsAdBlock::get_config_id()
             ]);
         }
     }

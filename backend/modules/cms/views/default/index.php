@@ -52,32 +52,6 @@ use backend\components\PageWidget;
 
 
 
-<!--    <div class="table-wrap">-->
-<!--        <table  data-toggle="table" class="table-item2 table inner-table">-->
-<!--            <thead>-->
-<!--            <tr>-->
-<!--                <th>分类名称</th>-->
-<!--                <th>文件名</th>-->
-<!--                <th>文件大小</th>-->
-<!--                <th>添加时间</th>-->
-<!--                <th>操作</th>-->
-<!--            </tr>-->
-<!--            </thead>-->
-<!--            <tbody>-->
-<!--            --><?php //foreach($data as $k=>$vo):?>
-<!--            <tr>-->
-<!--                <td>--><?//=$vo['id']?><!--</td>-->
-<!--                <td><img src="--><?//=$vo['file']?><!--" style="width:200px;height:200px;"></td>-->
-<!--                <td>--><?//=$vo['id']?><!--</td>-->
-<!--                <td>--><?//=$vo['name']?><!--</td>-->
-<!--                <td><a href="">[编辑]</a> <a href="">[删除]</a></td>-->
-<!--            </tr>-->
-<!--            --><?php //endforeach;?>
-<!--            </tbody>-->
-<!--        </table>-->
-<!--    </div>-->
-    <!-- Root element of PhotoSwipe. Must have class pswp. -->
-
     <div class="my-gallery" itemscope itemtype="http://schema.org/ImageGallery">
         <?php foreach($data as $k=>$vo):?>
 

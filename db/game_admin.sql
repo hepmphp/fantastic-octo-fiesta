@@ -1,16 +1,16 @@
 /*
 Navicat MySQL Data Transfer
 
-Source Server         : 127.0.0.1
-Source Server Version : 50721
+Source Server         : 本地数据库
+Source Server Version : 50626
 Source Host           : localhost:3306
-Source Database       : game_admin
+Source Database       : yii_admin
 
 Target Server Type    : MYSQL
-Target Server Version : 50721
+Target Server Version : 50626
 File Encoding         : 65001
 
-Date: 2018-05-23 00:37:13
+Date: 2018-05-23 18:03:52
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -64,7 +64,7 @@ CREATE TABLE `ga_admin_log` (
   `status` tinyint(3) NOT NULL DEFAULT '0' COMMENT '登录状态 1成功0失败',
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1086 DEFAULT CHARSET=utf8 COMMENT='管理员操作日志';
+) ENGINE=InnoDB AUTO_INCREMENT=1087 DEFAULT CHARSET=utf8 COMMENT='管理员操作日志';
 
 -- ----------------------------
 -- Records of ga_admin_log
@@ -168,6 +168,7 @@ INSERT INTO `ga_admin_log` VALUES ('1082', '1', '0', 'sysadmin', '127.0.0.1', ''
 INSERT INTO `ga_admin_log` VALUES ('1083', '1', '0', 'sysadmin', '127.0.0.1', '', '', '1526830647', '4', '登录成功', '1');
 INSERT INTO `ga_admin_log` VALUES ('1084', '1', '0', 'sysadmin', '127.0.0.1', '', '', '1526912204', '4', '登录成功', '1');
 INSERT INTO `ga_admin_log` VALUES ('1085', '1', '0', 'sysadmin', '127.0.0.1', '', '', '1527006987', '4', '登录成功', '1');
+INSERT INTO `ga_admin_log` VALUES ('1086', '1', '0', 'sysadmin', '192.168.71.21', '', '', '1527037383', '4', '登录成功', '1');
 
 -- ----------------------------
 -- Table structure for ga_admin_menu
@@ -221,14 +222,14 @@ INSERT INTO `ga_admin_menu` VALUES ('24', '23', '22', 'gii', '', '', '0', 'gii',
 INSERT INTO `ga_admin_menu` VALUES ('25', '23', '22', 'developer', 'index', '', '0', '开发工具', '', '1', '2');
 INSERT INTO `ga_admin_menu` VALUES ('26', '23', '22', 'developer', 'preview', '', '-1', '表单生成预览', '', '2', '2');
 INSERT INTO `ga_admin_menu` VALUES ('27', '23', '22', 'developer', 'create-js', '', '-1', '生成js', '', '2', '2');
-INSERT INTO `ga_admin_menu` VALUES ('28', '0', '28', 'cms/default', 'index', '', '0', 'CMS', 'cms', '3', '0');
+INSERT INTO `ga_admin_menu` VALUES ('28', '0', '28', 'cms/cms-article', 'index', '', '0', 'CMS', 'cms', '3', '0');
 INSERT INTO `ga_admin_menu` VALUES ('29', '28', '28', 'cms/default', 'index', '', '0', '附件管理', '0', '0', '1');
 INSERT INTO `ga_admin_menu` VALUES ('30', '29', '28', 'cms/default', 'index', '', '0', '附件列表', '备注', '0', '2');
 INSERT INTO `ga_admin_menu` VALUES ('31', '30', '28', 'cms/default', 'add', '', '0', '附件添加', '附件', '0', '3');
 INSERT INTO `ga_admin_menu` VALUES ('32', '29', '28', 'cms/attach-cate', 'index', '0', '-1', '附件分类管理', 'cms', '0', '2');
 INSERT INTO `ga_admin_menu` VALUES ('33', '32', '28', 'cms/attach-cate', 'add', '', '0', '添加', '附件分类', '0', '3');
 INSERT INTO `ga_admin_menu` VALUES ('34', '32', '28', 'cms/attach-cate', 'search', '', '-1', '附件下拉搜索', '', '1', '3');
-INSERT INTO `ga_admin_menu` VALUES ('35', '28', '28', 'cms/ad', 'index', '', '0', '广告管理', 'cms', '0', '1');
+INSERT INTO `ga_admin_menu` VALUES ('35', '28', '28', 'cms/cms-ad', 'index', '', '0', '广告管理', 'cms', '0', '1');
 INSERT INTO `ga_admin_menu` VALUES ('36', '35', '28', 'cms/cms-ad', 'index', '', '0', '广告管理', 'cms', '0', '2');
 INSERT INTO `ga_admin_menu` VALUES ('37', '35', '28', 'cms/cms-ad-block', 'index', '', '0', '广告区块', 'cms', '0', '2');
 INSERT INTO `ga_admin_menu` VALUES ('38', '36', '28', 'cms/cms-ad', 'index', '', '0', '广告列表', 'cms', '1', '3');
@@ -239,22 +240,22 @@ INSERT INTO `ga_admin_menu` VALUES ('42', '37', '28', 'cms/cms-ad-block', 'index
 INSERT INTO `ga_admin_menu` VALUES ('43', '37', '28', 'cms/cms-ad-block', 'create', '', '0', '区块添加', 'cms', '0', '3');
 INSERT INTO `ga_admin_menu` VALUES ('44', '37', '28', 'cms/cms-ad-block', 'update', '', '0', '区块修改', 'cms', '0', '3');
 INSERT INTO `ga_admin_menu` VALUES ('45', '37', '28', 'cms/cms-ad-block', 'delete', '', '0', '区块删除', 'cms', '0', '3');
-INSERT INTO `ga_admin_menu` VALUES ('46', '28', '28', 'cms-article', 'index', '', '0', '资讯管理', 'cms', '0', '1');
-INSERT INTO `ga_admin_menu` VALUES ('47', '51', '28', 'cms/article', 'index', '', '0', '资讯列表', 'cms', '0', '2');
-INSERT INTO `ga_admin_menu` VALUES ('48', '51', '28', 'cms/article', 'create', '', '0', '资讯添加', 'cms', '0', '2');
-INSERT INTO `ga_admin_menu` VALUES ('49', '51', '28', 'cms/article', 'update', '', '0', '资讯修改', 'cms', '0', '2');
-INSERT INTO `ga_admin_menu` VALUES ('50', '51', '28', 'cms/article', 'delete', '', '0', '资讯删除', 'cms', '0', '2');
-INSERT INTO `ga_admin_menu` VALUES ('51', '46', '28', 'cms/article', 'index', '', '0', '资讯管理', 'cms', '0', '2');
-INSERT INTO `ga_admin_menu` VALUES ('52', '46', '28', 'cms/article-category', 'index', '', '0', '分类管理', 'cms', '0', '2');
-INSERT INTO `ga_admin_menu` VALUES ('53', '46', '28', 'cms/tag', 'index', '', '0', '标签管理', 'cms', '0', '2');
-INSERT INTO `ga_admin_menu` VALUES ('54', '52', '28', 'cms/article-category', 'index', '', '0', '分类列表', 'cms', '0', '3');
-INSERT INTO `ga_admin_menu` VALUES ('55', '52', '28', 'cms/article-category', 'create', '', '0', '分类添加', 'cms', '0', '3');
-INSERT INTO `ga_admin_menu` VALUES ('56', '52', '28', 'cms/article-category', 'update', '', '0', '分类修改', 'cms', '0', '3');
-INSERT INTO `ga_admin_menu` VALUES ('57', '52', '28', 'cms/article-category', 'delete', '', '0', '分类删除', 'cms', '0', '3');
-INSERT INTO `ga_admin_menu` VALUES ('58', '53', '28', 'cms/tag', 'index', '', '0', '标签列表', 'cms', '0', '3');
-INSERT INTO `ga_admin_menu` VALUES ('59', '53', '28', 'cms/tag', 'create', '', '0', '标签添加', 'cms', '0', '3');
-INSERT INTO `ga_admin_menu` VALUES ('60', '53', '28', 'cms/tag', 'update', '', '0', '标签修改', 'cms', '0', '3');
-INSERT INTO `ga_admin_menu` VALUES ('61', '53', '28', 'cms/tag', 'delete', '', '0', '标签删除', 'cms', '4', '3');
+INSERT INTO `ga_admin_menu` VALUES ('46', '28', '28', 'cms/cms-article', 'index', '', '0', '资讯管理', 'cms', '0', '1');
+INSERT INTO `ga_admin_menu` VALUES ('47', '51', '28', 'cms/cms-article', 'index', '', '0', '资讯列表', 'cms', '0', '2');
+INSERT INTO `ga_admin_menu` VALUES ('48', '51', '28', 'cms/cms-article', 'create', '', '0', '资讯添加', 'cms', '0', '2');
+INSERT INTO `ga_admin_menu` VALUES ('49', '51', '28', 'cms/cms-article', 'update', '', '0', '资讯修改', 'cms', '0', '2');
+INSERT INTO `ga_admin_menu` VALUES ('50', '51', '28', 'cms/cms-article', 'delete', '', '0', '资讯删除', 'cms', '0', '2');
+INSERT INTO `ga_admin_menu` VALUES ('51', '46', '28', 'cms/cms-article', 'index', '', '0', '资讯管理', 'cms', '0', '2');
+INSERT INTO `ga_admin_menu` VALUES ('52', '46', '28', 'cms/cms-article-category', 'index', '', '0', '分类管理', 'cms', '0', '2');
+INSERT INTO `ga_admin_menu` VALUES ('53', '46', '28', 'cms/cms-tag', 'index', '', '0', '标签管理', 'cms', '0', '2');
+INSERT INTO `ga_admin_menu` VALUES ('54', '52', '28', 'cms/cms-article-category', 'index', '', '0', '分类列表', 'cms', '0', '3');
+INSERT INTO `ga_admin_menu` VALUES ('55', '52', '28', 'cms/cms-article-category', 'create', '', '0', '分类添加', 'cms', '0', '3');
+INSERT INTO `ga_admin_menu` VALUES ('56', '52', '28', 'cms/cms-article-category', 'update', '', '0', '分类修改', 'cms', '0', '3');
+INSERT INTO `ga_admin_menu` VALUES ('57', '52', '28', 'cms/cms-article-category', 'delete', '', '0', '分类删除', 'cms', '0', '3');
+INSERT INTO `ga_admin_menu` VALUES ('58', '53', '28', 'cms/cms-tag', 'index', '', '0', '标签列表', 'cms', '0', '3');
+INSERT INTO `ga_admin_menu` VALUES ('59', '53', '28', 'cms/cms-tag', 'create', '', '0', '标签添加', 'cms', '0', '3');
+INSERT INTO `ga_admin_menu` VALUES ('60', '53', '28', 'cms/cms-tag', 'update', '', '0', '标签修改', 'cms', '0', '3');
+INSERT INTO `ga_admin_menu` VALUES ('61', '53', '28', 'cms/cms-tag', 'delete', '', '0', '标签删除', 'cms', '4', '3');
 
 -- ----------------------------
 -- Table structure for ga_admin_user
@@ -280,7 +281,7 @@ CREATE TABLE `ga_admin_user` (
 -- ----------------------------
 -- Records of ga_admin_user
 -- ----------------------------
-INSERT INTO `ga_admin_user` VALUES ('1', 'sysadmin', '系统管理', '', '3885662a78b79c45ade750345fe0b679', 'i4BeVr', '1479393090', '0', '1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61', '1000', '1', 'cdj4jloaj16n68sjkk8pv2t7a2', '1527006987');
+INSERT INTO `ga_admin_user` VALUES ('1', 'sysadmin', '系统管理', '', '3885662a78b79c45ade750345fe0b679', 'i4BeVr', '1479393090', '0', '1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61', '1000', '1', 'agtf5r3jj0nnahbajcebcpnus6', '1527037382');
 INSERT INTO `ga_admin_user` VALUES ('2', 'test', 'test', '', 'c51f62115947f3689e5f440819ae7032', 'v6KJ4v', '1510814911', '0', '1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99,100,101,102,103,104,105,106,107,110,111,116,117,118,119,120,121,122,123,124,125,126,127,128,129,130,131,135,136,142,143,144,145,146,147,152,153', '61000', '1', 'emklcqulrtkgk1266soo8m07s2', '1513322025');
 INSERT INTO `ga_admin_user` VALUES ('3', 'xhd', 'xhd', '', 'b8dd2d160aac9e9da4add8b4143b0d9a', 'BSmWrr', '1511182801', '0', '1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99,100,101,102,103,104,105,106,107,110,111,116,117,118,119,120,121,122,123,124,125,126,127,128,129,130,131,135,136,138,139,140,141,142,143,144,145,146,147,148,152,153,155,156,157,162,163,164,165,166,167,168,169,170,171,172,191,192,193,194,195,196,197,198,199', '1', '1', 'ta9asqvhjv9d5a7eg64i7m4i62', '1515205636');
 INSERT INTO `ga_admin_user` VALUES ('4', 'wenbin', 'wenbin', '', '4173033fd3a048645eff75ee6f00a5f6', 'z4TGpO', '1511837805', '0', '1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99,100,101,102,103,104,105,106,107,110,111,116,117,118,119,120,121,122,123,124,125,126,127,128,129,130,131,135,136,142,143,144,145,146,147,152,153', '0', '1', 'fonqs26aiifh1hv4fap9rqlu87', '1511847554');

@@ -3,16 +3,15 @@
 namespace backend\modules\cms\models;
 
 use Yii;
-use backend\models\Model;
 
-class CmsAdBlock extends Model
+class CmsTag extends \yii\db\ActiveRecord
 {
     /**
      * @inheritdoc
      */
     public static function tableName()
     {
-        return '{{%cms_ad_block}}';
+        return '{{%cms_tag}}';
     }
 
     /**
@@ -22,7 +21,7 @@ class CmsAdBlock extends Model
     {
         return [
 
-				 [['name'],'required','message'=>'{attribute}不能为空!'],
+            [['name'],'required','message'=>'{attribute}不能为空!'],
         ];
     }
 
@@ -32,23 +31,23 @@ class CmsAdBlock extends Model
     public function attributeLabels()
     {
         return [
-           
-				 'id' => Yii::t('app', '自增id'),
-				 'name' => Yii::t('app', '区块名称'),
-				 'addtime' => Yii::t('app', '添加时间'),
+
+            'id' => Yii::t('app', ''),
+            'name' => Yii::t('app', '标签名称'),
+            'addtime' => Yii::t('app', '添加时间'),
         ];
     }
 
     public function beforeSave($insert){
-        if (parent::beforeSave($insert)) {
-            if($this->isNewRecord) {
-                $this->addtime = time();//添加时间
+        if(parent::beforeSave($insert)){
+            if($this->isNewRecord){
+                $this->addtime = time();
             }
             return true;
-        } else {
+        }else{
             return false;
         }
     }
 
 
-}
+} 
