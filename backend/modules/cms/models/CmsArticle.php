@@ -3,8 +3,9 @@
 namespace backend\modules\cms\models;
 
 use Yii;
+use backend\models\Model;
 
-class CmsArticle extends \yii\db\ActiveRecord
+class CmsArticle extends Model
 {
     /**
      * @inheritdoc

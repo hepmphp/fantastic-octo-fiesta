@@ -136,12 +136,15 @@ $('#btn_js').click(function(){
     var create_js_url = '?r=developer/create-js';
     var table = $('#table').val();
     var fields = new Array();
+    var form_builder_types = new Array();
     $("input[name='ids[]']").each(function(){
         if(this.checked){
             fields.push($(this).val());
+            var form_builder_type =  $(this).parent().parent().find('.form_builder_type').val();//查找对应的生成类型
+            form_builder_types.push(form_builder_type);
         }
     });
-    var js_url = create_js_url+"&table="+table+"&fields="+fields;
+    var js_url = create_js_url+"&table="+table+"&fields="+fields+"&form_builder_types="+form_builder_types;
   //  console.log(fields);
     var table = $('#table').val();
     layer.open({

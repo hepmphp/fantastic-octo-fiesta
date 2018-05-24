@@ -236,6 +236,8 @@ EOT;
         $fields = Yii::$app->request->get('fields','');
         $fields = explode(',',$fields);
         $preview = Yii::$app->request->get('preview',1);
+        $get_form_builder_types = Yii::$app->request->get("form_builder_types");
+        $get_form_builder_types = explode(',',$get_form_builder_types);
      //  var_dump($fields);exit();
         $table_field = (new InfoSchema())->get_table_field($table);
         $template_js = Yii::$app->viewPath.'/developer/template/js/index.js';
@@ -258,6 +260,57 @@ EOT;
             $controller = $module.'/'.implode('-',$controller_arr);
         }
         $template_content = str_replace(array('[controller]','[form_data]','[from_name]'),array($controller,$from_data,$form_name),$template_content);
+
+        //是否启用了文本多选
+        $mutil_select_js_tpl = <<<EOT
+    $('#[field]').select2({
+        ajax: {
+            url: '?r=cms/cms-[api]/select2-search',
+            dataType: 'json',
+            // Additional AJAX parameters go here; see the end of this chapter for the full code of this example,
+            processResults: function (data) {
+                console.log(data.data);
+                // Tranforms the top-level key of the response object from 'items' to 'results'
+                return {
+                    results: data.data
+                };
+            },
+            placeholder: 'Search for a repository',
+            escapeMarkup: function (markup) { return markup; }, // let our custom formatter work
+            minimumInputLength: 1,
+            templateResult: formatRepo,
+            templateSelection: formatRepoSelection
+        }
+    });
+    function formatRepo (repo) {
+        if (repo.loading) {
+            return repo.full_name;
+        }
+        return repo.full_name;
+    }
+
+    function formatRepoSelection (repo) {
+        return repo.full_name || repo.text;
+    }
+
+EOT;
+        $mutil_select_js = <<<EOT
+$( function() {
+  [mutil_select_js]
+});
+EOT;
+        $mutil_select_js_item = array();
+        if(in_array('text_multi_select',$get_form_builder_types)){
+
+            foreach($get_form_builder_types as $k=>$builder_type){
+                $field = $fields[$k];
+                if($builder_type=='text_multi_select'){
+                    $mutil_select_js_item[] = str_replace(array('[field]','[api]'),array($field,str_replace('_ids','',$field)),$mutil_select_js_tpl)."\n";
+                }
+            }
+            $mutil_select_js = str_replace('[mutil_select_js]',implode("",$mutil_select_js_item),$mutil_select_js);
+            $template_content = $template_content."\n".$mutil_select_js;
+        }
         if($create_file==1){
             $logic_path = './static/js/logic/'.$controller;//目前就用到index.js
             if(!is_dir($logic_path)){

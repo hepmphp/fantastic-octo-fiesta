@@ -3,8 +3,9 @@
 namespace backend\modules\cms\models;
 
 use Yii;
+use backend\models\Model;
 
-class CmsTag extends \yii\db\ActiveRecord
+class CmsTag extends Model
 {
     /**
      * @inheritdoc

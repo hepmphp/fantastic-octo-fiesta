@@ -129,9 +129,7 @@ AppCurdAsset::addScript($this,"/static/js/select2/js/select2.full.min.js");
                                         shade: 0.3, //遮罩透明度
                                         content:'http://yiiadmin.local/?r=cms/attach/index&iframe=1',
                                         yes: function(index, layero){
-
                                             var body = layer.getChildFrame('body', index);
-
                                             var image_list = '<p><img src="[src]" _src="[src]" ></p>'+"\n";
                                             var html_image_list = '';
                                             body.find('.image_border').each(function(){

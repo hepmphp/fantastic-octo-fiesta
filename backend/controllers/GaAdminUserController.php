@@ -164,7 +164,7 @@ class GaAdminUserController extends BaseController
      */
     public function actionDelete()
     {
-        return $this->commonLogicDelete();
+        return $this->commonLogicDelete($this->model);
     }
 
     /**

@@ -9,9 +9,11 @@
 
 namespace backend\controllers;
 use Yii;
+use backend\models\GaAdminLog;
 use backend\models\GaAdminMenu;
 use yii\web\Controller;
 use backend\components\exception\LogicException;
+use backend\services\helpers\Log;
 
 
 class BaseController extends Controller{
@@ -170,28 +172,14 @@ class BaseController extends Controller{
         if($model->validate()){
             $res = $model->save();
             if ($res) {
-                $response = array(
-                    'status'=>0,
-                    'msg'=>Yii::t('app','create_success'),
-                    'data'=>array(),
-                );
+                return $this->ajaxReturn(0,Yii::t('app','create_success'));
             }else{
-                // $commandQuery = clone $model;
-                $response = array(
-                    'status'=>-1,
-                    'msg'=>Yii::t('app','db_error'),
-                    'data'=>$model->errors,
-                    //   'last_sql'=>$commandQuery->find()->createCommand()->getRawSql(),
-                );
+                return $this->ajaxReturn(-1,Yii::t('app','db_error'),['data'=>['errors'=>$model->errors]]);
             }
         }else{
-            $response = array(
-                'status'=>-2,
-                'msg'=>implode("<br/>",$model->firstErrors),
-                'data'=>$model->errors,
-            );
+            return $this->ajaxReturn(-2,implode("<br/>",$model->firstErrors),['data'=>['errors'=>$model->errors]]);
         }
-        return $this->asJson($response);
+
     }
     /***
      * 通用的更新方法
@@ -203,39 +191,20 @@ class BaseController extends Controller{
         if($model->validate()){
             $res = $model->save();
             if ($res) {
-                $response = array(
-                    'status'=>0,
-                    'msg'=>Yii::t('app','update_success'),
-                    'data'=>array(),
-                );
+                return $this->ajaxReturn(0,Yii::t('app','update_success'));
             }else{
                 $commandQuery = clone $model;
-                $response = array(
-                    'status'=>-1,
-                    'msg'=>Yii::t('app','db_error'),
-                    'data'=>$model->errors,
-                    'last_sql'=>$commandQuery->find()->createCommand()->getRawSql(),
-                );
+                return $this->ajaxReturn(-1,Yii::t('app','db_error'),array('data'=>['errors'=>$model->errors,'last_sql'=>$commandQuery->find()->createCommand()->getRawSql()]));
             }
         }else{
-            $response = array(
-                'status'=>-2,
-                'msg'=>implode("<br/>",$model->firstErrors),
-                'data'=>$model->errors,
-            );
+            return $this->ajaxReturn(-2,implode("<br/>",$model->firstErrors),['data'=>['errors'=>$model->errors]]);
         }
-        return $this->asJson($response);
     }
 
     /**
      * 通用的删除方法
      */
     public function commonDelete($model){
-        $response = array(
-            'status'=>-1,
-            'msg'=>Yii::t('app','delete_fail'),
-            'data'=>'',
-        );
         $ids = Yii::$app->request->post('ids');
         $ids_arr = explode(',',$ids);
         $ids_arr = array_map('intval',$ids_arr);
@@ -244,24 +213,17 @@ class BaseController extends Controller{
             $where = ['in', 'id', $ids_arr];
             $res = $model->deleteAll($where);
             if($res){
-                $response =array(
-                    'status'=>0,
-                    'msg'=>Yii::t('app','delete_success'),
-                    'data'=>'',
-                );
+                return $this->ajaxReturn(0,Yii::t('app','delete_success'));
             }
+        }else{
+            return $this->ajaxReturn(-1,Yii::t('app','delete_fail'));
         }
-        $this->asJson($response);
+
     }
     /***
      * 通用逻辑删除
      */
     public function commonLogicDelete($model){
-        $response = array(
-            'status'=>-1,
-            'msg'=>Yii::t('app','delete_fail'),
-            'data'=>'',
-        );
         $status = Yii::$app->request->post('status','-1');
         $ids = Yii::$app->request->post('ids');
         $ids_arr = explode(',',$ids);
@@ -269,16 +231,14 @@ class BaseController extends Controller{
         if(!empty($ids_arr)){
             $res = $model->updateAll(['status'=>$status],['id'=>$ids_arr]);
             if($res){
-             //   $m = clone $this->model;
-                $response =array(
-                    'status'=>0,
-                    'msg'=>Yii::t('app','delete_success'),
-                    'data'=>array() //$m->find()->createCommand()->getRawSql(),
-                );
+                return $this->ajaxReturn(0,Yii::t('app','delete_success'));
+            }else{
+                return $this->ajaxReturn(-1,Yii::t('app','delete_fail'));
             }
+        }else{
+            return $this->ajaxReturn(-1,Yii::t('app','delete_fail'));
         }
 
-        $this->asJson($response);
     }
 
     /**
@@ -288,17 +248,11 @@ class BaseController extends Controller{
         $keywords = Yii::$app->request->get('term');
         $cate_names = $this->model->getSelect2Search($keywords);
         if($cate_names){
-            $response = array(
-                'status'=>0,
-                'data'=>$cate_names,
-            );
+            return $this->ajaxReturn(0,'',$cate_names);
+
         }else{
-            $response = array(
-                'status'=>-1,
-                'data'=>'',
-            );
+            return $this->ajaxReturn(-1,'no data');
         }
-        $this->asJson($response);
     }
 
     /**
@@ -308,29 +262,38 @@ class BaseController extends Controller{
         $keywords = Yii::$app->request->get('term');
         $data = $this->model->getAutoCompeleteSearch($keywords);
         if($data){
-            $response = array(
-                'status'=>0,
-                'data'=>$data,
-            );
+            return $this->ajaxReturn(0,'',$data);
         }else{
-            $response = array(
-                'status'=>-1,
-                'data'=>'',
-            );
+            return  $this->ajaxReturn(-1,'');
         }
-        $this->asJson($response);
+    }
+
+    /***
+     * 统一接口返回
+     * @param $status
+     * @param $msg
+     * @param array $data
+     * @return \yii\web\Response
+     */
+    public function ajaxReturn($status,$msg,$data=array()){
+        $response = array(
+            'status'=>$status,
+            'msg'=>$msg,
+            'data'=>$data,
+        );
+        return $this->asJson($response);
     }
 
     /**
      * 获取操作日志类型
      */
     public function getLogType(){
-        $action = '  '.strtolower(ACTION_NAME);
+        $action = '  '.strtolower(Yii::$app->controller->action->id);
         $log_type = 1;
         //日志类型 1添加2修改3删除4登录成功5登录失败
-        if(strpos($action,'add') !=false){
+        if(strpos($action,'create') !=false){
             $log_type = 1;
-        }elseif(strpos($action,'edit') !=false){
+        }elseif(strpos($action,'update') !=false){
             $log_type = 2;
         }elseif(strpos($action,'delete') !=false){
             $log_type = 3;
@@ -342,22 +305,36 @@ class BaseController extends Controller{
 
     public function adminLog($user_id,$username,$info=''){
         if(Yii::$app->request->isPost){
+            if(Yii::$app->controller->module->id!='app-backend'){
+                $model = Yii::$app->controller->module->id."/".Yii::$app->controller->id;
+            }else{
+                $model = Yii::$app->controller->id;
+            }
+            $action = Yii::$app->controller->action->id;
             $data = array(
                 'user_id'=>$user_id,
                 'username'=>$username,
-                'm'=>strtolower(MODULE_NAME),
-                'a'=>strtolower(ACTION_NAME),
+                'm'=>strtolower($model),
+                'a'=>strtolower($action),
                 'addtime'=>time(),
-                'ip'=>get_client_ip(),
+                'ip'=>Yii::$app->request->getUserIP(),
                 'info'=>$info,
                 'log_type'=>$this->getLogType(),
             );
-            if(MODULE_NAME!='Index'){
-                $log_filename = sprintf("%s.%s.%s",MODULE_NAME,ACTION_NAME,'log');//日志文件
-                $file_log_text =  sprintf("管理员:%s 应用：%s模块%s方法%s<br>参数%s",var_export($this->admin_user,true),GROUP_NAME,MODULE_NAME,ACTION_NAME,var_export($_REQUEST,true));
-                Service('Filelog')->write($file_log_text,$log_filename,'game_admin');//写日志
+            if($action!='Index'){
+                $log_filename = sprintf("%s.%s.%s",$model,$action,'log');//日志文件
+                $file_log_text =  sprintf("管理员:%s 应用：%s模块%s方法%s<br>参数%s",
+                    var_export($this->admin_user,true),
+                    Yii::$app->controller->module->id,
+                    Yii::$app->controller->id,
+                    Yii::$app->controller->action->id,
+                    var_export($_REQUEST,true)
+                );
+                Log::write($file_log_text,$log_filename,'yii_admin');
             }
-            M('admin_log')->add($data);
+            $admin_log = new GaAdminLog();
+            $admin_log->setAttributes($data);
+            $admin_log->save();
         }
     }
 

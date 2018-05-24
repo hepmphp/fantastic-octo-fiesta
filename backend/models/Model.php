@@ -45,7 +45,7 @@ class Model extends \yii\db\ActiveRecord{
      * @param $keywords
      * @return array
      */
-    public function getSelect2search($keywords){
+    public   function getSelect2search($keywords){
         $where = ['like', 'name',$keywords];
         //  var_dump($where);
         $attach_cate =  static::find()->select('id,name')->andFilterWhere($where)->limit(30)->asArray(true)->all();

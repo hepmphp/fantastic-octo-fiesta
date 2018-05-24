@@ -1,39 +1,15 @@
 /**
  * Created with JetBrains PhpStorm.
  * User: Administrator
- * Date: 18-5-22
- * Time: 上午11:29
+ * Date: 18-5-24
+ * Time: 下午5:39
  * To change this template use File | Settings | File Templates.
  */
-$(document).ready(function(){
-    $("#block_id").autocomplete({
-        source: function( request, response ) {
-            console.log("autocomplete...");
-            $.ajax( {
-                url: "?r=cms/cms-ad-block/auto-compelete-search",
-                dataType: "json",
-                data: {
-                    term: request.term
-                },
-                success: function( data ) {
-                    response( data.data );
-                }
-            } );
-        },
-        minLength:1,
-        select: function( event, ui ) {
-            $('#block_id').val(ui.item.id);
-            console.log(ui.item);
-            //log( "Selected: " + ui.item.value + " aka " + ui.item.id );
-        }
-    });
 
-});
-
-$( function() {
-    $('.js-data-example-ajax').select2({
+jQuery( function() {
+    jQuery('#tag_ids').select2({
         ajax: {
-            url: '?r=cms/attach-cate/search',
+            url: 'http://yiiadmin.local?r=cms/cms-tag/select2-search',
             dataType: 'json',
             // Additional AJAX parameters go here; see the end of this chapter for the full code of this example,
             processResults: function (data) {
@@ -50,7 +26,6 @@ $( function() {
             templateSelection: formatRepoSelection
         }
     });
-
     function formatRepo (repo) {
         if (repo.loading) {
             return repo.full_name;
@@ -61,4 +36,6 @@ $( function() {
     function formatRepoSelection (repo) {
         return repo.full_name || repo.text;
     }
+
+
 });
