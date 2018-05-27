@@ -9,7 +9,7 @@
 jQuery( function() {
     jQuery('#tag_ids').select2({
         ajax: {
-            url: 'http://yiiadmin.local?r=cms/cms-tag/select2-search',
+            url: '?r=cms/cms-tag/select2-search',
             dataType: 'json',
             // Additional AJAX parameters go here; see the end of this chapter for the full code of this example,
             processResults: function (data) {

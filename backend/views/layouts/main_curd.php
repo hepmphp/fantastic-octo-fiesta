@@ -25,7 +25,7 @@ use Yii;
 <?=$content?>
 </body>
 <script src="<?=$asset->baseUrl?>/static/js/bootstrap.min.js"></script>
-<script src="<?=$asset->baseUrl?>/static/js/logic/<?=Yii::$app->controller->id?>/<?=Yii::$app->controller->action->id?>.js"></script>
+<script src="<?=$asset->baseUrl?>/static/js/logic/<?=Yii::$app->controller->id?>/<?=Yii::$app->controller->action->id?>.js?version="+time()></script>
 
 </html>
 

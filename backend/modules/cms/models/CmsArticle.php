@@ -4,7 +4,7 @@ namespace backend\modules\cms\models;
 
 use Yii;
 use backend\models\Model;
-
+use backend\modules\cms\models\CmsArticleCategory;
 class CmsArticle extends Model
 {
     /**
@@ -56,6 +56,12 @@ class CmsArticle extends Model
                 $this->addtime = time();
                 $this->admin_id =Yii::$app->session['admin_user.id'];
                 $this->admin = Yii::$app->session['admin_user.username'];
+            }
+            $this->tag_ids = implode(',',$this->tag_ids);
+
+            $cms_article_cate = CmsArticleCategory::findOne(['id'=>$this->cate_id]);
+            if(!empty($cms_article_cate)){
+                $this->cate_ids = $cms_article_cate['path'];
             }
             $this->update_time=time();
             return true;

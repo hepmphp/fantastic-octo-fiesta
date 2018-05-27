@@ -26,7 +26,9 @@ AppCurdAsset::addScript($this,"/static/js/select2/js/select2.full.min.js");
         <div class="form-group">
             <label class="col-sm-1 control-label" for="tag_ids">标签id  </label>
             <div class="col-sm-4">
-                <input id="tag_ids" name="tag_ids" type="text" value="<?=$form['tag_ids']?>" placeholder="标签id  " class="form-control input-md">
+                <select class="form-control tag" style="width:500px"  id="tag_ids" name="tag_ids[]" multiple="multiple"></select>
+
+<!--                <input id="tag_ids" name="tag_ids" type="text" value="--><?//=$form['tag_ids']?><!--" placeholder="标签id  " class="form-control input-md">-->
             </div>
         </div>
         <div class="form-group">

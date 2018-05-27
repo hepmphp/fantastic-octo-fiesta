@@ -121,22 +121,6 @@ class AttachCateController extends BaseController
     }
 
 
-    public function actionSearch(){
-        $keywords = Yii::$app->request->get('term');
-        $cate_names = $this->model->getAutoCompeleteSearch($keywords);
-        if($cate_names){
-            $response = array(
-                'status'=>0,
-                'data'=>$cate_names,
-            );
-         }else{
-            $response = array(
-                'status'=>-1,
-                'data'=>'',
-            );
-          }
-        $this->asJson($response);
-    }
     /**
      * Finds the GaAdminGroup model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.

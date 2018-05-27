@@ -82,7 +82,7 @@ EOT;
         <div class="form-group">
           <label class="col-sm-4 control-label" for="[field]">[name]</label>
           <div class="col-sm-4">
-          <input id="[field]" name="[field]" type="text" value="<?=\$form['[field]']?>" placeholder="[name]" class="form-control input-md">
+           <select class="form-control " style="width:500px"  id="[field]" name="[field][]" multiple="multiple"></select>
           </div>
        </div>
 EOT;

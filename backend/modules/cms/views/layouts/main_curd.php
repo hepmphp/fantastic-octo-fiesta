@@ -31,7 +31,7 @@ $asset = AppCurdAsset::register($this);
 <?php $this->endBody() ?>
 <?php
 //Yii::$app->controller->module->id Yii::$app->controller->id Yii::$app->controller->action->id
-$logic_js = $asset->baseUrl."/static/js/logic/%s/%s/%s.js";
+$logic_js = $asset->baseUrl."/static/js/logic/%s/%s/%s.js?version=".time();
 
 if(Yii::$app->controller->action->id=='update'){//更新的js和create的js一样
     $logic_js = sprintf($logic_js,Yii::$app->controller->module->id,Yii::$app->controller->id,'create');

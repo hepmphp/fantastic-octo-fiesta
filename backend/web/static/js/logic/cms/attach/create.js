@@ -27,7 +27,7 @@ $('#ssiupload').ssi_uploader({
 $( function() {
     $('.js-data-example-ajax').select2({
         ajax: {
-            url: '?r=cms/attach-cate/search',
+            url: '?r=cms/attach-cate/select2-search',
             dataType: 'json',
             // Additional AJAX parameters go here; see the end of this chapter for the full code of this example,
             processResults: function (data) {

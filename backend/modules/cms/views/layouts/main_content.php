@@ -27,7 +27,7 @@ $asset = AppAsset::register($this);
     <?php $this->endBody() ?>
 
     <!--业务逻辑代码-->
-    <script src="<?=$asset->baseUrl?>/static/js/logic/<?=Yii::$app->controller->module->id?>/<?=Yii::$app->controller->id?>/<?=Yii::$app->controller->action->id?>.js"></script>
+    <script src="<?=$asset->baseUrl?>/static/js/logic/<?=Yii::$app->controller->module->id?>/<?=Yii::$app->controller->id?>/<?=Yii::$app->controller->action->id?>.js?version=<?=time()?>"></script>
     </body>
     </html>
 <?php $this->endPage() ?>
