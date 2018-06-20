@@ -30,7 +30,7 @@ common
     mail/                contains view files for e-mails
     models/              contains model classes used in both backend and frontend
     tests/               contains tests for common classes    
-console
+console                  定时任务
     config/              contains console configurations
     controllers/         contains console controllers (commands)
     migrations/          contains database migrations

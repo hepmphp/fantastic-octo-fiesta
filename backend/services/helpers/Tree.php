@@ -9,7 +9,29 @@
 
 namespace backend\services\helpers;
 
+/*
+
+public function get_config_menu($parentid=null,$app_id=null){
+    $tree = new Tree();
+    $admin_menu = GaAdminMenu::find()->asArray(true)->all();
+    foreach ($admin_menu as $r) {
+        if($parentid !=null){
+            $r['selected'] = $r['id'] == $parentid ? 'selected' : '';
+        }else{
+            $r['selected'] = '';
+        }
+
+        $array[] = $r;
+    }
+    $str = "<option value='\$id' \$selected>\$spacer \$name</option>";
+    $tree->init($array);
+    $select_categorys = $tree->get_tree(0, $str);
+    return $select_categorys;
+}*/
+
 /**
+ *
+ *
  * 通用的树型类，可以生成任何树型结构
  */
 class Tree {

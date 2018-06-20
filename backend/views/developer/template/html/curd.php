@@ -255,7 +255,8 @@ $db->update(‘mrs_article’ , [‘status’=>0] , “id=:id” , [‘:id’ =>
 
 
 
-$db = \Yii::$app->db->createCommand(); $db->insert(‘mrs_article’ , [‘title’=>’new Record’] )->execute();
+$db = \Yii::$app->db->createCommand();
+$db->insert(‘mrs_article’ , [‘title’=>’new Record’] )->execute();
 
 
 

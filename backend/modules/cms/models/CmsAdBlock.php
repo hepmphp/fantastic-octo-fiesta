@@ -21,8 +21,7 @@ class CmsAdBlock extends Model
     public function rules()
     {
         return [
-
-				 [['name'],'required','message'=>'{attribute}不能为空!'],
+		    [['name'],'required','message'=>'{attribute}不能为空!'],
         ];
     }
 

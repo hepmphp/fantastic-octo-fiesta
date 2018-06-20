@@ -54,11 +54,32 @@ class CountryController extends ApiTokenValidateController
         return $actions;
     }
 
+    /**
+     *
+     * @api {get} /v1/country/search 城市搜索
+     * @apiName GetUser
+     * @apiGroup Country
+     *
+     * @apiParam {Number} id Users unique ID.
+     *
+     * @apiSuccess {String} firstname Firstname of the User.
+     * @apiSuccess {String} lastname  Lastname of the User.
+     */
     public function actionSearch($name){
         $one = Country::findOne(['name'=>$name]);
         return $one;
     }
 
+    /**
+     * @api {get} /v1/country/order 下订单
+     * @apiName GetOrder
+     * @apiGroup Order
+     * @apiParam {json} user  {user_id:1,username:123456,account:1}
+     * @apiParam {json} goods {good_id:1,goods_name:"商品名称"}
+     *
+     * @apiSuccess {json} data {status:0,"msg":"",data:""}
+     * @return array
+     */
     public function actionOrder(){
 
         return ['status'=>0,'msg'=>'','data'=>['id'=>1]];
