@@ -16,6 +16,7 @@ return [
             'class' => 'frontend\modules\user\User',//验证码api模块
         ],
     ],
+
     'components' => [
         'request' => [
             'csrfParam' => '_csrf-frontend',
@@ -38,6 +39,12 @@ return [
                     'levels' => ['error', 'warning'],
                 ],
             ],
+        ],
+        'redis' => [
+            'class' => 'yii\redis\Connection',
+            'hostname' => 'localhost',
+            'port' => 6379,
+            'database' => 0,
         ],
         'errorHandler' => [
             'errorAction' => 'site/error',

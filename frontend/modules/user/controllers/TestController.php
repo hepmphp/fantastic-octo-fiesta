@@ -18,4 +18,13 @@ class TestController extends Controller{
 
     }
 
+    public function actionRedis(){
+        //yii\redis\Connectio
+        $redis = \Yii::$app->redis;
+        var_dump($redis->set("bbbb",1));
+        var_dump($redis->get("bbbb"));
+        var_dump($redis->hmset("h_stat",'a',1,'b',2,'c',3,'d','4','f',5));
+        var_dump($redis->hmget("h_stat",'a','b','c','d','f'));
+    }
+
 }
