@@ -36,10 +36,21 @@ return [
             'targets' => [
                 [
                     'class' => 'yii\log\FileTarget',
-                    'levels' => ['error', 'warning'],
+                    'levels' => ['warning'],
+                ],
+                [
+                    'class' => 'yii\log\EmailTarget',
+                    'mailer' => 'mailer',
+                    'levels' => ['error'],
+                    'message' => [
+                        'from' => ['shrun@qq.com'],
+                        'to' => ['306863208@qq.com'],
+                        'subject' => 'Log message',
+                    ],
                 ],
             ],
         ],
+
         'redis' => [
             'class' => 'yii\redis\Connection',
             'hostname' => 'localhost',
@@ -49,22 +60,38 @@ return [
         'errorHandler' => [
             'errorAction' => 'site/error',
         ],
+        //http://yiiweb.local/index.php/user/test/maillog.html?id=1
         /*
         'urlManager' => [
             'enablePrettyUrl' => true,
-            'enableStrictParsing'=>true,
+            'enableStrictParsing'=>false,
             'showScriptName' => false,
+            'suffix'=>'.html',
             'rules' => [
-                ['class'=>'yii\rest\UrlRule','controller'=>'user']
+                //['class'=>'yii\rest\UrlRule','controller'=>'user']
             ],
-        ],
-*/
+        ],*/
+
         'db' => [
             'class' => 'yii\db\Connection',
             'dsn' => 'mysql:host=localhost;dbname=yii_api',
             'username' => 'root',
             'password' => '123456',
             'charset' => 'utf8',
+        ],
+
+        'mailer' => [
+            'class' => 'yii\swiftmailer\Mailer', #必不可少
+            'viewPath' => '@common/mail', #邮件模板路径
+            'useFileTransport' => false,
+            'transport' => [
+                'class' => 'Swift_SmtpTransport',
+                'host' => 'smtp.qq.com', #163 SMTP邮件服务器
+                'username' => 'shrun@qq.com', #邮箱
+                'password' => 'aokxaciaofwwjdad', #163服务器，请设置安全密码
+                'port' => '465', #465/994
+                'encryption' => 'ssl', #采用ssl加密方式
+            ],
         ],
 
     ],

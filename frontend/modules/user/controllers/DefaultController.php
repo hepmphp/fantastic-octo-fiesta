@@ -3,6 +3,7 @@
 namespace frontend\modules\user\controllers;
 
 use yii\web\Controller;
+use Yii;
 
 /**
  * Default controller for the `user` module
@@ -15,6 +16,10 @@ class DefaultController extends Controller
      */
     public function actionIndex()
     {
+        \Yii::trace("hello");
+        Yii::trace('start calculating average revenue', __METHOD__);
+
         return $this->render('index');
+
     }
 }
