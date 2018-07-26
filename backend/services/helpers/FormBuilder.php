@@ -121,7 +121,7 @@ EOT;
         <div class="form-group">
           <label class="col-sm-4 control-label" for="[field]">[name]</label>
           <div class="col-sm-4">
-            <textarea class="form-control" id="[field]" name="[field]">default text</textarea>
+            <textarea class="form-control" id="[field]" name="[field]"><?=\$form['[field]']?></textarea>
           </div>
         </div>
 EOT;
