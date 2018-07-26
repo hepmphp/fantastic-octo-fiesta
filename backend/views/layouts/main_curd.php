@@ -1,6 +1,3 @@
-<?php
-use Yii;
-?>
 <!DOCTYPE html>
 <html lang="">
 <head>
