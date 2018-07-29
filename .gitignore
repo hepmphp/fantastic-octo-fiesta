@@ -35,3 +35,4 @@ phpunit.phar
 /.vagrant
 /backend/web/uploads
 /api/apidoc
+/yii_vendor.zip

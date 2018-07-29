@@ -1,18 +1,18 @@
 <?php
 
-namespace backend\modules\cms\controllers;
+namespace backend\modules\shop\controllers;
 
 use Yii;
+use backend\modules\shop\models\ShopGoodsSpec;
 use yii\filters\VerbFilter;
 use yii\data\Pagination;
 use backend\controllers\BaseController;
-use backend\modules\cms\models\CmsArticle;
-use backend\modules\cms\models\CmsArticleCategory;
-use backend\modules\cms\models\CmsTag;
-class CmsArticleController extends BaseController
+
+
+class ShopGoodsSpecController extends BaseController
 {
     public function init(){
-        $this->model = new CmsArticle();
+        $this->model = new ShopGoodsSpec();
     }
     /**
      * @inheritdoc
@@ -41,20 +41,17 @@ class CmsArticleController extends BaseController
                $where['cate_id'] = $cate_id;
             }
             
-            $tag_ids = Yii::$app->request->get('tag_ids');
-            if($tag_ids){
-               $where['tag_ids'] = $tag_ids;
-            }
-            
-             $title = Yii::$app->request->get('title');
-              if($title){
-                  $and_where[] = ['like','title',$title];
-              }
-
-             $content = Yii::$app->request->get('content');
-              if($content){
-                  $and_where[] = ['like','content',$content];
-              }
+           $begin_name = Yii::$app->request->get('begin_name');
+           $end_name = Yii::$app->request->get('end_name');
+           if($begin_name){
+              $begin_name = strtotime($begin_name);
+               $and_where[] = ['>=','begin_time',$begin_name];
+           }
+           if($end_name){
+               $end_name = strtotime($end_name)+86400;
+               $and_where[] = ['<','end_time',$end_name];
+           }
+           
 
 
         }
@@ -71,13 +68,13 @@ class CmsArticleController extends BaseController
     }
 
     /**
-     * Lists all CmsArticle models.
+     * Lists all ShopGoodsSpec models.
      * @return mixed
      */
     public function actionIndex()
     {
         list($where,$and_where) = $this->get_search_where();
-        $query = CmsArticle::find()->where($where);
+        $query = ShopGoodsSpec::find()->where($where);
         if(!empty($and_where)){
             foreach($and_where as $aw){
                 $query->andWhere($aw);
@@ -97,8 +94,8 @@ class CmsArticleController extends BaseController
         return $this->render('index', [
             'page' => $page,
             'data'=>$data,
-            'config_is_top'=>CmsArticle::get_config_is_top(),
-            'config_status'=>CmsArticle::get_config_status(),
+
+				'select_tree'=>ShopGoodsSpec::get_config_menu(),
 
         ]);
     }
@@ -107,9 +104,9 @@ class CmsArticleController extends BaseController
     public function actionView($id)
     {
         return $this->render('view', [
-            'model' => CmsArticle::findOne($id),
-            'config_is_top'=>CmsArticle::get_config_is_top(),
-            'config_status'=>CmsArticle::get_config_status(),
+            'model' => ShopGoodsSpec::findOne($id),
+
+				'select_tree'=>ShopGoodsSpec::get_config_menu(),
 
         ]);
     }
@@ -120,33 +117,30 @@ class CmsArticleController extends BaseController
             return $this->commonCreate($this->model);
         }else{
             return $this->render('create',[
-				'config_is_top'=>CmsArticle::get_config_is_top(),
-                'config_status'=>CmsArticle::get_config_status(),
-                'select_tree'=>CmsArticleCategory::get_config_menu(),
-                'config_tag_id'=>CmsTag::get_config_id()
+
+				'select_tree'=>ShopGoodsSpec::get_config_menu(),
+
             ]);
         }
     }
 
     public function actionUpdate()
     {
-        $model = CmsArticle::findOne(Yii::$app->request->get('id'));
+        $model = ShopGoodsSpec::findOne(Yii::$app->request->get('id'));
         if(Yii::$app->request->isPost){//Yii::$app->request->isPost
             return $this->commonUpdate($model);//更新
         }else{
             return $this->render('create',[
                 'form'=>$model->attributes,//表单参数
-				'config_is_top'=>CmsArticle::get_config_is_top(),
-				'config_status'=>CmsArticle::get_config_status(),
-                'select_tree'=>CmsArticleCategory::get_config_menu($model->cate_id),
-                'config_tag_id'=>CmsTag::get_config_id()
+
+				'select_tree'=>ShopGoodsSpec::get_config_menu($model['parent_id']),
+
             ]);
         }
-
     }
     public function actionDelete()
     {
-        return $this->commonLogicDelete($this->model);
+        return $this->commonDelete($this->model);
     }
 
 

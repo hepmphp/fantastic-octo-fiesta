@@ -5,6 +5,15 @@
             <input type="hidden" name="iframe" value="1">
             <input type="hidden" name="search" value="1">
             <div class="form-group">
+                <label class="control-label">模块：</label>
+                <select class="form-control" name="module_id" id="module_id">
+                    <option value="">请选择</option>
+                    <?php foreach($config_modules_id as $k=>$v){ ?>
+                        <option value="<?=$v?>" <?php if($v==Yii::$app->request->get('module_id')){ echo "selected";}?>><?=$v?></option>
+                    <?php }?>
+                </select>
+            </div>
+            <div class="form-group">
                 <label class="control-label">表：</label>
                 <select class="form-control" name="table" id="table">
                     <option value="">请选择</option>
@@ -13,6 +22,8 @@
                     <?php }?>
                 </select>
             </div>
+
+
             <button class="btn btn-info m-l" type="submit"> 查询</button>
             <button class="btn" id="preview" type="button">预览from</button>
           
@@ -21,6 +32,17 @@
             <button class="btn" type="button" id="btn_model">预览模型</button>
             <button class="btn" type="button" id="btn_list">预览列表</button>
             <button class="btn" type="button" id="btn_controller">预览控制器</button>
+            &nbsp;&nbsp;&nbsp;&nbsp;
+
+            <div class="form-group">
+                <label class="control-label">菜单：</label>
+                <select class="form-control" name="parent_id" id="parent_id">
+                    <option value="">请选择</option>
+                    <option value="0">作为一级菜单</option>
+                    <?=$config_menu?>
+                </select>
+            </div>
+            <button class="btn" type="button" id="btn_menu">预览菜单</button>
         </form>
 
     </div>

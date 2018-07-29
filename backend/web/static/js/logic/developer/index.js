@@ -22,6 +22,7 @@ $('#preview').click(function(){
     var fields = new Array();
     var form_builder_types = new Array();
     var table = $('#table').val();
+    var module_id = $('#module_id').val();
     $("input[name='ids[]']").each(function(){
         if(this.checked){
             var form_builder_type =  $(this).parent().parent().find('.form_builder_type').val();//查找对应的生成类型
@@ -29,7 +30,13 @@ $('#preview').click(function(){
             form_builder_types.push(form_builder_type);
         }
     });
-    var preview_url = "?r=developer/preview&fields="+fields+"&form_builder_types="+form_builder_types+"&table="+table;
+    var param = {
+        fields:fields,
+        form_builder_types:form_builder_types,
+        table:table,
+        module_id:module_id
+    };
+    var preview_url = "?r=developer/preview&"+ $.param(param);
     layer.open({
         type: 2, //iframe
         area: ['1200px', '750px'],
@@ -47,8 +54,9 @@ $('#preview').click(function(){
 
 $('#btn_list').click(function(){
     var fields = new Array();
-     var search_list_types = new Array();
+    var search_list_types = new Array();
     var table = $('#table').val();
+    var module_id = $('#module_id').val();
     $("input[name='ids[]']").each(function(){
         if(this.checked){
             var search_list_type = $(this).parent().parent().find('.search_list_type').val();//查找对应的生成类型
@@ -56,7 +64,13 @@ $('#btn_list').click(function(){
             search_list_types.push(search_list_type);
         }
     });
-    var list_url = "?r=developer/create-list&fields="+fields+"&search_list_types="+search_list_types+"&table="+table;
+    var param = {
+        fields:fields,
+        search_list_types:search_list_types,
+        table:table,
+        module_id:module_id
+    };
+    var list_url = "?r=developer/create-list&"+$.param(param);
     layer.open({
         type: 2, //iframe
         area: ['1200px', '750px'],
@@ -78,6 +92,7 @@ $('#btn_controller').click(function(){
     var search_builder_types = new Array();
     var form_builder_types = new Array();
     var table = $('#table').val();
+    var module_id = $('#module_id').val();
     $("input[name='ids[]']").each(function(){
         if(this.checked){
             var search_builder_type =  $(this).parent().parent().find('.search_builder_type').val();//查找对应的生成类型
@@ -87,7 +102,13 @@ $('#btn_controller').click(function(){
             form_builder_types.push(form_builder_type);
         }
     });
-    var controller_url = "?r=developer/create-controller&fields="+fields+"&search_builder_types="+search_builder_types+"&table="+table+"&form_builder_types="+form_builder_types;
+    var param = {
+        fields:fields,
+        form_builder_types:form_builder_types,
+        table:table,
+        module_id:module_id
+    };
+    var controller_url = "?r=developer/create-controller&"+ $.param(param);
     layer.open({
         type: 2, //iframe
         area: ['1200px', '750px'],
@@ -108,6 +129,7 @@ $('#btn_model').click(function(){
     var fields = new Array();
     var form_validator_types = new Array();
     var table = $('#table').val();
+    var module_id = $('#module_id').val();
     $("input[name='ids[]']").each(function(){
         if(this.checked){
             var form_validator_type =  $(this).parent().parent().find('.form_validator_type').val();//查找对应的生成类型
@@ -115,7 +137,13 @@ $('#btn_model').click(function(){
             form_validator_types.push(form_validator_type);
         }
     });
-    var model_url = "?r=developer/create-model&fields="+fields+"&form_validator_types="+form_validator_types+"&table="+table;
+    var param = {
+        fields:fields,
+        form_validator_types:form_validator_types,
+        table:table,
+        module_id:module_id
+    };
+    var model_url = "?r=developer/create-model&="+ $.param(param);
     layer.open({
         type: 2, //iframe
         area: ['1200px', '750px'],
@@ -137,6 +165,7 @@ $('#btn_js').click(function(){
     var table = $('#table').val();
     var fields = new Array();
     var form_builder_types = new Array();
+    var module_id = $('#module_id').val();
     $("input[name='ids[]']").each(function(){
         if(this.checked){
             fields.push($(this).val());
@@ -144,9 +173,37 @@ $('#btn_js').click(function(){
             form_builder_types.push(form_builder_type);
         }
     });
-    var js_url = create_js_url+"&table="+table+"&fields="+fields+"&form_builder_types="+form_builder_types;
+    var param = {
+        fields:fields,
+        form_builder_types:form_builder_types,
+        table:table,
+        module_id:module_id
+    };
+    var js_url = create_js_url+"&"+ $.param(param);
   //  console.log(fields);
+    layer.open({
+        type: 2, //iframe
+        area: ['1200px', '750px'],
+        title: '预览',
+        btn: [],
+        shade: 0.3, //遮罩透明度
+        content:js_url,
+        btn: ['生成','取消'],
+        yes: function(index, layero){
+            ajax_get_alert_success(js_url,{create_file:1});
+        },btn2: function(index, layero){
+
+        }
+    });
+    //ajax_post(create_js_url,{table:$('#table').val()});
+});
+
+$('#btn_menu').click(function(){
+    var create_js_url = '?r=developer/create-menu';
     var table = $('#table').val();
+    var parent_id = $('#parent_id').val();
+    var js_url = create_js_url+"&table="+table+"&parent_id="+parent_id;
+    //  console.log(fields);
     layer.open({
         type: 2, //iframe
         area: ['1200px', '750px'],

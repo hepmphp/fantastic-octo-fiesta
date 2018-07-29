@@ -10,10 +10,17 @@ class InfoSchema{
         return $table_field;
     }
 
-    public function get_table($table_schema='yii_admin'){
+    public function get_table($table_schema='yii_admin',$table=''){
         $sql   = "SELECT table_name as id,table_comment as name from INFORMATION_SCHEMA.`TABLES` where TABLE_SCHEMA='{$table_schema}'";
-        $command = Yii::$app->db->createCommand($sql);
-        $config_table_id = $command->queryAll();
+        if(!empty($table)){
+            $sql .= " AND table_name='{$table}'";
+            $command = Yii::$app->db->createCommand($sql);
+            $config_table_id = $command->queryOne();
+        }else{
+            $command = Yii::$app->db->createCommand($sql);
+            $config_table_id = $command->queryAll();
+        }
+
         return $config_table_id;
     }
     /**

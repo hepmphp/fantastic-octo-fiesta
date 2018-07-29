@@ -37,7 +37,6 @@ class GaAdminMenu extends \yii\db\ActiveRecord
     {
         return [
             [['parentid', 'status', 'listorder','level','top_menu_id'], 'integer'],
-
             [['model', 'action', 'remark'], 'string', 'max' => 255],
             [['data', 'name'], 'string', 'max' => 50],
         ];
@@ -144,9 +143,15 @@ class GaAdminMenu extends \yii\db\ActiveRecord
      * @param null $app_id
      * @return mixed
      */
-    public function get_config_menu($parentid=null,$app_id=null){
+    public function get_config_menu($parentid=null,$level=null){
         $tree = new Tree();
-        $admin_menu = GaAdminMenu::find()->asArray(true)->all();
+
+        $query = GaAdminMenu::find();
+        if(!empty($level)){
+            $and_where = ['<=','level',$level];
+            $query->andWhere($and_where);
+        }
+        $admin_menu = $query->asArray(true)->all();
         foreach ($admin_menu as $r) {
             if($parentid !=null){
                 $r['selected'] = $r['id'] == $parentid ? 'selected' : '';

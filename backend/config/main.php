@@ -18,6 +18,9 @@ return [
         'cms' => [
             'class' => 'backend\modules\cms\Cms',//Cms模块
         ],
+        'shop' => [
+            'class' => 'backend\modules\shop\Shop',//商城
+        ],
      ],
     'components' => [
         'request' => [

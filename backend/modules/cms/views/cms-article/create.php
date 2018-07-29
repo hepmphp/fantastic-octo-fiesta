@@ -26,7 +26,15 @@ AppCurdAsset::addScript($this,"/static/js/select2/js/select2.full.min.js");
         <div class="form-group">
             <label class="col-sm-1 control-label" for="tag_ids">标签id  </label>
             <div class="col-sm-4">
-                <select class="form-control tag" style="width:500px"  id="tag_ids" name="tag_ids[]" multiple="multiple"></select>
+                <select class="form-control tag" style="width:500px"  id="tag_ids" name="tag_ids[]" multiple="multiple">
+                    <?php foreach($config_tag_id as $tag_id){?>
+                        <option value="<?=$tag_id['id']?>"><?=$tag_id['name']?></option>
+                    <?php }?>
+                </select>
+                <script>
+                    var tag_ids_str = "<?=$form['tag_ids']?>";
+                 
+                </script>
 
 <!--                <input id="tag_ids" name="tag_ids" type="text" value="--><?//=$form['tag_ids']?><!--" placeholder="标签id  " class="form-control input-md">-->
             </div>
@@ -63,6 +71,7 @@ AppCurdAsset::addScript($this,"/static/js/select2/js/select2.full.min.js");
                     <?php }?>
                 </select>
             </div>
+
         </div>
         <div class="form-group">
             <label class="col-sm-1 control-label">列表显示图片：</label>

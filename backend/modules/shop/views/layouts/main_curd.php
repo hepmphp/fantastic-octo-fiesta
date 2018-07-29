@@ -1,5 +1,4 @@
 <?php
-use Yii;
 use backend\assets\AppCurdAsset;
 use yii\helpers\Html;
 //<link href="" rel="stylesheet">
@@ -22,6 +21,7 @@ $asset = AppCurdAsset::register($this);
     <script src="<?=$asset->baseUrl?>/static/js/html5shiv.min.js"></script>
     <script src="<?=$asset->baseUrl;?>/static/js/respond.min.js"></script>
     <![endif]-->
+    <script src="<?=$asset->baseUrl;?>/static/js/jquery.min.js"></script>
 </head>
 <body>
 <?php $this->beginBody() ?>

@@ -3,6 +3,7 @@
 namespace backend\assets;
 
 use yii\web\AssetBundle;
+use yii\web\View;
 
 /**
  * Main backend application asset bundle.
@@ -32,7 +33,8 @@ class AppCurdAsset extends AssetBundle
    // public $cssOptions = ['condition' => 'lte IE9'];
     public $js = [
          //全局js
-       // '/static/js/jquery.min.js',
+        ['/static/js/jquery.min.js','position' => View::POS_HEAD],
+       // '/static/js/jquery.min.js',//'position' => View::POS_HEAD
         '/static/js/bootstrap.min.js',
         '/static/js/layer/layer.js',
         '/static/js/logic/lib/ajax.js',

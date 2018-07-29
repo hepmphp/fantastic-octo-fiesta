@@ -30,6 +30,7 @@ AppCurdAsset::addScript($this,"/static/js/logic/lib/image_upload.js");
         </div>
         <div class="form-group">
             <label class="col-sm-4 control-label">图片链接：</label>
+            <div class="upload-img-box tc popup-gallery fl img-thumbnail pr "><div class="each"><a href="/uploads/brand/2018-04-25/5adfe83d540eb.jpg" title="点击查看大图片"><img src="/static/img/noimage.gif"></a><div class="text-center opacity del_btn"></div></div></div>
             <form name="image_form_pic_url" id="image_form_pic_url" action="?r=api/upload-single/index" method="post" enctype="multipart/form-data" target="imageFrame">
                 <input type="hidden" name="form_name" value="image_form_pic_url">
                 <div class="col-sm-4">

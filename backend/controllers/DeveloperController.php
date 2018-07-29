@@ -16,6 +16,7 @@ use backend\services\helpers\FormSearchList;
 use backend\services\helpers\FormValidator;
 use backend\services\helpers\InfoSchema;
 use backend\services\helpers\SearchController;
+use  backend\models\GaadminMenu;
 use yii\base\View;
 
 /***
@@ -44,6 +45,15 @@ use yii\base\View;
 class DeveloperController extends BaseController{
 
     public function actionIndex(){
+        $modules =  scandir(Yii::$app->basePath."/modules/");
+        $modules = array_filter($modules,function($i){
+                if($i=='.'||$i=='..'){
+                    return false;
+                }else{
+                    return true;
+                }
+            }
+        );
         $fields = array();
         $select = array();
         //print_r(Yii::$app);
@@ -54,23 +64,26 @@ class DeveloperController extends BaseController{
         $config_table_id = (new InfoSchema())->get_table();
         return $this->render('index',
             [
+             'config_modules_id'=>$modules,
              'config_table_id'=>$config_table_id,
              'config_form_builder_type'=>FormBuilder::get_config_form_builder_type(),
              'config_form_validator_type'=>FormValidator::get_config_form_validator_type(),
              'config_search_builder_type'=>SearchController::get_config_search_builder_type(),
              'config_search_list_type'=>FormSearchList::get_config_search_list_type(),
-             'fields'=>$fields
+             'fields'=>$fields,
+             'config_menu'  => (new GaadminMenu)->get_config_menu(null,1)
             ]
         );
     }
 
   public function actionPreview(){
       $create_file = Yii::$app->request->get('create_file','0');
+      $module_id = Yii::$app->request->get('module_id','');
       $table = Yii::$app->request->get('table','ga_platform');
       $get_fields = Yii::$app->request->get('fields');
-      $get_fields = explode(',',$get_fields);
+     // $get_fields = explode(',',$get_fields);
       $get_form_builder_types = Yii::$app->request->get("form_builder_types");
-      $get_form_builder_types = explode(',',$get_form_builder_types);
+     // $get_form_builder_types = explode(',',$get_form_builder_types);
       $config_fied_builder_types = array();
       foreach($get_fields as $k=>$field){
           $config_fied_builder_types[$field] = $get_form_builder_types[$k];
@@ -147,7 +160,6 @@ HTML;
 
 ?>
 EOT;
-
             foreach($css as $c){
                 $css_js[] = sprintf($css_register,$c);
             }
@@ -177,12 +189,10 @@ EOT;
       if($create_file==1){
           $controller = str_replace('_','-',$table);
           $controller_arr = explode('-',$controller);
-          if($controller_arr[0]!='ga'){//非管理后台的 为模块快发 cms_attach_cate 对应的目录为 cms/attach-cate/index.js
-              $module = $controller_arr[0];
-             // unset($controller_arr[0]);
+          if(!empty($module_id)){//非管理后台的 为模块快发 cms_attach_cate 对应的目录为 cms/attach-cate/index.js
               $controller = implode('-',$controller_arr);
               $view_path = Yii::$app->viewPath."/../modules/%s/views/%s/";
-              $view_path = sprintf($view_path,$module,$controller);
+              $view_path = sprintf($view_path,$module_id,$controller);
           }else{
               $view_path =  Yii::$app->viewPath.'/'.$controller.'/';
           }
@@ -221,8 +231,6 @@ EOT;
 //          $this->layout = 'main_curd.php';
 //          return $this->render('preview',['form_html'=>$form_html]);
       }
-
-
       //echo FormBuilder::mutil_checkbox('stauts','状态',$select['status']);
 
   }
@@ -232,12 +240,13 @@ EOT;
      */
     public function actionCreateJs(){
         $create_file = Yii::$app->request->get('create_file','0');
+        $module_id =  Yii::$app->request->get('module_id');
         $table = Yii::$app->request->get('table','ga_platform');
         $fields = Yii::$app->request->get('fields','');
-        $fields = explode(',',$fields);
+//        $fields = explode(',',$fields);
         $preview = Yii::$app->request->get('preview',1);
         $get_form_builder_types = Yii::$app->request->get("form_builder_types");
-        $get_form_builder_types = explode(',',$get_form_builder_types);
+//        $get_form_builder_types = explode(',',$get_form_builder_types);
      //  var_dump($fields);exit();
         $table_field = (new InfoSchema())->get_table_field($table);
         $template_js = Yii::$app->viewPath.'/developer/template/js/index.js';
@@ -254,10 +263,10 @@ EOT;
         $from_data .= PHP_EOL."}";
         $controller = str_replace('_','-',$table);
         $controller_arr = explode('-',$controller);
-        if($controller_arr[0]!='ga'){//非管理后台的 为模块快发 cms_attach_cate 对应的目录为 cms/attach-cate/index.js
+        if(!empty($module_id)){//非管理后台的 为模块快发 cms_attach_cate 对应的目录为 cms/attach-cate/index.js
             $module = $controller_arr[0];
             //unset($controller_arr[0]);
-            $controller = $module.'/'.implode('-',$controller_arr);
+            $controller = $module_id.'/'.implode('-',$controller_arr);
         }
         $template_content = str_replace(array('[controller]','[form_data]','[from_name]'),array($controller,$from_data,$form_name),$template_content);
 
@@ -352,13 +361,14 @@ EOT;
     */
    public function actionCreateList(){
        $create_file = Yii::$app->request->get('create_file','0');
+        $module_id =  Yii::$app->request->get('module_id');
         $table = Yii::$app->request->get('table','ga_platform');
         $fields = Yii::$app->request->get('fields','');
-        $fields = explode(',',$fields);
+//        $fields = explode(',',$fields);
         $preview = Yii::$app->request->get('preview',1);
 
         $search_list_types = Yii::$app->request->get("search_list_types");
-        $search_list_types = explode(',',$search_list_types);
+//        $search_list_types = explode(',',$search_list_types);
         $config_search_list_types = array();
         foreach($fields as $k=>$field){
             $config_search_list_types[$field] = $search_list_types[$k];
@@ -412,16 +422,15 @@ EOT;
         if($create_file==1){
             $controller = str_replace('_','-',$table);
             $controller_arr = explode('-',$controller);
-            if($controller_arr[0]!='ga'){//非管理后台的 为模块快发 cms_attach_cate 对应的目录为 cms/attach-cate/index.js
-                $module = $controller_arr[0];
+            if(!empty($module_id)){//非管理后台的 为模块快发 cms_attach_cate 对应的目录为 cms/attach-cate/index.js
                // unset($controller_arr[0]);
                 $controller = implode('-',$controller_arr);
                 $view_path = Yii::$app->viewPath."/../modules/%s/views/%s/";
-                $view_path = sprintf($view_path,$module,$controller);
+                $view_path = sprintf($view_path,$module_id,$controller);
             }else{
                 $view_path =  Yii::$app->viewPath.'/'.$controller.'/';
             }
-//          echo $view_path;exit();
+
             if(!is_dir($view_path)){
                 mkdir($view_path,0755,true);
             }
@@ -462,9 +471,10 @@ EOT;
        $fields = Yii::$app->request->get('fields');
        $search_builder_types = Yii::$app->request->get('search_builder_types');
        $form_builder_types = Yii::$app->request->get('form_builder_types');
-       $fields = explode(',',$fields);
-       $search_builder_types = explode(',',$search_builder_types);
-       $form_builder_types = explode(',',$form_builder_types);
+       $module_id =  Yii::$app->request->get('module_id');
+//       $fields = explode(',',$fields);
+//       $search_builder_types = explode(',',$search_builder_types);
+//       $form_builder_types = explode(',',$form_builder_types);
 
        $table_arr = explode('_',$table);
        $table_arr = array_map(function($a){
@@ -483,11 +493,11 @@ EOT;
        $model = 'backend\models';//backend\models\GaAdminGroup
        $namespace = 'backend\controllers';
        $controller_path = Yii::$app->viewPath."/../controllers/";
-       if($table_arr[0]!='ga'){
-           $table_arr[0] = strtolower($table_arr[0]);
-           $namespace = sprintf('backend\modules\%s\controllers',$table_arr[0]);
-           $model =  sprintf('backend\modules\%s\models',$table_arr[0]);
-           $controller_path = Yii::$app->viewPath."/../modules/{$table_arr[0]}/controllers/";
+       if(!empty($module_id)){
+           $module_id = strtolower($module_id);
+           $namespace = sprintf('backend\modules\%s\controllers',$module_id);
+           $model =  sprintf('backend\modules\%s\models',$module_id);
+           $controller_path = Yii::$app->viewPath."/../modules/{$module_id}/controllers/";
        }
        // $id = Yii::$app->request->get('id');
        // if($id){
@@ -520,11 +530,11 @@ EOT;
            \$end_[field] = Yii::\$app->request->get('end_[field]');
            if(\$begin_[field]){
               \$begin_[field] = strtotime(\$begin_[field]);
-               \$and_where[] = ['>=','begin_time',\$begin_[field]];
+               \$and_where[] = ['>=','[field]',\$begin_[field]];
            }
            if(\$end_[field]){
                \$end_[field] = strtotime(\$end_[field])+86400;
-               \$and_where[] = ['<','end_time',\$end_[field]];
+               \$and_where[] = ['<','[field]',\$end_[field]];
            }
            \n
 
@@ -545,7 +555,7 @@ EOT;
             if($searc_builder_type=='search_text'){
                 $where_str .= str_replace('[field]',$field,$where_tpl);
             }else if($searc_builder_type=='search_select'){
-                $where_str .= str_replace('[field]',$field,$where_time_range);
+                $where_str .= str_replace('[field]',$field,$where_select);
             }else if($searc_builder_type=='search_time'){
                 $where_str .= str_replace('[field]',$field,$where_time_range);
             }else if($searc_builder_type=='search_like'){
@@ -629,11 +639,13 @@ EOT;
      */
     public function actionCreateModel(){
         $create_file = Yii::$app->request->get('create_file','0');
+        $module_id =  Yii::$app->request->get('module_id');
         $table = Yii::$app->request->get('table','ga_platform');
         $fields = Yii::$app->request->get('fields');
         $form_validator_types = Yii::$app->request->get('form_validator_types');
-        $fields = explode(',',$fields);
-        $form_validator_types = explode(',',$form_validator_types);
+
+       // $fields = explode(',',$fields);
+       // $form_validator_types = explode(',',$form_validator_types);
 
         $table_arr = explode('_',$table);
         $table_arr = array_map(function($a){
@@ -648,18 +660,15 @@ EOT;
         $content = file_get_contents($tpl);
 
         //替换模块名称 非后台的 全部替换成对应的模块
-        if($table_arr[0]!='ga'){
-            $table_arr[0] = strtolower($table_arr[0]);
-            $namespace = sprintf('backend\modules\%s\models',$table_arr[0]);
-            $model_path = Yii::$app->viewPath."/../modules/{$table_arr[0]}/models/";
+        if(!empty($module_id)){
+            $module_id = strtolower($module_id);
+            $namespace = sprintf('backend\modules\%s\models',$module_id);
+            $model_path = Yii::$app->viewPath."/../modules/$module_id/models/";
         }else{
             $namespace = 'backend\models';
             $model_path = Yii::$app->viewPath."/../models/";
         }
         list($db_fields,$select) = (new InfoSchema())->get_all_fields($table);
-
-
-
 
         //状态配置
         $config_tpl = <<<EOT
@@ -753,6 +762,55 @@ EOT;
             highlight_string($content);
         }
 }
+
+
+    public function actionCreateMenu(){
+        $table = Yii::$app->request->get('table','ga_platform');
+        $create_file = Yii::$app->request->get('create_file','0');
+        $parent_id = Yii::$app->request->get('parent_id','0');
+        $root_action = 'index';
+        $actions = array(
+            'index',
+            'create',
+            'update',
+            'delete',
+        );
+        $config_action_name = array(
+            'index'=>'列表',
+            'create'=>'添加',
+            'update'=>'修改',
+            'delete'=>'删除',
+        );
+        //
+        $controller = str_replace('_','-',$table);
+        $controller_arr = explode('-',$controller);
+        if($controller_arr[0]!='ga'){//非管理后台的 为模块快发 cms_attach_cate 对应的目录为 cms/attach-cate/index.js
+            $module = $controller_arr[0];
+            //unset($controller_arr[0]);
+            $controller = $module.'/'.implode('-',$controller_arr);
+        }
+
+        $table_data = (new InfoSchema())->get_table('yii_admin',$table);
+        $root_menu = ['model'=>$controller,'action'=>'index','listorder'=>0,'name'=>$table_data['name'].$config_action_name['index'],'parentid'=>$parent_id];
+        $menu_data = array();
+        foreach($actions as $action){
+            $menu_data[] = ['model'=>$controller,'action'=>$action,'listorder'=>0,'name'=>$table_data['name'].$config_action_name[$action],'parentid'=>$parent_id];
+        }
+        if($create_file){
+            //检查是否存在
+
+               $admin_menu =  GaAdminMenu::find()->where($root_menu)->asArray()->one();
+               print_r($admin_menu);
+
+
+        }else{
+            echo Yii::$app->db->createCommand()->insert('`ga_admin_menu`',$root_menu)->getRawSql()."<br/>\n";
+            foreach($menu_data as $m_data){
+                echo Yii::$app->db->createCommand()->insert('`ga_admin_menu`',$m_data)->getRawSql()."<br/>\n";
+            }
+        }
+
+    }
 
 
 

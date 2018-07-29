@@ -75,7 +75,7 @@ function admin_menu_form(url,action){
     var btn =  action==2?['确认修改','取消']:['确认添加','取消'];
     layer.open({
         type: 2, //iframe
-        area: ['500px', '690px'],
+        area: ['800px', '500px'],
         title: title,
         btn: btn,
         shade: 0.3, //遮罩透明度

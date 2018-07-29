@@ -37,5 +37,8 @@ jQuery( function() {
         return repo.full_name || repo.text;
     }
 
-
+    var tag_ids_arr = tag_ids_str.split(',');
+    $("#tag_ids").val(tag_ids_arr).trigger("change");
 });
+
+
