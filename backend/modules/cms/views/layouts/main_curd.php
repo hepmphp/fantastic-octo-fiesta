@@ -1,5 +1,4 @@
 <?php
-use Yii;
 use backend\assets\AppCurdAsset;
 use yii\helpers\Html;
 //<link href="" rel="stylesheet">

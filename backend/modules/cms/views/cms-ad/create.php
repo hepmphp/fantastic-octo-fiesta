@@ -4,6 +4,10 @@ AppCurdAsset::register($this);
 AppCurdAsset::addScript($this,"/static/js/logic/lib/date_picker.js");
 AppCurdAsset::addScript($this,"/static/js/logic/lib/image_upload.js");
 
+
+AppCurdAsset::addCss($this,"/static/js/mutil_uploader/css/iconfont.css");
+AppCurdAsset::addCss($this,"/static/js/mutil_uploader/css/image.css");
+AppCurdAsset::addScript($this,"/static/js/mutil_uploader/js/uploader.js");
 ?>
 <div class="container col-sm-12" style="margin-top: 10px;">
     <div class="form-horizontal">
@@ -28,18 +32,50 @@ AppCurdAsset::addScript($this,"/static/js/logic/lib/image_upload.js");
                 <input id="title" name="title" type="text" value="<?=$form['title']?>" placeholder="广告标题" class="form-control input-md">
             </div>
         </div>
+<!--        <div class="form-group">-->
+<!--            <label class="col-sm-4 control-label">图片链接：</label>-->
+<!--            <div class="upload-img-box tc popup-gallery fl img-thumbnail pr "><div class="each"><a href="/uploads/brand/2018-04-25/5adfe83d540eb.jpg" title="点击查看大图片"><img src="/static/img/noimage.gif"></a><div class="text-center opacity del_btn"></div></div></div>-->
+<!--            <form name="image_form_pic_url" id="image_form_pic_url" action="?r=api/upload-single/index" method="post" enctype="multipart/form-data" target="imageFrame">-->
+<!--                <input type="hidden" name="form_name" value="image_form_pic_url">-->
+<!--                <div class="col-sm-4">-->
+<!--                    <input value="--><?//=$form['pic_url']?><!--" name="pic_url" class="imgPath form-control" type="text" id="pic_url">-->
+<!--                </div>-->
+<!--                <button type="button" class="btnImg btn btn-success">浏览</button>-->
+<!--                <input name="submitImg" id="submitImg" class="submitImg" style="display:none" type="file" accept=".jpg,.png,.gif,.jpeg">-->
+<!--                <iframe width="0" height="0" id="imageFrame" name="imageFrame" frameborder="0" scrolling="no"></iframe>-->
+<!--            </form>-->
+<!--        </div>-->
         <div class="form-group">
             <label class="col-sm-4 control-label">图片链接：</label>
-            <div class="upload-img-box tc popup-gallery fl img-thumbnail pr "><div class="each"><a href="/uploads/brand/2018-04-25/5adfe83d540eb.jpg" title="点击查看大图片"><img src="/static/img/noimage.gif"></a><div class="text-center opacity del_btn"></div></div></div>
-            <form name="image_form_pic_url" id="image_form_pic_url" action="?r=api/upload-single/index" method="post" enctype="multipart/form-data" target="imageFrame">
-                <input type="hidden" name="form_name" value="image_form_pic_url">
-                <div class="col-sm-4">
-                    <input value="<?=$form['pic_url']?>" name="pic_url" class="imgPath form-control" type="text" id="pic_url">
+            <div class="col-sm-8">
+                <div class="clear-float">
+                    <form class="upload-win clear-float" enctype="multipart/form-data">
+                        <div class="upload-img left">
+                            <img src="" alt="" id="pic_url" class="pic_url">
+                            <input type="file" name="images" style="opacity:0" accept="image/*" capture="camera">
+                            <i class="iconfont icon-lajitong"></i>
+                            <i class="iconfont icon-tianjia"></i>
+                            <div class="over-cover"></div>
+                        </div>
+                    </form>
                 </div>
-                <button type="button" class="btnImg btn btn-success">浏览</button>
-                <input name="submitImg" id="submitImg" class="submitImg" style="display:none" type="file" accept=".jpg,.png,.gif,.jpeg">
-                <iframe width="0" height="0" id="imageFrame" name="imageFrame" frameborder="0" scrolling="no"></iframe>
-            </form>
+            </div>
+       </div>
+        <div class="form-group">
+            <label class="col-sm-4 control-label">图片链接：</label>
+            <div class="col-sm-8">
+                <div class="clear-float">
+                    <form class="upload-win clear-float" enctype="multipart/form-data">
+                        <div class="upload-img left">
+                            <img src="" alt="" id="pic_url" class="pic_url">
+                            <input type="file" name="images" style="opacity:0" accept="image/*" capture="camera">
+                            <i class="iconfont icon-lajitong"></i>
+                            <i class="iconfont icon-tianjia"></i>
+                            <div class="over-cover"></div>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
         <div class="form-group">
             <label class="col-sm-4 control-label" for="link_address">广告地址</label>
