@@ -147,6 +147,15 @@ HTML;
             $css[] = '/static/js/autocomplete/jquery-ui.css';
             $js[] = '/static/js/autocomplete/jquery-ui.js';
         }
+
+      if(  in_array('image_priview',$get_form_builder_types)
+          ||in_array('image_mutil_priview',$get_form_builder_types)){
+          $css[] = '/static/js/mutil_uploader/css/iconfont.css';
+          $css[] = '/static/js/mutil_uploader/css/image.css';
+          $js[] = '/static/js/mutil_uploader/js/uploader.js';
+      }
+
+
         $css_js = '';
         $css_register= 'AppCurdAsset::addCss($this,"%s");';
         $js_register= 'AppCurdAsset::addScript($this,"%s");';
@@ -320,6 +329,34 @@ EOT;
             $mutil_select_js = str_replace('[mutil_select_js]',implode("",$mutil_select_js_item),$mutil_select_js);
             $template_content = $template_content."\n".$mutil_select_js;
         }
+
+        //多图预览上传js处理
+        $mutil_image_prive_tpl = <<<EOT
+var [field] = new Array();
+            body.find('#[field]').parent().find(".image-item").each(function(){
+                if($(this).attr('src')){
+                    [field].push($(this).attr("src"));
+                }
+            });
+EOT;
+        $mutil_image_prive_val_tpl = "body.find('#[field]').val()";
+        if(in_array('image_mutil_priview',$get_form_builder_types)){
+            foreach($get_form_builder_types as $k=>$builder_type){
+                $field = $fields[$k];
+                if($builder_type=='image_mutil_priview'){
+                    $mutil_image_prive = str_replace(array('[field]'),array($field),$mutil_image_prive_tpl)."\n";
+                    $mutil_image_prive_val = str_replace(array('[field]'),array($field),$mutil_image_prive_val_tpl);
+                    if(!empty($mutil_image_prive)){
+                        //mutil_image_prive_var
+                        $template_content = str_replace("//mutil_image_prive_var",$mutil_image_prive,$template_content);
+                        $template_content = str_replace($mutil_image_prive_val,$field,$template_content);
+                    }
+                }
+            }
+
+        }
+        //多图预览上传js处理结束
+
         if($create_file==1){
             $logic_path = './static/js/logic/'.$controller;//目前就用到index.js
             if(!is_dir($logic_path)){

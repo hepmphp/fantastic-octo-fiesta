@@ -31,7 +31,9 @@ class FormBuilder {
             'text_rich'=>'11.富文本',
             'text_multi_select'=>'12.文本多选',
             'text_search'=>'13.下拉搜索',
-            'select_tree'=>'14.树形菜单'
+            'select_tree'=>'14.树形菜单',
+            'image_priview'=>'15.单图预览上传',
+            'image_mutil_priview'=>'16.多图预览上传',
 
 
         );
@@ -315,9 +317,9 @@ EOT;
     public static function text_rich($field,$name){
         $input = <<<EOT
       <div class="form-group">
-     <label class="col-sm-1 control-label">[name]：</label>
-       <div class="col-sm-11">
-        <script id="editor" type="text/plain" name="[field]" id="[field]" value="{\$form['field']}" style="width:100%;height: 400px;"></script>
+     <label class="col-sm-4 control-label">[name]：</label>
+       <div class="col-sm-4">
+        <script type="text/plain" name="[field]" id="[field]" value="" style="width:100%;height: 400px;"></script>
 
         <style>
         /*设置按扭样式*/
@@ -395,6 +397,90 @@ EOT;
         return $input;
 
     }
+
+    /**
+     *
+     * 单图预览上传
+     * @param $field
+     * @param $name
+     * @return mixed
+     */
+    public static function image_priview($field,$name){
+        $input = <<<EOT
+         <div class="form-group">
+            <label class="col-sm-4 control-label">[name]：</label>
+            <div class="col-sm-8">
+                <div class="clear-float">
+                    <form class="upload-win clear-float" enctype="multipart/form-data">
+                        <div class="upload-img upload-img-one left">
+                            <input value="<?=\$form['[field]']?>" type="hidden" class="image-item" type="text" id="[field]">
+                            <img src="<?=Yii::\$app->controller->getStaticUrl()?><?=\$form['[field]']?>" alt=""  class="pic_url">
+                            <input type="file" name="images" style="opacity:0" accept="image/*" capture="camera">
+                            <i class="iconfont icon-lajitong"></i>
+                            <i class="iconfont icon-tianjia"></i>
+                            <div class="over-cover"></div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+EOT;
+        $input = str_replace(array('[name]','[field]'),array($name,$field),$input);
+       return $input;
+    }
+
+    /***
+     * 多图预览上传
+     * @param $field
+     * @param $name
+     * @return mixed
+     */
+    public static function image_mutil_priview($field,$name){
+
+        $input = <<<EOT
+   <div class="form-group">
+            <label class="col-sm-4 control-label">[name]：</label>
+            <input value="<?=\$form['[field]']?>" type="hidden" id="images">
+            <div class="col-sm-8">
+                <div class="clear-float">
+                    <form class="upload-win clear-float" enctype="multipart/form-data">
+                        <?php
+                            \$form['images'] = explode(',',\$form['[field]']);
+                            if(!empty(\$form['[field]'])){
+                                foreach(\$form['[field]'] as \$image){
+
+                        ?>
+                        <div class="upload-img upload-img-one left">
+                            <img src="<?=Yii::\$app->controller->getStaticUrl()?><?=\$image?>" alt=""  class="pic_url">
+                            <span class="image-item" src="<?=\$image?>"></span>
+                            <input type="file" name="images" style="opacity:0" accept="image/*" capture="camera">
+                            <i class="iconfont icon-lajitong"></i>
+                            <i class="iconfont icon-tianjia"></i>
+                            <div class="over-cover"></div>
+                        </div>
+                        <?php }?>
+                        <?php }?>
+
+                        <div class="upload-img upload-img-mutil left">
+                            <img src="" alt=""  class="pic_url">
+                           <span class="image-item" src=""></span>
+                            <input type="file" name="images" style="opacity:0" accept="image/*" capture="camera">
+                            <i class="iconfont icon-lajitong"></i>
+                            <i class="iconfont icon-tianjia"></i>
+                            <div class="over-cover"></div>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+EOT;
+        $input = str_replace(array('[name]','[field]'),array($name,$field),$input);
+        return $input;
+
+    }
+
+
 
 
 }
