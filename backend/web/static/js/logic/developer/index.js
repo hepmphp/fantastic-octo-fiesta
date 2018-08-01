@@ -105,6 +105,7 @@ $('#btn_controller').click(function(){
     var param = {
         fields:fields,
         form_builder_types:form_builder_types,
+        search_builder_types,search_builder_types,
         table:table,
         module_id:module_id
     };
