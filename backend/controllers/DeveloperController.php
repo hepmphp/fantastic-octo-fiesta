@@ -156,7 +156,7 @@ HTML;
       }
 
 
-        $css_js = '';
+        $css_js = array();
         $css_register= 'AppCurdAsset::addCss($this,"%s");';
         $js_register= 'AppCurdAsset::addScript($this,"%s");';
         $js_register_head = 'AppCurdAsset::addScriptHead($this,"%s");';

@@ -23,7 +23,7 @@ class BaseController extends Controller{
      *控制器名 Yii::$app->controller->id
      *方法名 Yii::$app->controller->action->id;
      */
-    public $layout = 'main_admin.php';
+    public $layout = '/main_admin.php';
 
     public $current_menu = null;
 
@@ -77,27 +77,29 @@ class BaseController extends Controller{
                 throw new LogicException(LogicException::PAGE_ERROR,'你的账户在其它地方登录,请重新登录');
             }
         }
-//        if(Yii::$app->request->get('iframe')==1){
-            $this->checkAccess();
-//        }
-        //Yii::$app->view->
-        $top_menu = GaAdminMenu::find()->where(['parentid'=>0,'status'=>0])->orderBy(['listorder'=>SORT_ASC])->asArray()->all();
 
-        $where_left_menu = array(
-            'top_menu_id'=>$this->current_menu['top_menu_id'],
-            'level'=>1,
-        );
-        $left_menu = GaAdminMenu::find()->where($where_left_menu)->orderBy(['listorder'=>SORT_ASC])->asArray()->all();
+        $this->checkAccess();
+        if(Yii::$app->request->get('iframe')!=1){
+            $top_menu = GaAdminMenu::find()->where(['parentid'=>0,'status'=>0])->orderBy(['listorder'=>SORT_ASC])->asArray()->all();
+
+            $where_left_menu = array(
+                'top_menu_id'=>$this->current_menu['top_menu_id'],
+                'level'=>1,
+            );
+            $left_menu = GaAdminMenu::find()->where($where_left_menu)->orderBy(['listorder'=>SORT_ASC])->asArray()->all();
 
 
-        $menu = array(
-            'top_menu'=>$top_menu,
-            'left_menu'=>$left_menu
-        );
-        Yii::$app->cache->set('menu',$menu);
-        Yii::$app->cache->set('current_top_menu_id',$this->current_menu['top_menu_id']);//当前菜单id
+            $menu = array(
+                'top_menu'=>$top_menu,
+                'left_menu'=>$left_menu
+            );
+            Yii::$app->session->set('menu',$menu);
+            Yii::$app->session->set('current_top_menu_id',$this->current_menu['top_menu_id']);//当前菜单id
+        }
 
-      //  var_dump(Yii::$app->cache->get('current_top_menu_id'));
+       // var_dump(Yii::$app->session->get('menu'));
+
+        //  var_dump(Yii::$app->cache->get('current_top_menu_id'));
       //  var_dump($left_menu);
       //  Yii::$app->cache->get('current_top_menu_id');
       //  echo "<pre>";
@@ -138,7 +140,7 @@ class BaseController extends Controller{
                         'mids'=>Yii::$app->session['admin_user.mids'],
                     ),
                 );*/
-               // throw new LogicException(-1,Yii::t('app','user_has_no_permission'));
+                throw new LogicException(-1,Yii::t('app','user_has_no_permission'));
         }else{
             return true;
         }
@@ -336,6 +338,10 @@ class BaseController extends Controller{
             $admin_log->setAttributes($data);
             $admin_log->save();
         }
+    }
+
+    public function getStaticUrl(){
+        return '/';
     }
 
 }
