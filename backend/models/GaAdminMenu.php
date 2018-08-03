@@ -68,13 +68,16 @@ class GaAdminMenu extends \yii\db\ActiveRecord
     public function beforeSave($insert){
         if(parent::beforeSave($insert)){
             if($this->isNewRecord){
-                $admin_menu = GaAdminMenu::findOne(['id'=>$this->parentid]);
-                if(isset($admin_menu['level']) && is_numeric($admin_menu['level'])){
-                    $this->level = $admin_menu['level']+1;
-                }else{
-                    $this->level = 0;
-                }
+
             }
+            $admin_menu = GaAdminMenu::findOne(['id'=>$this->parentid]);
+            if(isset($admin_menu['level']) && is_numeric($admin_menu['level'])){
+                $this->level = $admin_menu['level']+1;
+            }else{
+                $this->level = 0;
+            }
+            $parent_menu = GaAdminMenu::findOne(['id'=>$this->parentid]);
+            $this->top_menu_id = $parent_menu['top_menu_id'];
             return true;
         }else{
             return false;
