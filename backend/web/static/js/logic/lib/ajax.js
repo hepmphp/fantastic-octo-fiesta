@@ -45,7 +45,41 @@ function ajax_post(url,param){
         }
     });
 }
-
+function ajax_post_callback(url,param,callback){
+    $.ajax({
+        type:"POST",
+        url: url,
+        data:  param,
+        timeout:"4000",
+        dataType:'json',
+        success: function(data){
+            if (data.status == 0) {
+                layer.closeAll('loading');
+                callback();
+                // alert_success_sub(data.msg);
+            }
+            else {
+                layer.closeAll('loading');
+                alert_fail(data.msg);
+            }
+        },
+        error: function(XMLHttpRequest, textStatus, errorThrown) {
+            console.log(XMLHttpRequest.status);
+            console.log(XMLHttpRequest.readyState);
+            console.log(textStatus);
+            console.log(errorThrown);
+            console.log(XMLHttpRequest.responseText);
+            var result = jQuery.parseJSON(XMLHttpRequest.responseText);
+            console.log(result);
+            layer.closeAll('loading');
+            alert_fail(result.msg);
+        },
+        complete: function(XMLHttpRequest, textStatus) {
+            // console.log(textStatus);
+            //this; // 璋冪敤鏈AJAX璇锋眰鏃朵紶閫掔殑options鍙傛暟
+        }
+    });
+}
 function ajax_post_alert_success(url,param){
     layer.load(2);
     $.ajax({

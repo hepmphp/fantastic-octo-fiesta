@@ -444,6 +444,7 @@ EOT;
             <div class="col-sm-8">
                 <div class="clear-float">
                     <form class="upload-win clear-float" enctype="multipart/form-data">
+                        <input type="hidden" class="group_name" value="admin">
                         <?php
                             \$form['images'] = explode(',',\$form['[field]']);
                             if(!empty(\$form['[field]'])){

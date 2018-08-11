@@ -82,7 +82,6 @@ class CmsArticleCategoryController extends BaseController
         return $this->render('index', [
             'page' => $page,
             'data'=>$data,
-
             'select_tree'=>CmsArticleCategory::get_config_menu(),
 
         ]);

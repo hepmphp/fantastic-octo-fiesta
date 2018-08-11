@@ -177,7 +177,7 @@ class GaAdminUser extends \yii\db\ActiveRecord
         }
         $admin_log = new GaAdminLog();
         $data = array(
-            'user_id'=>$admin_user['id'],
+            'user_id'=>$admin_user['id']?$admin_user['id']:0,
             'username'=>$username,
             'ip'=>Yii::$app->request->getUserIP(),
             'status'=>$status,

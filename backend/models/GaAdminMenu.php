@@ -36,9 +36,10 @@ class GaAdminMenu extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['parentid', 'status', 'listorder','level','top_menu_id'], 'integer'],
+            [['parentid', 'status','level','top_menu_id'], 'integer'],
             [['model', 'action', 'remark'], 'string', 'max' => 255],
             [['data', 'name'], 'string', 'max' => 50],
+            ['listorder','default','value'=>0]
         ];
     }
 

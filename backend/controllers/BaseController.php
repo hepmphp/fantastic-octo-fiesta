@@ -26,8 +26,6 @@ class BaseController extends Controller{
     public $layout = '/main_admin.php';
 
     public $current_menu = null;
-
-
     public $model = '';//通用的操作模型
     public function beforeAction($action){
         if(parent::beforeAction($action)){
@@ -62,8 +60,7 @@ class BaseController extends Controller{
     public function checkLogin(){
         $this->ip_check();
         header("Content-type:text/html;charset=utf-8");
-
-        if(Yii::$app->controller->id !='site'&&empty(Yii::$app->session['admin_user.id'])){
+        if(Yii::$app->controller->id !='site'&& empty(Yii::$app->session['admin_user.id'])){
             //跳转
             throw new LogicException(LogicException::PAGE_ERROR,'长时间没操作,请重新登录');
            // $this->error('长时间没操作,请重新登录',U('index/login'),5000);
@@ -81,7 +78,6 @@ class BaseController extends Controller{
         $this->checkAccess();
         if(Yii::$app->request->get('iframe')!=1){
             $top_menu = GaAdminMenu::find()->where(['parentid'=>0,'status'=>0])->orderBy(['listorder'=>SORT_ASC])->asArray()->all();
-
             $where_left_menu = array(
                 'top_menu_id'=>$this->current_menu['top_menu_id'],
                 'level'=>1,
@@ -98,7 +94,6 @@ class BaseController extends Controller{
         }
 
        // var_dump(Yii::$app->session->get('menu'));
-
         //  var_dump(Yii::$app->cache->get('current_top_menu_id'));
       //  var_dump($left_menu);
       //  Yii::$app->cache->get('current_top_menu_id');
@@ -128,6 +123,7 @@ class BaseController extends Controller{
         );
 
         $this->current_menu = GaAdminMenu::find()->where($where_menu)->andWhere(['<>','level',0])->limit(1)->asArray()->one();
+
         if(!in_array($this->current_menu['id'],Yii::$app->session['admin_user.mids']) && Yii::$app->controller->action->id != 'get_search_where'){//搜索条件拼接不做权限检测
                /*
                $response = array(

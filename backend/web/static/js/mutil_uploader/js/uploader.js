@@ -1,5 +1,4 @@
-  // 上传图片
-
+// 上传图片
 var uploaderApi = '?r=api/upload-mutil/index';
 var imgNum=0;
 var offsBooL=true;
@@ -7,15 +6,16 @@ uploadImgOne();//单图上传
 uploadImg();//多图上传
 
 function uploadImg(){
+ 
 $(".upload-img-mutil input").eq(imgNum).change(function() {
     var that=$(this);
 //    console.log(that.parent());
-    console.log(imgNum);
+     
       var formdata=new FormData();
-      var group_name = $(that).parent().parent().find(".group_name").val();
+      var group_name = $(that).parent().parent().find(".group_name").val();//事件冲突 所以放最外层
       formdata.append('image',this.files[0]);
       formdata.append('group_name',group_name);
-        var str='<div class="upload-img  upload-img-mutil  left"><span class="image-item"></span><img src="" alt=""><input type="file" name="images" style="opacity:0" accept="image/*" capture="camera"/><i class="iconfont icon-lajitong"></i><i class="iconfont icon-tianjia"></i><div class="over-cover"></div></div>';
+      var str='<input type="hidden" class="group_name" value="'+group_name+'">'+'<div class="upload-img  upload-img-mutil left"><span class="image-item"></span><img src="" alt=""><input type="file" name="images" style="opacity:0" accept="image/*" capture="camera"/><i class="iconfont icon-lajitong"></i><i class="iconfont icon-tianjia"></i><div class="over-cover"></div></div>';
         $.ajax({
           type: 'POST',
           url: uploaderApi,
@@ -31,7 +31,7 @@ $(".upload-img-mutil input").eq(imgNum).change(function() {
             console.log( that.parent());
             that.parent().find(".icon-tianjia").hide();
             that.parent().find("img").attr({'src':result.data.url});
-           that.parent().find(".image-item").attr({'src':result.data.file_path});
+            that.parent().find(".image-item").attr({'src':result.data.file_path});
             imgNum ++;
             that.parent().parent().parent().find(".upload-win").append(str);
             uploadImg()
@@ -63,10 +63,8 @@ $(".upload-img-mutil input").eq(imgNum).change(function() {
 function uploadImgOne(){
     $(".upload-img-one input").change(function() {
         var that=$(this);
-    console.log(  that.find("img"));
-//    console.log(imgNum);
         var formdata=new FormData();
-        var group_name = $(that).parent().parent().find(".group_name").val();
+        var group_name = $(that).parent().find(".group_name").val();
         formdata.append('image',this.files[0]);
         formdata.append('group_name',group_name);
       //  var str='<div class="upload-img left"><img src="" alt=""><input type="file" name="images" style="opacity:0" accept="image/*" capture="camera"/><i class="iconfont icon-lajitong"></i><i class="iconfont icon-tianjia"></i><div class="over-cover"></div></div>';
@@ -86,6 +84,7 @@ function uploadImgOne(){
 //                that.parent().parent().parent().find(".upload-win .icon-tianjia").hide();
                 that.parent().find("img").attr({'src':result.data.url});
                 that.parent().find(".image-item").attr({'value':result.data.file_path});
+				that.parent().find(".image-item").attr({'src':result.data.file_path});
               //  that.parent().parent().parent().find(".upload-win").append(str);
             }
         });

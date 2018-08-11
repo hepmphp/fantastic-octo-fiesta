@@ -26,10 +26,11 @@ class UploadMutilController extends Controller{
 //        print_r($_FILES);
 //        var_dump($_POST);
         $form_name = Yii::$app->request->post('form_name');
+        $group_name = Yii::$app->request->post('group_name','admin');
        //  $model = new UploadForm();
      if(Yii::$app->request->isPost){
             $uploader = UploadedFile::getInstanceByName('image');
-            $filePath = 'uploads/'.date("Ymd").'/';
+            $filePath = 'uploads/'.$group_name.'/'.date("Ymd").'/';
             if(!file_exists($filePath)){
                mkdir($filePath,0755,true);
             }

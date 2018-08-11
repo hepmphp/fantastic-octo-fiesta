@@ -46,7 +46,7 @@ class AppAsset extends AssetBundle
         //日期
         '/static/js/date/moment.min.js',
         '/static/js/date/jquery.daterangepicker.js',
-        '/static/js/logic/lib/date_picker.js',
+        '/static/js/logic/lib/date_range_picker.js',//时间搜索
 
         //通用
         '/static/js/common.js',

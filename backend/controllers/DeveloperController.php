@@ -45,6 +45,7 @@ use yii\base\View;
 class DeveloperController extends BaseController{
 
     public function actionIndex(){
+        /*模块列表*/
         $modules =  scandir(Yii::$app->basePath."/modules/");
         $modules = array_filter($modules,function($i){
                 if($i=='.'||$i=='..'){
@@ -61,6 +62,7 @@ class DeveloperController extends BaseController{
             $table = Yii::$app->request->get('table','ga_platform');
             list($fields,$select) = (new InfoSchema())->get_all_fields($table);
         }
+
         $config_table_id = (new InfoSchema())->get_table();
         return $this->render('index',
             [

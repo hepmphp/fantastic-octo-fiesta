@@ -53,7 +53,6 @@ use backend\components\PageWidget;
 			<th>是否置顶</th>
 			<th>列表显示图片</th>
 			<th>状态</th>
-
                 <th>操作</th>
             </tr>
             </thead>
