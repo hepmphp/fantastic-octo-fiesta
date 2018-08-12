@@ -482,6 +482,120 @@ EOT;
     }
 
 
+    public static function get_form_html($table,$config_fied_builder_types,$get_form_builder_types){
+        list($fields,$select) = (new InfoSchema())->get_all_fields($table);
+        //生成html
+        $form_html = '';
+        foreach($fields as $field=>$name){
+            $fb_func = $config_fied_builder_types[$field];
+            if(empty($fb_func)){
+                continue;
+            }
+
+            if(isset($select[$field])){
+                $form_html .= FormBuilder::$fb_func($field,$name,$select[$field])."\n";
+            }else{
+                $form_html .= FormBuilder::$fb_func($field,$name)."\n";
+            }
+        }
+
+        $html = <<<HTML
+<div class="container col-sm-12" style="margin-top: 10px;">
+    <div class="form-horizontal">
+        <input type="hidden" id="id" value="<?=\$form['id']?>">
+        [form_html]
+    </div>
+</div>
+HTML;
+
+        $css = array();
+        $js = array();
+
+        //包含 时间 日期 单图 多图 富文本 文本多选 下拉搜索 自动注入js
+        if(in_array('date_time',$get_form_builder_types)
+            ||in_array('date',$get_form_builder_types)
+        ){
+            $js[] = '/static/js/logic/lib/date_picker.js';
+        }
+
+        if(in_array('image',$get_form_builder_types)){
+
+            //"/static/js/logic/lib/image_upload_callback.js"
+            //"/static/js/logic/lib/image_upload_callback.js"
+            $js[] = '/static/js/logic/lib/image_upload.js';
+        }
+        if(in_array('image_mutil',$get_form_builder_types)){
+
+        }
+        if(in_array('text_rich',$get_form_builder_types)){
+            $css[] = "/static/js/umeditor/themes/default/css/umeditor.css";
+            $js[] = "/static/js/umeditor/lang/zh-cn/zh-cn.js";
+            $js[] = "/static/js/umeditor/umeditor.config.js";
+            $js[] = "/static/js/umeditor/umeditor.js";
+        }
+
+        if(in_array('text_multi_select',$get_form_builder_types)){
+            $css[] = "/static/js/select2/css/select2.min.css";
+            $js[] = "/static/js/select2/js/select2.full.min.js";
+        }
+        if(in_array('text_search',$get_form_builder_types)){
+            $css[] = '/static/js/autocomplete/jquery-ui.css';
+            $js[] = '/static/js/autocomplete/jquery-ui.js';
+        }
+
+        if(  in_array('image_priview',$get_form_builder_types)
+            ||in_array('image_mutil_priview',$get_form_builder_types)){
+            $css[] = '/static/js/mutil_uploader/css/iconfont.css';
+            $css[] = '/static/js/mutil_uploader/css/image.css';
+            $js[] = '/static/js/mutil_uploader/js/uploader.js';
+        }
+
+
+        $css_js = array();
+        $css_register= 'AppCurdAsset::addCss($this,"%s");';
+        $js_register= 'AppCurdAsset::addScript($this,"%s");';
+        $js_register_head = 'AppCurdAsset::addScriptHead($this,"%s");';
+        if(!empty($css) ||!empty($js)){
+            $php_html = <<<EOT
+<?php
+    use backend\assets\AppCurdAsset;
+    AppCurdAsset::register(\$this);
+    [css_js]
+
+?>
+EOT;
+            foreach($css as $c){
+                $css_js[] = sprintf($css_register,$c);
+            }
+            foreach($js as $j){
+                if(strpos($j,'lang')!==false){
+                    $css_js[] = sprintf($js_register,$j);
+                }else if(strpos($j,'umeditor')!==false){
+                    $css_js[] = sprintf($js_register_head,$j);
+                }else{
+                    $css_js[] = sprintf($js_register,$j);
+                }
+            }
+            foreach($css_js as $k=>&$v){
+                if($k==0){
+                    continue;
+                }
+                $v = "\t".$v;
+            }
+            $php_html = str_replace('[css_js]',implode("\n",$css_js),$php_html);
+            $html = $php_html."\n".$html;
+
+        }
+
+
+        $html = str_replace(array('[form_html]'),array($form_html),$html);
+        return $html;
+    }
+
+
+
+
+
 
 
 }
