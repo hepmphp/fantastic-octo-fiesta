@@ -218,6 +218,8 @@ class BaseController extends Controller{
         }
 
     }
+	
+	
     /***
      * 通用逻辑删除
      */
@@ -238,6 +240,87 @@ class BaseController extends Controller{
         }
 
     }
+	
+	 /***
+     *
+     * 通用的多个模型添加方法
+     * @param $model
+     * @return \yii\web\Response
+     */
+    public function commonMutipleCreate($all_models,$key=''){
+        $main_model = $all_models[0];
+        foreach($all_models as $model){
+            $model->load(Yii::$app->request->post());
+        }
+        $is_valid = $main_model->validateMultiple($all_models);
+        if($is_valid){
+            $save_res = [];
+            $save_id = [];
+            foreach($all_models as $k=>$model){
+                if($k>0 ){
+                    $model->$key = $save_id[0];
+                }
+                $save_res[] = $model->save();
+                $save_id[] = $model->primaryKey;
+            }
+            $save_res = array_filter($save_res);
+            if(count($save_res)==count($all_models)){
+                return $this->ajaxReturn(0,Yii::t('app','create_success'));
+            }else{
+                return $this->ajaxReturn(-1,Yii::t('app','db_error'),['data'=>['errors'=>$main_model->errors]]);
+            }
+        }else{
+            $errors = [];
+            foreach($all_models as $model){
+                if(!empty($model->firstErrors)){
+                    $errors = array_merge($errors,$model->firstErrors);
+                }
+            }
+            return $this->ajaxReturn(-2,implode("<br/>",$errors),['data'=>['errors'=>$errors]]);
+        }
+    }
+
+    /**
+        * @param $all_models 所有的模型 模型1为主模型 其它为扩展模型
+         * @return mixed
+     */
+    public function commonMutipleUpdate($all_models){
+        $model = $all_models[0];
+        $model_exts = array_slice($all_models,1);
+        if( $model->load(Yii::$app->request->post())){
+            foreach($model_exts as $model_ext){
+                if(!empty($model_ext)){
+                    $model_ext->load(Yii::$app->request->post());
+                }else{
+                    $model_ext->primaryKey = $model->primaryKey;
+                    $model_ext->load(Yii::$app->request->post());
+                }
+            }
+            $is_valid = $model->validateMultiple($all_models);
+            if($is_valid){
+                $save_res[] = $model->save();
+                foreach($model_exts as $model_ext){
+                    $save_res[] = $model_ext->save();
+                }
+                $save_res = array_filter($save_res);
+                if(count($save_res)==count($model_exts)+1){
+                    return $this->ajaxReturn(0,Yii::t('app','update_success'));
+                }else{
+                    $commandQuery = clone $model;
+                    return $this->ajaxReturn(-1,Yii::t('app','db_error'),array('data'=>['errors'=>$model->errors,'last_sql'=>$commandQuery->find()->createCommand()->getRawSql()]));
+                }
+            }else{
+                $errors = $model->firstErrors;
+                foreach($model_exts as $model_ext){
+                    if(!empty($model_ext->firstErrors)){
+                        $errors = array_merge($errors,$model_ext->firstErrors);
+                    }
+                }
+                return $this->ajaxReturn(-2,implode("<br/>",$errors),array('data'=>['errors'=>$errors]));
+            }
+        }
+    }
+
 
     /**
      *Select2 搜索
