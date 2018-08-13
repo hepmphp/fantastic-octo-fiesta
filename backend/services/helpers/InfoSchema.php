@@ -11,7 +11,7 @@ class InfoSchema{
      * @return array
      */
     public function get_table_field($table){
-        $sql   = "SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name ='{$table}' and TABLE_SCHEMA='{$this->table_schema}'";
+        $sql   = "SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name ='{$table}' and TABLE_SCHEMA='{$this->table_schema}' ORDER BY ORDINAL_POSITION";
         $command = Yii::$app->db->createCommand($sql);
         $table_field = $command->queryAll();
         return $table_field;
