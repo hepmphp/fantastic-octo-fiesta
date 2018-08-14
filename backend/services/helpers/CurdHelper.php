@@ -113,7 +113,7 @@ EOT;
                     $mutil_image_prive_val = str_replace(array('[field]'),array($field),$mutil_image_prive_val_tpl);
                     if(!empty($mutil_image_prive)){
                         //mutil_image_prive_var
-                        $template_content = str_replace("//mutil_image_prive_var",$mutil_image_prive,$template_content);
+                        $template_content = preg_replace("/(var param)/",$mutil_image_prive."\n"."\t\t\t$1",$template_content);
                         $template_content = str_replace($mutil_image_prive_val,$field,$template_content);
                     }
                 }
@@ -121,6 +121,52 @@ EOT;
 
         }
         //多图预览上传js处理结束
+
+        //复选框js处理 转换成用,分隔的变量
+        //多图预览上传js处理
+        $mutil_select_tpl = <<<EOT
+var [field] = new Array();
+            body.find('input[name='[field]']:checked').each(function(){
+                    [field].push($(this).val());
+            });
+EOT;
+        $mutil_select_val_tpl = "body.find('#[field]').val()";
+        if(in_array('mutil_checkbox',$get_form_builder_types)){
+            foreach($get_form_builder_types as $k=>$builder_type){
+                $field = $fields[$k];
+                if($builder_type=='mutil_checkbox'){
+                    $mutil_select = str_replace(array('[field]'),array($field),$mutil_select_tpl)."\n";
+                    $mutil_select_val = str_replace(array('[field]'),array($field),$mutil_select_val_tpl);
+                    var_dump($mutil_select_val);
+                    if(!empty($mutil_select_val)){
+                        var_dump($mutil_select);
+                        //mutil_image_prive_var
+                        $template_content = preg_replace("/(var param)/",$mutil_select."\n"."\t\t\t$1",$template_content);
+                        $template_content = str_replace($mutil_select_val,$field.".join(','),",$template_content);
+                    }
+                }
+            }
+
+        }
+
+
+        //
+
+
+        $mutil_radio_val_tpl = "body.find('#[field]').val()";
+        $mutil_radio_tpl = '$("input[name=\'[field]\']:checked").val()';
+        if(in_array('multi_radio',$get_form_builder_types)){
+            foreach($get_form_builder_types as $k=>$builder_type){
+                $field = $fields[$k];
+                if($builder_type=='multi_radio'){
+                    $mutil_radio_val = str_replace(array('[field]'),array($field),$mutil_radio_val_tpl);
+                    $mutil_radio_val_replace = str_replace(array('[field]'),array($field),$mutil_radio_tpl);
+                    $template_content = str_replace($mutil_radio_val,$mutil_radio_val_replace.",",$template_content);
+                }
+            }
+
+        }
+
         return $template_content;
     }
 

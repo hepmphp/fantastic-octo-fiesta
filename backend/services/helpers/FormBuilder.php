@@ -199,7 +199,7 @@ EOT;
 EOT;
         $item_html = <<<EOT
   <label class="[radio-inline]" for="[field]-[i]">
-      <input type="radio" name="[field]" id="[field]-[i]" value="[v]">
+      <input type="radio" name="[field]" id="[field]-[i]" value="[i]">
       [v]
     </label>
 EOT;
@@ -241,7 +241,7 @@ EOT;
 EOT;
         $item_html = <<<EOT
    <label class="[checkbox-inline]" for="[field]-[i]">
-      <input type="checkbox" name="[field]" id="[field]-[i]" value="[v]">
+      <input type="checkbox" name="[field]" id="[field]-[i]" value="[i]">
       [v]
     </label>
 EOT;
