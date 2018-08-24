@@ -7,7 +7,6 @@ uploadImg();//多图上传
 function uploadImg(){
 	$(".upload-img-mutil input").change(function() {
 		var that=$(this);
-
 		var formdata=new FormData();
 		var group_name = $(that).parent().parent().find(".group_name").val();
 
