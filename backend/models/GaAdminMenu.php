@@ -78,6 +78,13 @@ class GaAdminMenu extends \yii\db\ActiveRecord
                 $this->level = 0;
             }
             $parent_menu = GaAdminMenu::findOne(['id'=>$this->parentid]);
+            
+            if($parent_menu){
+                $this->top_menu_id = $parent_menu['parentid']==0?$parent_menu['id']:$parent_menu['top_menu_id'];
+            }
+            if(!$this->isNewRecord && empty($this->top_menu_id) && $this->id){//顶级菜单更新
+                $this->top_menu_id = $this->id;
+            }
             $this->top_menu_id = $parent_menu['top_menu_id'];
             return true;
         }else{
