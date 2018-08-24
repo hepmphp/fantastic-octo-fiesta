@@ -1,7 +1,5 @@
-  // 上传图片
-
+// 上传图片
 var uploaderApi = '?r=api/upload-mutil/index';
-
 var offsBooL=true;
 uploadImgOne();//单图上传
 uploadImg();//多图上传
@@ -60,7 +58,6 @@ function uploadImg(){
 function uploadImgOne(){
     $(".upload-img-one input").change(function() {
         var that=$(this);
-
         var formdata=new FormData();
         var group_name = $(that).parent().parent().find(".group_name").val();
         formdata.append('image',this.files[0]);
