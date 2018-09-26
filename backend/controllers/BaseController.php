@@ -349,7 +349,7 @@ class BaseController extends Controller{
         }
     }
 
-    /***
+     /***
      * 统一接口返回
      * @param $status
      * @param $msg
@@ -357,6 +357,7 @@ class BaseController extends Controller{
      * @return \yii\web\Response
      */
     public function ajaxReturn($status,$msg,$data=array()){
+        $this->adminLog(Yii::$app->session['admin_user.id'],Yii::$app->session['admin_user.username'],var_export($_POST,true));
         $response = array(
             'status'=>$status,
             'msg'=>$msg,
@@ -403,9 +404,9 @@ class BaseController extends Controller{
                 'log_type'=>$this->getLogType(),
             );
             if($action!='Index'){
-                $log_filename = sprintf("%s.%s.%s",$model,$action,'log');//日志文件
+                $log_filename = sprintf("%s.%s.%s",str_replace('/','-',$model),$action,'log');//日志文件
                 $file_log_text =  sprintf("管理员:%s 应用：%s模块%s方法%s<br>参数%s",
-                    var_export($this->admin_user,true),
+                    $user_id."-".$username,
                     Yii::$app->controller->module->id,
                     Yii::$app->controller->id,
                     Yii::$app->controller->action->id,
@@ -413,14 +414,18 @@ class BaseController extends Controller{
                 );
                 Log::write($file_log_text,$log_filename,'yii_admin');
             }
+
             $admin_log = new GaAdminLog();
             $admin_log->setAttributes($data);
             $admin_log->save();
         }
     }
-
-    public function getStaticUrl(){
-        return '/';
+    
+    public function getStaticUrl($file=""){
+        if(empty($file)){
+            return "";
+        }
+        return '/'.$file;
     }
 
 }
