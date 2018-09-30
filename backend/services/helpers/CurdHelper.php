@@ -327,35 +327,49 @@ EOT;
         }
         $config_str = implode("\n\t",$config_data);
 
+        //生成验证规则
         $rules = [];
+        $rules_filter = [];//过滤已经有自定义验证器的
+        $form_validator_mutil= [];//验证分组
         //替换搜索项
         //验证规则
-        $rules[] = FormValidator::required_all($fields);
-
         foreach($fields as $k=>$field){
             $form_validator_type = $form_validator_types[$k];
             if(empty($form_validator_type)){
                 continue;
             }
+            $rules_filter[] = $field;
+            if(in_array($form_validator_type,['default_int0','default_empty'])){
+                $form_validator_mutil[$form_validator_type][] = $field;
+                continue;
+            }
+
             $rules[] = "\t\t\t\t".FormValidator::$form_validator_type($field);
         }
+        foreach($form_validator_mutil as $form_validator_type=>$field){
+            $rules[] = "\t\t\t\t".FormValidator::$form_validator_type($field);
+        }
+
+        $fields = array_diff($fields,$rules_filter);
+        $rules[] = FormValidator::required_all($fields);
+        $rules = array_reverse($rules);
         $attributes = [];//属性
         foreach($db_fields as $field=>$name){
             $attributes[] = "\t\t\t\t '{$field}' => Yii::t('app', '{$name}'),";
         }
         //beforeSave//自动添加时间
         $config_beforesave_tpl = <<<EOT
-      public function beforeSave(\$insert){
-            if(parent::beforeSave(\$insert)){
-                if(\$this->isNewRecord){
-                    \$this->addtime = time();
-                }
-                //update_time//
-                return true;
-            }else{
-                return false;
+    public function beforeSave(\$insert){
+        if(parent::beforeSave(\$insert)){
+            if(\$this->isNewRecord){
+                \$this->addtime = time();
             }
+            //update_time//
+            return true;
+        }else{
+            return false;
         }
+    }
 EOT;
 
         $beforesave = '';
@@ -368,7 +382,7 @@ EOT;
 
         $content = str_replace(
             array('app_templdate','Model','[table]','[rule]','[field_comment]','//config_str//','//beforeSave//'),
-            array($namespace,$model_name,$table,"\n".implode("\n",$rules),"\n".implode("\n",$attributes),$config_str,$beforesave),
+            array($namespace,$model_name,$table,"\n"."\t\t\t".implode("\n",$rules),"\n".implode("\n",$attributes),$config_str,$beforesave),
             $content);
 
         return $content;

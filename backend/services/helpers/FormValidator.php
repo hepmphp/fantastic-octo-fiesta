@@ -85,6 +85,8 @@ class FormValidator {
             'match'=>'4.正则验证 规则需要自定义',
             'length'=>'5.验证长度',//['email', 'string', 'length' => [3, 20]]
             'range'=>'6.验证范围',// ['level', 'in', 'range' => [1, 2, 3]]
+            'default_int0'=>'7.默认0',
+            'default_empty'=>'8.默认空字符串'
            
         );
         return $config;
@@ -136,6 +138,33 @@ class FormValidator {
     public static function range($field){
         $tpl = "['[field]', 'in', 'range' => [1, 2, 3],'message'=>'{attribute}不在范围内']";
         $tpl = str_replace('[field]',$field,$tpl);
+        return $tpl;
+    }
+
+    /**
+     * 默认0
+     * @param $fields
+     * @return mixed
+     */
+    public static function default_int0($fields){
+        $fields = array_map(function($field){
+            return "'{$field}'";
+        },$fields);
+        $tpl = " [[[field]],'default','value'=>0]";
+        $tpl = str_replace('[field]',implode(",",$fields),$tpl);
+        return $tpl;
+    }
+    /***
+     * 默认空
+     * @param $fields
+     * @return mixed
+     */
+    public static function default_empty($fields){
+        $fields = array_map(function($field){
+            return "'{$field}'";
+        },$fields);
+        $tpl = " [[[field]],'default','value'=>'']";
+        $tpl = str_replace('[field]',implode(",",$fields),$tpl);
         return $tpl;
     }
 }

@@ -53,7 +53,7 @@ class Log {
      */
     public static function  write($message,$filename,$type='common',$cate='info'){
         $log_dir = "%s/%s/%s";//日志路径 日志类型 年 月 日
-        $dir = sprintf($log_dir,Yii::$app->getRuntimePath() . '/logs/',$type,date('Y/m/d/'));
+        $dir = sprintf($log_dir, Yii::getAlias('@data_log').'/admin/',$type,date('Y/m/d/'));
         if(!is_dir($dir)){
             mkdir($dir,0755,true);
         }

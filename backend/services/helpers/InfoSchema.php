@@ -3,7 +3,7 @@ namespace backend\services\helpers;
 use Yii;
 class InfoSchema{
     public $table_schema = '';//数据库名称
-    public function __construct($table_schema='yii_admin'){
+    public function __construct($table_schema='ad'){
            $this->table_schema = $table_schema;
     }
     /**
@@ -44,12 +44,17 @@ class InfoSchema{
         foreach($table_field as $k=>$v){
             if(stripos($v['COLUMN_COMMENT'],'|')!==false){//统一的格式 状态|0:显示,1:不显示
                   $comment = explode('|',$v['COLUMN_COMMENT']);
-                $fields[$v['COLUMN_NAME']] = $comment[0];
-                $select_item = explode(',',$comment[1]);
-                foreach($select_item as $s=>$it){
-                    $item = explode(':',$it);
-                    $select[$v['COLUMN_NAME']][] = array('id'=>$item[0],'name'=>$item[1]);
+                if(strpos($v['COLUMN_COMMENT'],':')!==false){
+                    $fields[$v['COLUMN_NAME']] = $comment[0];
+                    $select_item = explode(',',$comment[1]);
+                    foreach($select_item as $s=>$it){
+                        $item = explode(':',$it);
+                        $select[$v['COLUMN_NAME']][] = array('id'=>$item[0],'name'=>$item[1]);
+                    }
+                }else{
+                    $fields[$v['COLUMN_NAME']] = $v['COLUMN_COMMENT'];
                 }
+
             }else{
                 $fields[$v['COLUMN_NAME']] = $v['COLUMN_COMMENT'];
             }

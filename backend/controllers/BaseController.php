@@ -76,7 +76,7 @@ class BaseController extends Controller{
         }
 
         $this->checkAccess();
-        if(Yii::$app->request->get('iframe')!=1){
+        if(Yii::$app->request->get('iframe')!=1 && Yii::$app->session['admin_user.mids']){
             $top_menu = GaAdminMenu::find()->where(['parentid'=>0,'status'=>0])->orderBy(['listorder'=>SORT_ASC])->asArray()->all();
             $where_left_menu = array(
                 'top_menu_id'=>$this->current_menu['top_menu_id'],
@@ -84,6 +84,11 @@ class BaseController extends Controller{
             );
             $left_menu = GaAdminMenu::find()->where($where_left_menu)->orderBy(['listorder'=>SORT_ASC])->asArray()->all();
 
+            foreach($top_menu as $k=>$tm){
+                if(!in_array($tm['id'],Yii::$app->session['admin_user.mids'])){
+                    unset($top_menu[$k]);
+                }
+            }
 
             $menu = array(
                 'top_menu'=>$top_menu,
@@ -123,8 +128,15 @@ class BaseController extends Controller{
         );
 
         $this->current_menu = GaAdminMenu::find()->where($where_menu)->andWhere(['<>','level',0])->limit(1)->asArray()->one();
-
-        if(!in_array($this->current_menu['id'],Yii::$app->session['admin_user.mids']) && Yii::$app->controller->action->id != 'get_search_where'){//搜索条件拼接不做权限检测
+        //developer
+        //不需要做权限检测的控制器和方法
+        if(
+            in_array(Yii::$app->controller->id,['developer'])
+           || in_array(Yii::$app->controller->action->id, ['get_search_where'])
+        ){
+            return true;
+        }
+        if(!in_array($this->current_menu['id'],Yii::$app->session['admin_user.mids'])){
                /*
                $response = array(
                     'status'=>-1,
@@ -357,6 +369,7 @@ class BaseController extends Controller{
      * @return \yii\web\Response
      */
     public function ajaxReturn($status,$msg,$data=array()){
+        $this->adminLog(Yii::$app->session['admin_user.id'],Yii::$app->session['admin_user.username'],var_export($_POST,true));
         $response = array(
             'status'=>$status,
             'msg'=>$msg,
@@ -403,24 +416,43 @@ class BaseController extends Controller{
                 'log_type'=>$this->getLogType(),
             );
             if($action!='Index'){
-                $log_filename = sprintf("%s.%s.%s",$model,$action,'log');//日志文件
+                $log_filename = sprintf("%s.%s.%s",str_replace('/','-',$model),$action,'log');//日志文件
                 $file_log_text =  sprintf("管理员:%s 应用：%s模块%s方法%s<br>参数%s",
-                    var_export($this->admin_user,true),
+                    $user_id."-".$username,
                     Yii::$app->controller->module->id,
                     Yii::$app->controller->id,
                     Yii::$app->controller->action->id,
                     var_export($_REQUEST,true)
                 );
-                Log::write($file_log_text,$log_filename,'yii_admin');
+                Log::write($file_log_text,$log_filename,'admin_log');
             }
+
             $admin_log = new GaAdminLog();
             $admin_log->setAttributes($data);
             $admin_log->save();
         }
     }
 
-    public function getStaticUrl(){
-        return '/';
+    /**
+     * 获取搜索条件
+     * @return array
+     */
+    public function getAdminWhere(){
+        $where = array();
+        if(!in_array(Yii::$app->session['admin_user.group_id'],[1])){
+            $where['admin_id'] = Yii::$app->session['admin_user.id'];
+        }
+     //   var_dump(Yii::$app->session['admin_user.group_id']);
+        return $where;
     }
+
+    public function getStaticUrl($file=""){
+        if(empty($file)){
+            return "";
+        }
+        return Yii::$app->params['ad.image.url'].'/'.$file;
+    }
+
+
 
 }

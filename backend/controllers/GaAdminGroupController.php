@@ -180,9 +180,7 @@ class GaAdminGroupController extends BaseController
             $admin_group->mids = $permission['mids'];
             $res = $admin_group->save();
             //更新相关用户的权限
-            $admin_user = new GaAdminUser();
-            $admin_user->mids = $permission['mids'];
-            $res2 = $admin_user->save();
+            GaAdminUser::updateAll(['mids'=>$permission['mids']],['group_id'=>$id]);
             if($res){
                 $response = array(
                     'status'=>0,

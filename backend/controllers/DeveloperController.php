@@ -139,7 +139,7 @@ class DeveloperController extends BaseController{
         $js = CurdHelper::get_js($module_id,$table,$fields,$get_form_builder_types);
         if($create_file==1){
             if(!empty($module_id)){
-                $logic_path = './static/js/logic/{$module_id}/{$controller}';//目前就用到index.js
+                $logic_path = "./static/js/logic/{$module_id}/{$controller}";//目前就用到index.js
             }else{
                 $logic_path = './static/js/logic/'.$controller;//目前就用到index.js
             }
