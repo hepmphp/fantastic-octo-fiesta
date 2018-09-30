@@ -9,13 +9,13 @@ function uploadImg(){
  
 $(".upload-img-mutil input").eq(imgNum).change(function() {
     var that=$(this);
-//    console.log(that.parent());
+//    console.log(that.parent()); '<input type="hidden" class="group_name" value="'+group_name+'">'
      
       var formdata=new FormData();
       var group_name = $(that).parent().parent().find(".group_name").val();//事件冲突 所以放最外层
       formdata.append('image',this.files[0]);
       formdata.append('group_name',group_name);
-      var str='<input type="hidden" class="group_name" value="'+group_name+'">'+'<div class="upload-img  upload-img-mutil left"><span class="image-item"></span><img src="" alt=""><input type="file" name="images" style="opacity:0" accept="image/*" capture="camera"/><i class="iconfont icon-lajitong"></i><i class="iconfont icon-tianjia"></i><div class="over-cover"></div></div>';
+      var str='<div class="upload-img  upload-img-mutil left"><span class="image-item"></span><img src="" alt=""><input type="file" name="images" style="opacity:0" accept="image/*" capture="camera"/><i class="iconfont icon-lajitong"></i><i class="iconfont icon-tianjia"></i><div class="over-cover"></div></div>';
         $.ajax({
           type: 'POST',
           url: uploaderApi,
@@ -92,4 +92,29 @@ function uploadImgOne(){
     })
 }
 // 上传图片   
+ //删除按钮
+ $(".upload-img").mouseover(function(){
+
+      if($(this).children('img').attr('src') !==''){
+          $(this).children('.icon-lajitong').show();
+          $(this).children('.over-cover').show();
+          if($(this).siblings().length>0){
+              $(this).children('.icon-lajitong').css({'z-index':'999'});
+          }
+      }
+      $('.icon-lajitong').click(function(){
+          $(this).parent().remove();
+          if(offsBooL){
+              offsBooL=false;
+              setTimeout(function(){
+                  offsBooL=true;
+                  imgNum --;
+              }, 50);
+          }
+      })
+  });
+  $('.upload-img').mouseout(function(){
+      $('.icon-lajitong').hide();
+      $('.over-cover').hide();
+  });
  

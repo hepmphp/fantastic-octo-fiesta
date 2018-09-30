@@ -48,7 +48,10 @@ class GaAdminUser extends \yii\db\ActiveRecord
                     $salt = Unique::genRandomString(6);//密码盐
                     $this->salt = $salt;
                     $this->password = $this->genrate_password($this->password,$salt);
+                }else{
+                    $this->password = $this->getOldAttribute('password');//密码为空 不改密码
                 }
+                
             }
             return true;
         } else {
