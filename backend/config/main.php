@@ -60,9 +60,9 @@ return [
 
         'db' => [
             'class' => 'yii\db\Connection',
-            'dsn' => 'mysql:host=localhost;dbname=yii_admin',
+            'dsn' => 'mysql:host=localhost;dbname=app_admin',
             'username' => 'root',
-            'password' => '',
+            'password' => '123456',
             'charset' => 'utf8',
         ],
         'db_operation'=>[
