@@ -12,6 +12,7 @@ use backend\modules\cms\models\CmsTag;
 class CmsArticleController extends BaseController
 {
     public function init(){
+		parent::init();
         $this->model = new CmsArticle();
     }
     /**

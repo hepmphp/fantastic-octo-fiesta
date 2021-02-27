@@ -156,7 +156,7 @@ class BaseController extends Controller{
 
     public function init(){//公用方法初始化
         //根据url参数设置layout
-
+		parent::init();
 
     }
 
