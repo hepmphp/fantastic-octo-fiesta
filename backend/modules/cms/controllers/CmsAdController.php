@@ -14,6 +14,7 @@ use yii\helpers\ArrayHelper;
 class CmsAdController extends BaseController
 {
     public function init(){
+		parent::init();
         $this->model = new CmsAd();
     }
     /**

@@ -12,6 +12,7 @@ use backend\controllers\BaseController;
 class CmsAdBlockController extends BaseController
 {
     public function init(){
+		parent::init();
         $this->model = new CmsAdBlock();
     }
     /**

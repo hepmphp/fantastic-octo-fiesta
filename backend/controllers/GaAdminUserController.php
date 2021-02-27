@@ -21,6 +21,7 @@ class GaAdminUserController extends BaseController
     public $model = null;
 
     public function init(){
+		parent::init();
         $this->model = new GaAdminUser();
     }
 

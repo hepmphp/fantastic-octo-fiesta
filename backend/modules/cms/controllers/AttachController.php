@@ -16,6 +16,7 @@ use  backend\modules\cms\models\CmsAttachCate;
 class AttachController extends BaseController
 {
     public function init(){
+		parent::init();
         $this->model = new CmsAttach();
     }
 

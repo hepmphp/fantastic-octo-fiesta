@@ -22,7 +22,7 @@ use backend\components\exception\LogicException;
 class GaAdminMenuController extends BaseController{
 
     public function init(){
-        //parent::init();
+        parent::init();
         if(Yii::$app->request->get('iframe')==1){
             $this->layout = false;
         }

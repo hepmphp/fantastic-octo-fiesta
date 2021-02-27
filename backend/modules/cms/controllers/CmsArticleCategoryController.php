@@ -12,6 +12,7 @@ use backend\controllers\BaseController;
 class CmsArticleCategoryController extends BaseController
 {
     public function init(){
+		parent::init();
         $this->model = new CmsArticleCategory();
     }
     /**
