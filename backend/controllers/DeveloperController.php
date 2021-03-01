@@ -117,7 +117,7 @@ class DeveloperController extends BaseController{
           }
           return $this->asJson($response);
       }else{
-          highlight_string($html);
+          highlight_string($html);exit();
 //          $this->layout = 'main_curd.php';
 //          return $this->render('preview',['form_html'=>$form_html]);
       }
@@ -169,7 +169,8 @@ class DeveloperController extends BaseController{
             return $this->asJson($response);
         }else{
 
-            highlight_string($js);
+           highlight_string($js);exit();
+			 
         }
    }
 
@@ -216,7 +217,7 @@ class DeveloperController extends BaseController{
             }
             return $this->asJson($response);
         }else{
-            highlight_string($template_content);
+            highlight_string($template_content);exit();
         }
 
    }
@@ -276,7 +277,7 @@ class DeveloperController extends BaseController{
 
 
         }else{
-            highlight_string($content);
+            highlight_string($content);exit();
         }
 
 
@@ -353,7 +354,7 @@ class DeveloperController extends BaseController{
             }
             return $this->asJson($response);
         }else{
-            highlight_string($content);
+            highlight_string($content);exit();
         }
 }
 
